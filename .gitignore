@@ -1,0 +1,8 @@
+# MacOS system files
+.DS_Store
+
+# C object files 
+*.o
+
+# bin directory 
+bin/
