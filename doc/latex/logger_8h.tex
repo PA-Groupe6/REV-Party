@@ -1,0 +1,76 @@
+\hypertarget{logger_8h}{}\doxysection{src/logger.h File Reference}
+\label{logger_8h}\index{src/logger.h@{src/logger.h}}
+
+
+header du logger  
+
+
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+Include dependency graph for logger.\+h\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=153pt]{logger_8h__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{logger_8h_a4d503a34762b69fa2a6a4d75fe25af0e}{printl}} (char $\ast$msg)
+\begin{DoxyCompactList}\small\item\em écrit dans la sortie du logger. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{logger_8h_afcf0fe7ae3fd5d9e469ef60fe62f3e5c}{redirect}} (FILE $\ast$out)
+\begin{DoxyCompactList}\small\item\em définit la sortie appropriée du logger \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+header du logger 
+
+\begin{DoxyAuthor}{Author}
+Laforge Mateo 
+\end{DoxyAuthor}
+\begin{DoxyNote}{Note}
+la sortie par défaut du logger est stdout 
+\end{DoxyNote}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{logger_8h_a4d503a34762b69fa2a6a4d75fe25af0e}\label{logger_8h_a4d503a34762b69fa2a6a4d75fe25af0e}} 
+\index{logger.h@{logger.h}!printl@{printl}}
+\index{printl@{printl}!logger.h@{logger.h}}
+\doxysubsubsection{\texorpdfstring{printl()}{printl()}}
+{\footnotesize\ttfamily void printl (\begin{DoxyParamCaption}\item[{char $\ast$}]{msg }\end{DoxyParamCaption})}
+
+
+
+écrit dans la sortie du logger. 
+
+\begin{DoxyDate}{Date}
+13 octobre 2023 
+\end{DoxyDate}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em msg} & le méssage à écrire \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{logger_8h_afcf0fe7ae3fd5d9e469ef60fe62f3e5c}\label{logger_8h_afcf0fe7ae3fd5d9e469ef60fe62f3e5c}} 
+\index{logger.h@{logger.h}!redirect@{redirect}}
+\index{redirect@{redirect}!logger.h@{logger.h}}
+\doxysubsubsection{\texorpdfstring{redirect()}{redirect()}}
+{\footnotesize\ttfamily void redirect (\begin{DoxyParamCaption}\item[{FILE $\ast$}]{out }\end{DoxyParamCaption})}
+
+
+
+définit la sortie appropriée du logger 
+
+\begin{DoxyDate}{Date}
+13 octobre 2023 
+\end{DoxyDate}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em out} & la nouvelle sortie du logger \\
+\hline
+\end{DoxyParams}
+\begin{DoxyRemark}{Remarks}
+en mode DEBUG cette fonction ne fait rien 
+\end{DoxyRemark}

@@ -1,0 +1,173 @@
+\hypertarget{sdlist_8h}{}\doxysection{src/utils/data-\/struct/sdlist.h File Reference}
+\label{sdlist_8h}\index{src/utils/data-\/struct/sdlist.h@{src/utils/data-\/struct/sdlist.h}}
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$stdbool.\+h$>$}\newline
+Include dependency graph for sdlist.\+h\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=210pt]{sdlist_8h__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{sdlist_8h_aae40d62082ae76b595acf3f8ad94f794}\label{sdlist_8h_aae40d62082ae76b595acf3f8ad94f794}} 
+typedef struct s\+\_\+list \mbox{\hyperlink{sdlist_8h_aae40d62082ae76b595acf3f8ad94f794}{List}}
+\begin{DoxyCompactList}\small\item\em This library implement an pseudo-\/static list using static table. It can only store Integer (int). \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{sdlist_8h_aa9503e58af4b68abc7eab8077a8e4a8a}\label{sdlist_8h_aa9503e58af4b68abc7eab8077a8e4a8a}} 
+typedef \mbox{\hyperlink{sdlist_8h_aae40d62082ae76b595acf3f8ad94f794}{List}} $\ast$ {\bfseries ptr\+List}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+ptr\+List \mbox{\hyperlink{sdlist_8h_a5d4833cfafa95d159657af1970883bee}{create\+List}} (int size)
+\begin{DoxyCompactList}\small\item\em Create an empty list. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{sdlist_8h_abdf93eb44b5c1ab3f5b288b9549f50f9}{delete\+List}} (ptr\+List l)
+\begin{DoxyCompactList}\small\item\em DElete the list. \end{DoxyCompactList}\item 
+ptr\+List \mbox{\hyperlink{sdlist_8h_afe3a225cd9e11e8fe547655487295155}{list\+Add}} (ptr\+List l, int v)
+\begin{DoxyCompactList}\small\item\em Add value v to the end of the list. \end{DoxyCompactList}\item 
+ptr\+List \mbox{\hyperlink{sdlist_8h_ad1cc0baa76a894d950a8117ad8f86298}{list\+Insert}} (ptr\+List l, int v, int i)
+\begin{DoxyCompactList}\small\item\em Insert a value in the list to the position require. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{sdlist_8h_ad542bc6fbdfe8467c645f335887e5138}{list\+Remove}} (ptr\+List l, int i)
+\begin{DoxyCompactList}\small\item\em Remove a value in the list to the position require. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{sdlist_8h_aee4bfb5e93b536535e760cab7fe51b53}{list\+Empty}} (ptr\+List l)
+\begin{DoxyCompactList}\small\item\em Return if the list is empty. \end{DoxyCompactList}\item 
+unsigned int \mbox{\hyperlink{sdlist_8h_a3852c279363a6b09ac0ad19c2afe839d}{list\+Size}} (ptr\+List l)
+\begin{DoxyCompactList}\small\item\em Return the size of the list (position + 1 of the last element) \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Projet REV party -\/ Structur list
+
+\begin{DoxyAuthor}{Author}
+\+: Ugo VALLAT 
+\end{DoxyAuthor}
+\begin{DoxyDate}{Date}
+creation date \+: 20/10/2023 
+\end{DoxyDate}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{sdlist_8h_a5d4833cfafa95d159657af1970883bee}\label{sdlist_8h_a5d4833cfafa95d159657af1970883bee}} 
+\index{sdlist.h@{sdlist.h}!createList@{createList}}
+\index{createList@{createList}!sdlist.h@{sdlist.h}}
+\doxysubsubsection{\texorpdfstring{createList()}{createList()}}
+{\footnotesize\ttfamily ptr\+List create\+List (\begin{DoxyParamCaption}\item[{int}]{size }\end{DoxyParamCaption})}
+
+
+
+Create an empty list. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em size} & allocated space for the list \\
+\hline
+\end{DoxyParams}
+\begin{DoxyDate}{Date}
+20/10/2023 
+\end{DoxyDate}
+\mbox{\Hypertarget{sdlist_8h_abdf93eb44b5c1ab3f5b288b9549f50f9}\label{sdlist_8h_abdf93eb44b5c1ab3f5b288b9549f50f9}} 
+\index{sdlist.h@{sdlist.h}!deleteList@{deleteList}}
+\index{deleteList@{deleteList}!sdlist.h@{sdlist.h}}
+\doxysubsubsection{\texorpdfstring{deleteList()}{deleteList()}}
+{\footnotesize\ttfamily void delete\+List (\begin{DoxyParamCaption}\item[{ptr\+List}]{l }\end{DoxyParamCaption})}
+
+
+
+DElete the list. 
+
+\begin{DoxyDate}{Date}
+20/10/2023 
+\end{DoxyDate}
+\mbox{\Hypertarget{sdlist_8h_afe3a225cd9e11e8fe547655487295155}\label{sdlist_8h_afe3a225cd9e11e8fe547655487295155}} 
+\index{sdlist.h@{sdlist.h}!listAdd@{listAdd}}
+\index{listAdd@{listAdd}!sdlist.h@{sdlist.h}}
+\doxysubsubsection{\texorpdfstring{listAdd()}{listAdd()}}
+{\footnotesize\ttfamily ptr\+List list\+Add (\begin{DoxyParamCaption}\item[{ptr\+List}]{l,  }\item[{int}]{v }\end{DoxyParamCaption})}
+
+
+
+Add value v to the end of the list. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em v} & value to add \\
+\hline
+\end{DoxyParams}
+\begin{DoxyDate}{Date}
+20/10/2023 
+\end{DoxyDate}
+\mbox{\Hypertarget{sdlist_8h_aee4bfb5e93b536535e760cab7fe51b53}\label{sdlist_8h_aee4bfb5e93b536535e760cab7fe51b53}} 
+\index{sdlist.h@{sdlist.h}!listEmpty@{listEmpty}}
+\index{listEmpty@{listEmpty}!sdlist.h@{sdlist.h}}
+\doxysubsubsection{\texorpdfstring{listEmpty()}{listEmpty()}}
+{\footnotesize\ttfamily bool list\+Empty (\begin{DoxyParamCaption}\item[{ptr\+List}]{l }\end{DoxyParamCaption})}
+
+
+
+Return if the list is empty. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em l} & \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{sdlist_8h_ad1cc0baa76a894d950a8117ad8f86298}\label{sdlist_8h_ad1cc0baa76a894d950a8117ad8f86298}} 
+\index{sdlist.h@{sdlist.h}!listInsert@{listInsert}}
+\index{listInsert@{listInsert}!sdlist.h@{sdlist.h}}
+\doxysubsubsection{\texorpdfstring{listInsert()}{listInsert()}}
+{\footnotesize\ttfamily ptr\+List list\+Insert (\begin{DoxyParamCaption}\item[{ptr\+List}]{l,  }\item[{int}]{v,  }\item[{int}]{i }\end{DoxyParamCaption})}
+
+
+
+Insert a value in the list to the position require. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em v} & value to add \\
+\hline
+{\em i} & position \\
+\hline
+\end{DoxyParams}
+\begin{DoxyPrecond}{Precondition}
+\+: 0 $<$= i $<$= list\+Size 
+\end{DoxyPrecond}
+\begin{DoxyDate}{Date}
+20/10/2023 
+\end{DoxyDate}
+\mbox{\Hypertarget{sdlist_8h_ad542bc6fbdfe8467c645f335887e5138}\label{sdlist_8h_ad542bc6fbdfe8467c645f335887e5138}} 
+\index{sdlist.h@{sdlist.h}!listRemove@{listRemove}}
+\index{listRemove@{listRemove}!sdlist.h@{sdlist.h}}
+\doxysubsubsection{\texorpdfstring{listRemove()}{listRemove()}}
+{\footnotesize\ttfamily int list\+Remove (\begin{DoxyParamCaption}\item[{ptr\+List}]{l,  }\item[{int}]{i }\end{DoxyParamCaption})}
+
+
+
+Remove a value in the list to the position require. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em i} & position \\
+\hline
+\end{DoxyParams}
+\begin{DoxyPrecond}{Precondition}
+\+: 0 $<$= i $<$ list\+Size 
+\end{DoxyPrecond}
+\begin{DoxyDate}{Date}
+20/10/2023 
+\end{DoxyDate}
+\mbox{\Hypertarget{sdlist_8h_a3852c279363a6b09ac0ad19c2afe839d}\label{sdlist_8h_a3852c279363a6b09ac0ad19c2afe839d}} 
+\index{sdlist.h@{sdlist.h}!listSize@{listSize}}
+\index{listSize@{listSize}!sdlist.h@{sdlist.h}}
+\doxysubsubsection{\texorpdfstring{listSize()}{listSize()}}
+{\footnotesize\ttfamily unsigned int list\+Size (\begin{DoxyParamCaption}\item[{ptr\+List}]{l }\end{DoxyParamCaption})}
+
+
+
+Return the size of the list (position + 1 of the last element) 
+
+\begin{DoxyDate}{Date}
+20/10/2023 
+\end{DoxyDate}
