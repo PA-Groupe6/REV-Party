@@ -1,8 +1,14 @@
 # MacOS system files
 .DS_Store
 
+# recomended IDE folder
+.vscode/
+
 # C object files 
 *.o
 
 # bin directory 
 bin/
+
+# doc directory
+doc/html
