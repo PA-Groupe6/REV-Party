@@ -4,11 +4,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "sha256.h"
-#include "sha256_utils.h"
-#define STRLONG 30
+#include "src/utils/sha256/sha256.h"
+#include "src/utils/sha256/sha256_utils.h"
+#define STRLONG 60
 
-int main(){
+int main() {
 	int bufferSize = SHA256_BLOCK_SIZE;
 	char hashRes[bufferSize*2 + 1]; // contiendra le hash en hexadécimal
 	char * item = malloc(STRLONG*sizeof(char)); // contiendra la chaîne à hasher
