@@ -41,12 +41,12 @@ void deleteList(ptrList l);
 
 
 /** \brief Add value v to the end of the list
-    \param[in] ptrl pointer to the adress of the list
+    \param[in] l pointer to the adress of the list
     \param[in] v value to add
     \return new adress of the list, null if error
     \date  20/10/2023
 */
-ptrList listAdd(ptrList* ptrl, TYPE v);
+ptrList listAdd(ptrList l, TYPE v);
 
 
 /** \brief Insert a value in the list to the position require
@@ -57,7 +57,17 @@ ptrList listAdd(ptrList* ptrl, TYPE v);
     \pre: 0 <= i <= listSize
     \date  20/10/2023
 */
-ptrList listInsert(ptrList* ptrl, TYPE v, int i);
+ptrList listInsert(ptrList l, TYPE v, int i);
+
+
+/**
+ * @brief Supprime le dernier élément de la liste
+ * 
+ * @param[in] l list
+ * @return -1 si erreur, 0 sinon
+ * @pre taille liste > 0
+ */
+int listPop(ptrList l);
 
 
 /** \brief Remove a value in the list to the position require
@@ -89,11 +99,41 @@ unsigned int listSize(ptrList l);
  * @brief Create new list and copy all the data from old list into new list
  * 
  * @param oldList list to copy
- * @param size size of the new list
+ * @param new_size size of the new list
  * @pre: size >= old list size
  * @return pointer to the new list, null if error
  */
 
-ptrList listCopy(ptrList oldList, int size);
+ptrList listCopy(ptrList oldList, int new_size);
+
+
+/**
+ * @brief Return the value at position i
+ * 
+ * @param l list
+ * @param i position of the element to return
+ * @pre: 0 <= i < list size
+ * @return value 
+ */
+TYPE listGet(ptrList l, int i);
+
+
+/**
+ * @brief display the list in the default output
+ * 
+ * @param l list to display
+ */
+void displayList(ptrList l);
+
+#ifdef DEBUG
+
+/**
+ * @brief display in the logger all the information about the list and the elements
+ * 
+ * @param l list to print in logger
+ */
+void printListLog(ptrList l);
+
+#endif
 
 #endif
