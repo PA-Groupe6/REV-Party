@@ -26,7 +26,7 @@
 
 
 /*------------------------------------------------------------------*/
-/*                         STRUCTURE                                */
+/*                        STRUCTURE LIST                            */
 /*------------------------------------------------------------------*/
 
 
@@ -148,18 +148,31 @@ void displayList(ptrList l);
 typedef struct s_list_ite ListIte;
 typedef struct s_list_ite* ptrListIte;
 
-#define FROM_BEGIN 0
-#define FROM_END 1
+/* l'itérateur commence au début de la liste */
+#define FROM_BEGIN 1
+/* l'itérateur commence à la fin de la liste */
+#define FROM_END 0
 
 /**
  * @brief Crée un itérateur sur la liste passée en entrée
  * 
  * @param[in] l liste à parcourrir
  * @param[in] dir sens de parcours de l'itérateur (FROM_BEGIN ou FROM_END)
- * @return pointeur vers l'itérateur
+ * @return pointeur vers l'itérateur, NULL si erreur
  * @date 22/10/2023
  */
 ptrListIte createListIte(ptrList l, int dir);
+
+
+/**
+ * @brief Initialise l'itérateur selon ses paramêtres
+ * 
+ * @param[in] ite pointeur vers l'itérateur
+ * @return pointeur vers l'itérateur, NULL si erreur
+ * @date 22/10/2023
+ */
+ptrListIte initListIte(ptrListIte ite);
+
 
 /**
  * @brief Renvoie si il reste des éléments à parcourir dans la liste
@@ -174,11 +187,23 @@ bool listIteHasNext(ptrListIte ite);
  * @brief Décale l'itérateur sur le prochain élément et renvoie sa valeur
  * 
  * @param[in] ite pointeur vers l'itérateur
- * @return prochain élément
+ * @return -1 si erreur, 0 sinon
  * @pre doit avoir un prochain élément 
  * @date 22/10/2023
  */
-TYPE listIteNext(ptrListIte ite);
+int listIteNext(ptrListIte ite);
+
+
+/**
+ * @brief Renvoie la valeur courrante
+ * 
+ * @param[in] ite pointeur vers l'itérateur
+ * @return élément courant
+ * @pre doit être sur un élément
+ * @date 22/10/2023
+ */
+TYPE ListIteValue(ptrListIte ite);
+
 
 /**
  * @brief Supprime l'élément courant
@@ -188,16 +213,15 @@ TYPE listIteNext(ptrListIte ite);
  * @pre nécessite appel de next avant chaque appel de remove
  * @date 22/10/2023
  */
-TYPE listIteRemove(ptrListIte ite);
+int listIteRemove(ptrListIte ite);
 
 /**
  * @brief Supprime l'itérateur et libère la mémoire
  * 
  * @param[in] ite pointeur vers l'itérateur
- * @return -1 si erreur, 0 sinon 
  * @date 22/10/2023
  */
-int deleteListIte(ptrListIte ite);
+void deleteListIte(ptrListIte ite);
 
 
 /*------------------------------------------------------------------*/
