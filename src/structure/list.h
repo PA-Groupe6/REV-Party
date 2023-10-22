@@ -34,6 +34,8 @@
 typedef struct s_list List;
 typedef List * ptrList;
 
+
+/* Type des valeurs dans la List */
 #define TYPE double
 
 
@@ -204,16 +206,6 @@ int listIteNext(ptrListIte ite);
  */
 TYPE ListIteValue(ptrListIte ite);
 
-
-/**
- * @brief Supprime l'élément courant
- * 
- * @param[in] ite pointeur vers l'itérateur
- * @return -1 si erreur, 0 sinon
- * @pre nécessite appel de next avant chaque appel de remove
- * @date 22/10/2023
- */
-int listIteRemove(ptrListIte ite);
 
 /**
  * @brief Supprime l'itérateur et libère la mémoire
