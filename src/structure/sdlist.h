@@ -9,32 +9,44 @@
 /*-----------------------------------------------------------------*/
 
 /**
-    \brief This library implement an pseudo-static list using static table.
-    It can only store Integer (int).
+ * @brief Cette librairie implémente une liste pseudo statique de type TYPE
+ *
+ * Implémente la liste sous forme d'un tableau statique et alloue
+ * de la mémoire dynamiquement lorsque qu'il est plein
+ *
+ * @note haute performance en lecture( O(1) ) mais faible en écriture ( O(n))
+ *
  */
+
 
 #ifndef __LIST__H__
 #define __LIST__H__
 #include <stdio.h>
 #include <stdbool.h>
 
-/* Opaque definition of type List */
+
+/*------------------------------------------------------------------*/
+/*                         STRUCTURE                                */
+/*------------------------------------------------------------------*/
+
+
+/* Définition opaque de la structure list */
 typedef struct s_list List;
 typedef List * ptrList;
 
 #define TYPE double
 
 
-/** \brief Create an empty list
-    \param[in] size allocated space for the list
-    \return adress of the new list, -1 if error
+/** \brief Crée une liste vide
+    \param[in] size Espace mémoire initial (en nombre d'éléments)
+    \return pointeur vers la liste, NULL si erreur
     \date  20/10/2023
 */
 ptrList createList(int size);
 
 
-/** \brief DElete the list
-    \param[in] l
+/** \brief Supprime la liste et libère la mémoire
+    \param[in] l liste à supprimer
     \date  20/10/2023
 */
 void deleteList(ptrList l);
@@ -66,6 +78,7 @@ ptrList listInsert(ptrList l, TYPE v, int i);
  * @param[in] l list
  * @return -1 si erreur, 0 sinon
  * @pre taille liste > 0
+ * @date 20/10/2023
  */
 int listPop(ptrList l);
 
@@ -102,9 +115,10 @@ unsigned int listSize(ptrList l);
  * @param new_size size of the new list
  * @pre: size >= old list size
  * @return pointer to the new list, null if error
+ * @date 20/10/2023
  */
 
-ptrList listCopy(ptrList oldList, int new_size);
+ptrList listCopy(ptrList old_list, int new_size);
 
 
 /**
@@ -114,6 +128,7 @@ ptrList listCopy(ptrList oldList, int new_size);
  * @param i position of the element to return
  * @pre: 0 <= i < list size
  * @return value 
+ * @date 20/10/2023
  */
 TYPE listGet(ptrList l, int i);
 
@@ -122,8 +137,72 @@ TYPE listGet(ptrList l, int i);
  * @brief display the list in the default output
  * 
  * @param l list to display
+ * @date 20/10/2023
  */
 void displayList(ptrList l);
+
+/*------------------------------------------------------------------*/
+/*                         ITERATEUR                                */
+/*------------------------------------------------------------------*/
+
+typedef struct s_list_ite ListIte;
+typedef struct s_list_ite* ptrListIte;
+
+#define FROM_BEGIN 0
+#define FROM_END 1
+
+/**
+ * @brief Crée un itérateur sur la liste passée en entrée
+ * 
+ * @param[in] l liste à parcourrir
+ * @param[in] dir sens de parcours de l'itérateur (FROM_BEGIN ou FROM_END)
+ * @return pointeur vers l'itérateur
+ * @date 22/10/2023
+ */
+ptrListIte createListIte(ptrList l, int dir);
+
+/**
+ * @brief Renvoie si il reste des éléments à parcourir dans la liste
+ * 
+ * @param[in] ite pointeur vers l'itérateur
+ * @return true si il reste des éléments, sinon false
+ * @date 22/10/2023
+ */
+bool listIteHasNext(ptrListIte ite);
+
+/**
+ * @brief Décale l'itérateur sur le prochain élément et renvoie sa valeur
+ * 
+ * @param[in] ite pointeur vers l'itérateur
+ * @return prochain élément
+ * @pre doit avoir un prochain élément 
+ * @date 22/10/2023
+ */
+TYPE listIteNext(ptrListIte ite);
+
+/**
+ * @brief Supprime l'élément courant
+ * 
+ * @param[in] ite pointeur vers l'itérateur
+ * @return -1 si erreur, 0 sinon
+ * @pre nécessite appel de next avant chaque appel de remove
+ * @date 22/10/2023
+ */
+TYPE listIteRemove(ptrListIte ite);
+
+/**
+ * @brief Supprime l'itérateur et libère la mémoire
+ * 
+ * @param[in] ite pointeur vers l'itérateur
+ * @return -1 si erreur, 0 sinon 
+ * @date 22/10/2023
+ */
+int deleteListIte(ptrListIte ite);
+
+
+/*------------------------------------------------------------------*/
+/*                              DEBUG                               */
+/*------------------------------------------------------------------*/
 
 #ifdef DEBUG
 
@@ -131,6 +210,7 @@ void displayList(ptrList l);
  * @brief display in the logger all the information about the list and the elements
  * 
  * @param l list to print in logger
+ * @date 20/10/2023
  */
 void printListLog(ptrList l);
 

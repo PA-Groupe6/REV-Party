@@ -16,7 +16,7 @@
 
 
 struct s_list {
-    unsigned int memorySize;
+    unsigned int memory_size;
     unsigned int size;
     TYPE *tab;
 };
@@ -26,7 +26,7 @@ struct s_list {
 ptrList createList(int size) {
     ptrList l = malloc(sizeof(List));
     if (l == NULL) exitl("sdlist.c", "createList", "erreur malloc", EXIT_FAILURE);
-    l->memorySize = size;
+    l->memory_size = size;
     l->size = 0;
     l->tab = malloc(sizeof(TYPE)*size);
     return l;
@@ -40,9 +40,9 @@ void deleteList(ptrList l) {
 ptrList listAdd(ptrList l, TYPE v) {
 
     /* agrandissement de la liste si pleine */
-    if(l->size == l->memorySize){ 
+    if(l->size == l->memory_size){ 
         /* création nouveau tableau */
-        TYPE *new_tab = malloc(sizeof(TYPE)*(l->memorySize + 32));
+        TYPE *new_tab = malloc(sizeof(TYPE)*(l->memory_size + 32));
 
         /* copie du tableau */
         for (int i = 0; i < l->size; i++) 
@@ -50,7 +50,7 @@ ptrList listAdd(ptrList l, TYPE v) {
 
         free(l->tab);
         l->tab = new_tab;
-        l->memorySize = l->memorySize + 32;
+        l->memory_size = l->memory_size + 32;
     }
 
     l->tab[l->size] = v;
@@ -65,9 +65,9 @@ ptrList listInsert(ptrList l, TYPE v, int i) {
         return NULL;
     }
     /* agrandissement de la liste si pleine */
-    if(l->size >= l->memorySize){ 
+    if(l->size >= l->memory_size){ 
         /* création nouveau tableau */
-        TYPE *new_tab = malloc(sizeof(TYPE)*(l->memorySize + 32));
+        TYPE *new_tab = malloc(sizeof(TYPE)*(l->memory_size + 32));
 
         /* copie du tableau */
         for (int i = 0; i < l->size; i++) 
@@ -75,7 +75,7 @@ ptrList listInsert(ptrList l, TYPE v, int i) {
 
         free(l->tab);
         l->tab = new_tab;
-        l->memorySize = l->memorySize + 32;
+        l->memory_size = l->memory_size + 32;
     }
     
     /* décale tous les éléments */
@@ -120,18 +120,18 @@ unsigned int listSize(ptrList l) {
 }
 
 
-ptrList listCopy(ptrList oldList, int new_size) {
-    if(new_size < oldList->size) {
+ptrList listCopy(ptrList old_list, int new_size) {
+    if(new_size < old_list->size) {
         warnl("sdlist.c", "listCopy", "invalid size for new list");
         return NULL;
     }
-    ptrList newList = createList(new_size);
+    ptrList new_list = createList(new_size);
 
-    newList->size = oldList->size;
-    for(int i = 0; i < oldList->size; i++)
-        newList->tab[i] = oldList->tab[i];
+    new_list->size = old_list->size;
+    for(int i = 0; i < old_list->size; i++)
+        new_list->tab[i] = old_list->tab[i];
 
-    return newList;
+    return new_list;
 }
 
 
@@ -156,10 +156,13 @@ void displayList(ptrList l) {
     }
 }
 
+
+#ifdef DEBUG
+
 void printListLog(ptrList l) {
     printf("\n<+>------------[ sdlist ]-----------<+>\n\n");
     printf("[sdlist] size = %d\n", l->size);
-    printf("[sdlist] memory size = %d\n", l->memorySize);
+    printf("[sdlist] memory size = %d\n", l->memory_size);
     if(l->size == 0) printf("[sdlist] list = ");
     else {
         printf("[sdlist] list = %f", l->tab[0]);
@@ -169,6 +172,7 @@ void printListLog(ptrList l) {
     printf("\n\n<->---------------------------------<->\n");
 }
 
+#endif
 
 
 
