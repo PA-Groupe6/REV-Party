@@ -35,5 +35,9 @@ typedef struct commande
 /************
  * fonction *
 *************/
-
+/** \brief Crée une structure commande
+    \param[in] argv Commande de lancement du programme
+    \return une structure commande
+    \date  23/10/2023
+*/
 commande intreprete(char* argv[]);
