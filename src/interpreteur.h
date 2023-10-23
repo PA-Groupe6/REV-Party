@@ -30,7 +30,7 @@ typedef struct commande
 ********************/
 
 #define BALLOT 9
-#define MATRICE_DUEL 1000000000000
+#define MATRICE_DUEL 10
 
 /************
  * fonction *
