@@ -1,10 +1,11 @@
 CC=gcc
-CFLAGS=-Wextra -Wall -Werror -pedantic
+CFLAGS=-Wextra -Wall -Werror -pedantic -std=c99
 
 BINDIR=bin
 OBJDIR=obj
 SRCDIR=src
 
+CHECK=check
 EXEC=rev
 HDR= $(shell find $(SRCDIR) -name "*.h")
 SRC= $(shell find $(SRCDIR) -name "*.c")
@@ -56,6 +57,10 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.c
 	$(CC) -c $< -o $@ $(CFLAGS); \
 	fi
 
+$(CHECK): $(OBJDIR)/utils/sha256/sha256.o $(OBJDIR)/utils/sha256/sha256_utils.o
+	@$(MAKE) dirs
+	@$(CC) $(SRCDIR)/check.c -o $(BINDIR)/$(CHECK) $^ $(LDFLAGS)
+
 # s'assure que les dossier récepteurs sont crées
 dirs:
 	@if [ ! -d "$(BINDIR)" ]; then mkdir $(BINDIR); fi
@@ -102,14 +107,14 @@ tlist: $(OBJDIR)/structure/list.o $(OBJDIR)/logger.o
 tmatrix: $(OBJDIR)/structure/matrix.o $(OBJDIR)/logger.o
 	@$(call run_test,matrix,structure/,$^)
 
-tsha256: $(OBJDIR)/utils/sha256/sha256.o $(OBJDIR)/logger.o
-	@$(call run_test,sha256,utils/sha256/,$^)
-
-tutils_sd: $(OBJDIR)/utils/utils_sd.o $(OBJDIR)/logger.o
-	@$(call run_test,utils_sd,utils/,$^)
-
 tstrlist: $(OBJDIR)/structure/strlist.o $(OBJDIR)/logger.o
 	@$(call run_test,strlist,structure/,$^)
+
+tsha256: $(OBJDIR)/utils/sha256/sha256.o
+	@$(call run_test,sha256,utils/sha256/,$^)
+
+tutils_sd: $(OBJDIR)/utils/utils_sd.o
+	@$(call run_test,utils_sd,utils/,$^)
 
 ################################
 #             MISC             #
