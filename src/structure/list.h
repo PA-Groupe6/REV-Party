@@ -38,10 +38,10 @@ typedef List * ptrList;
 
 /** \brief Crée une liste vide
     \param[in] size Espace mémoire initial (en nombre d'éléments)
-    \return pointeur vers la liste, NULL si erreur
+    \return pointeur vers la liste, NULL si erreur+
     \date  20/10/2023
 */
-ptrList createList(int size);
+ptrList createList(unsigned int size);
 
 
 /** \brief Supprime la liste et libère la mémoire
@@ -145,8 +145,8 @@ void displayList(ptrList l);
 /*                         ITERATEUR                                */
 /*------------------------------------------------------------------*/
 
-typedef struct s_list_ite ListIte;
-typedef struct s_list_ite* ptrListIte;
+typedef struct s_listIte ListIte;
+typedef struct s_listIte* ptrListIte;
 
 /* l'itérateur commence au début de la liste */
 #define FROM_BEGIN 1

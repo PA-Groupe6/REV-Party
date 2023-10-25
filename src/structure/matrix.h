@@ -67,7 +67,7 @@ ptrMatrix matrixInsert(ptrMatrix m, int l, int c, int v);
 
 /** \brief Supprime la valeur en position (l,c) et la remplace par la valeur default_value
     \param[in] m pointeur vers la matrice
-    \param[in] l Ligne de la supprossion (l,c)
+    \param[in] l Ligne de la suppression (l,c)
     \param[in] c Colonne de la suppression(l,c)
     \return -1 if error, 0 else
     \pre (0,0) <= (l,c) < (nb_lignes, nb_colonnes)
@@ -106,8 +106,8 @@ unsigned int* matrixShape(ptrMatrix m);
 /*------------------------------------------------------------------*/
 
 /* Définition opaque de la structure MatrixIte */
-typedef struct s_matrix_ite MatrixIte;
-typedef struct s_matrix_ite* ptrMatrixIte;
+typedef struct s_matrixIte MatrixIte;
+typedef struct s_matrixIte* ptrMatrixIte;
 
 
 /**
@@ -117,7 +117,7 @@ typedef struct s_matrix_ite* ptrMatrixIte;
  * @param[in] c Colonne courante
  * @param[in] buff pointeur vers un buffer pouvant stocker un résultat
  * @return nouvelle valeur de la case
- *  
+ * @date 25/10/2023
  */
 typedef int (*fun_ite) (int v, int l, int c, void* buff);
 
@@ -248,6 +248,15 @@ int* matrixMax(ptrMatrix m, int l, int c);
 int* matrixMin(ptrMatrix m, int l, int c);
 
 
+/**
+ * @brief Définie le type des fonctions prise en paramêtre du filter
+ * 
+ * @param[in] v Valeur de la case courante
+ * @param[in] l Ligne courante
+ * @param[in] c Colonne courante
+ * @return true si l'élément est conservé, sinon false
+ * @date 25/10/2023
+ */
 typedef bool (*fun_filter)(int v, int l, int c);
 
 /**
