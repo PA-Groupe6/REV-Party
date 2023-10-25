@@ -15,7 +15,7 @@ typedef enum module_e {
  * @brief fait référence au type de fichier csv renseigné par l'utilisateur
  */
 typedef enum file_type_e {
-    BALLOT, DUEL
+    BALE, DUEL
 } FileType;
 
 /** @date 25 Octobre 2023
