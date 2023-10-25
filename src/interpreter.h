@@ -15,7 +15,7 @@ typedef enum module_e {
  * @brief fait référence au type de fichier csv renseigné par l'utilisateur
  */
 typedef enum file_type_e {
-    BALLOT, MATRICE_DUEL
+    BALLOT, DUEL
 } FileType;
 
 /** @date 25 Octobre 2023
@@ -37,4 +37,4 @@ typedef struct commande_t {
     \return une structure commande
     \date  23/10/2023
 */
-Commande intreprete(char* argv[]);
+Commande intreprete(int argc,char* argv[]);
