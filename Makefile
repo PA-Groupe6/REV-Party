@@ -74,14 +74,14 @@ TSTDIR=test
 
 # procédure de test générique
 run_test= if [ -f $(TSTDIR)/$(2)test_$(1).c ]; then \
-		$(CC) $(TSTDIR)/$(2)test_$(1).c $(3) -o $(TSTDIR)/$(2)t$(1).c $(CFLAGS); \
+		$(CC) $(TSTDIR)/$(2)test_$(1).c $(3) -o $(TSTDIR)/$(2)t$(1) $(CFLAGS); \
 		echo "$(EXECC)Executing tests on $(TSTC)$(1).c$(RSTC)"; \
-		if $(TSTDIR)/$(2)t$(1).c; then \
-			echo "$(BOLD)$(SUCCC)|>-------------------------------= Tests Passed =- $(RSTC)\n"; \
+		if $(TSTDIR)/$(2)t$(1); then \
+			echo "\n$(BOLD)$(SUCCC)|>-------------------------------= Tests Passed =- $(RSTC)\n"; \
 		else \
-			echo "$(BOLD)$(FAILC)|>-------------------------------= Tests Failed =- $(RSTC)\n"; \
+			echo "\n$(BOLD)$(FAILC)|>-------------------------------= Tests Failed =- (xcode: $$?) $(RSTC)\n"; \
 		fi; \
-		rm $(TSTDIR)/$(2)t$(1).c; \
+		rm $(TSTDIR)/$(2)t$(1); \
 	else \
 		echo "$(BOLD)$(ERRC)fatal error$(RSTC): $(TSTDIR)/$(2)test_$(1).c doesn't exist$(RSTC)"; \
 	fi; \
@@ -89,31 +89,34 @@ run_test= if [ -f $(TSTDIR)/$(2)test_$(1).c ]; then \
 
 # TODO règles modules
 
-tlogger: $(OBJDIR)/logger.o
+ $(OBJDIR)/test_utils.o:
+	@$(CC) -c $(TSTDIR)/test_utils.c -o $@ $(CFLAGS)
+
+tlogger: $(OBJDIR)/logger.o $(OBJDIR)/test_utils.o
 	@$(call run_test,logger,,$^)
 
-tbale: $(OBJDIR)/structure/bale.o $(OBJDIR)/logger.o
+tbale: $(OBJDIR)/structure/bale.o $(OBJDIR)/logger.o $(OBJDIR)/test_utils.o
 	@$(call run_test,bale,structure/,$^)
 
-tgenericlinkedlist: $(OBJDIR)/structure/genericlinkedlist.o $(OBJDIR)/logger.o
+tgenericlinkedlist: $(OBJDIR)/structure/genericlinkedlist.o $(OBJDIR)/logger.o $(OBJDIR)/test_utils.o
 	@$(call run_test,genericlinkedlist,structure/,$^)
 
-tgraph: $(OBJDIR)/structure/graph.o $(OBJDIR)/logger.o
+tgraph: $(OBJDIR)/structure/graph.o $(OBJDIR)/logger.o $(OBJDIR)/test_utils.o
 	@$(call run_test,graph,structure/,$^)
 
-tlist: $(OBJDIR)/structure/list.o $(OBJDIR)/logger.o
+tlist: $(OBJDIR)/structure/list.o $(OBJDIR)/logger.o $(OBJDIR)/test_utils.o
 	@$(call run_test,list,structure/,$^)
 
-tmatrix: $(OBJDIR)/structure/matrix.o $(OBJDIR)/logger.o
+tmatrix: $(OBJDIR)/structure/matrix.o $(OBJDIR)/logger.o $(OBJDIR)/test_utils.o
 	@$(call run_test,matrix,structure/,$^)
 
-tstrlist: $(OBJDIR)/structure/strlist.o $(OBJDIR)/logger.o
+tstrlist: $(OBJDIR)/structure/strlist.o $(OBJDIR)/logger.o $(OBJDIR)/test_utils.o
 	@$(call run_test,strlist,structure/,$^)
 
-tsha256: $(OBJDIR)/utils/sha256/sha256.o
+tsha256: $(OBJDIR)/utils/sha256/sha256.o $(OBJDIR)/test_utils.o
 	@$(call run_test,sha256,utils/sha256/,$^)
 
-tutils_sd: $(OBJDIR)/utils/utils_sd.o
+tutils_sd: $(OBJDIR)/utils/utils_sd.o $(OBJDIR)/test_utils.o
 	@$(call run_test,utils_sd,utils/,$^)
 
 ################################
