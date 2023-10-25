@@ -1,15 +1,15 @@
 /*-----------------------------------------------------------------*/
 /**
     Projet REV party - Structur list header
-    \file sdlist.h
+    \file list.h
     \author : Ugo VALLAT
-    \date creation date : 20/10/2023
+    \date Date de création : 20/10/2023
  
  */
 /*-----------------------------------------------------------------*/
 
 /**
- * @brief Cette librairie implémente une liste pseudo statique de type TYPE
+ * @brief Cette librairie implémente une liste pseudo statique d'entiers
  *
  * Implémente la liste sous forme d'un tableau statique et alloue
  * de la mémoire dynamiquement lorsque qu'il est plein
@@ -35,9 +35,6 @@ typedef struct s_list List;
 typedef List * ptrList;
 
 
-/* Type des valeurs dans la List */
-#define TYPE double
-
 
 /** \brief Crée une liste vide
     \param[in] size Espace mémoire initial (en nombre d'éléments)
@@ -60,7 +57,7 @@ void deleteList(ptrList l);
     \return new adress of the list, null if error
     \date  20/10/2023
 */
-ptrList listAdd(ptrList l, TYPE v);
+ptrList listAdd(ptrList l, int v);
 
 
 /** \brief Insert a value in the list to the position require
@@ -71,7 +68,7 @@ ptrList listAdd(ptrList l, TYPE v);
     \pre: 0 <= i <= listSize
     \date  20/10/2023
 */
-ptrList listInsert(ptrList l, TYPE v, int i);
+ptrList listInsert(ptrList l, int v, int i);
 
 
 /**
@@ -96,6 +93,18 @@ int listRemove(ptrList l, int i);
 
 
 /**
+ * @brief Return the value at position i
+ * 
+ * @param[in] l list
+ * @param[in] i position of the element to return
+ * @pre: 0 <= i < list size
+ * @return value 
+ * @date 20/10/2023
+ */
+int listGet(ptrList l, int i);
+
+
+/**
  * \brief Return if the list is empty
  * \param[in] l 
  
@@ -111,34 +120,23 @@ bool listEmpty(ptrList l);
 unsigned int listSize(ptrList l);
 
 /**
- * @brief Create new list and copy all the data from old list into new list
+ * @brief Copie une liste source dans la liste destination de taille égale ou supérieure
  * 
- * @param oldList list to copy
- * @param new_size size of the new list
- * @pre: size >= old list size
- * @return pointer to the new list, null if error
- * @date 20/10/2023
+ * @param[in] list_src liste source à copier
+ * @param[in] list_dest liste destination
+ * @return  -1 si erreur, 0 sinon
+ * @pre size_src <= size_dest
+ * @date 25/10/2023
  */
 
-ptrList listCopy(ptrList old_list, int new_size);
+int listCopy(ptrList list_src, ptrList list_dest);
 
-
-/**
- * @brief Return the value at position i
- * 
- * @param l list
- * @param i position of the element to return
- * @pre: 0 <= i < list size
- * @return value 
- * @date 20/10/2023
- */
-TYPE listGet(ptrList l, int i);
 
 
 /**
  * @brief display the list in the default output
  * 
- * @param l list to display
+ * @param[in] l list to display
  * @date 20/10/2023
  */
 void displayList(ptrList l);
@@ -204,7 +202,7 @@ int listIteNext(ptrListIte ite);
  * @pre doit être sur un élément
  * @date 22/10/2023
  */
-TYPE ListIteValue(ptrListIte ite);
+int listIteGetValue(ptrListIte ite);
 
 
 /**
@@ -225,7 +223,7 @@ void deleteListIte(ptrListIte ite);
 /**
  * @brief display in the logger all the information about the list and the elements
  * 
- * @param l list to print in logger
+ * @param[in] l list to print in logger
  * @date 20/10/2023
  */
 void printListLog(ptrList l);

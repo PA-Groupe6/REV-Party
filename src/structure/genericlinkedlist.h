@@ -1,9 +1,9 @@
 /*-----------------------------------------------------------------*/
 /**
     Projet REV party - Structure Lkliste chaînée générique
-    \file sdgenlkLklist.h
+    \file genericlinkedlist.h
     \author : Ugo VALLAT
-    \date creation date : 22/10/2023
+    \date Date de création : 22/10/2023
  
  */
 /*-----------------------------------------------------------------*/
@@ -108,16 +108,17 @@ bool LklistEmpty(ptrLklist l);
 
 unsigned int LklistSize(ptrLklist l);
 
+
 /**
- * @brief Crée une copie de la liste
+ * @brief Copie la liste source dans la liste destination
  * 
- * @param old_Lklist Lklist à copier
- * @pre: size >= old Lklist size
- * @return adresse de la nouvelle Lklist, null si erreur
+ * @param[in] list_src liste source à copier
+ * @param[in] list_dest liste destination
+ * @return  -1 si erreur, 0 sinon
  * @date 22/10/2023
  */
 
-ptrLklist LklistCopy(ptrLklist old_Lklist);
+int listCopy(ptrLklist list_src, ptrLklist list_dest);
 
 
 /**
@@ -203,7 +204,7 @@ int LklistIteNext(ptrLklistIte ite);
  * @pre doit être sur un élément
  * @date 22/10/2023
  */
-void * LklistIteValue(ptrLklistIte ite);
+void * LklistIteGetValue(ptrLklistIte ite);
 
 
 /**
