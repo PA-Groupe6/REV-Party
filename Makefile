@@ -95,8 +95,14 @@ run_test= if [ -f $(TSTDIR)/$(2)test_$(1).c ]; then \
 tlogger: $(OBJDIR)/logger.o $(OBJDIR)/test_utils.o
 	@$(call run_test,logger,,$^)
 
+tinterpreter: $(OBJDIR)/logger.o $(OBJDIR)/test_utils.o
+	@$(call run_test,interpreter,,$^)
+
 tbale: $(OBJDIR)/structure/bale.o $(OBJDIR)/logger.o $(OBJDIR)/test_utils.o
 	@$(call run_test,bale,structure/,$^)
+
+tduel: $(OBJDIR)/structure/duel.o $(OBJDIR)/logger.o $(OBJDIR)/test_utils.o
+	@$(call run_test,duel,structure/,$^)
 
 tgenericlinkedlist: $(OBJDIR)/structure/genericlinkedlist.o $(OBJDIR)/logger.o $(OBJDIR)/test_utils.o
 	@$(call run_test,genericlinkedlist,structure/,$^)
@@ -110,11 +116,11 @@ tlist: $(OBJDIR)/structure/list.o $(OBJDIR)/logger.o $(OBJDIR)/test_utils.o
 tmatrix: $(OBJDIR)/structure/matrix.o $(OBJDIR)/logger.o $(OBJDIR)/test_utils.o
 	@$(call run_test,matrix,structure/,$^)
 
-tstrlist: $(OBJDIR)/structure/strlist.o $(OBJDIR)/logger.o $(OBJDIR)/test_utils.o
-	@$(call run_test,strlist,structure/,$^)
-
 tsha256: $(OBJDIR)/utils/sha256/sha256.o $(OBJDIR)/test_utils.o
 	@$(call run_test,sha256,utils/sha256/,$^)
+
+tcsv_reader: $(OBJDIR)/utils/csv_reader.o $(OBJDIR)/test_utils.o
+	@$(call run_test,csv_reader,utils/,$^)
 
 tutils_sd: $(OBJDIR)/utils/utils_sd.o $(OBJDIR)/test_utils.o
 	@$(call run_test,utils_sd,utils/,$^)
