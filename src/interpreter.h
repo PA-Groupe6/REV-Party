@@ -1,40 +1,47 @@
-/** \file interpreter.h
- * \brief header de l'interpreteur de commande
- * \author Ludwig Corentin
+/** 
+ * @file interpreter.h
+ * @author LUDWIG Corentin
+ * @brief Header de l'interpreteur de commande
 */
 
-/** @date 25 Octobre 2023
- * @brief fait référence à un module de calcul de vaiqueur
+/**
+ * @date 27/10/2023
+ * @brief Modules de calcul du vaiqueur
  */
-typedef enum module_e {
+typedef enum e_module {
     UNI1, UNI2, MINIMAX, RANGEMENT, SCHULZE, JUGEMENT_MAJORITAIRE, ALL
 } Module;
 
 
-/** @date 25 Octobre 2023
- * @brief fait référence au type de fichier csv renseigné par l'utilisateur
+/**
+ * @date 27/10/2023
+ * @brief Types de fichier csv pouvant être renseigné par l'utilisateur
  */
-typedef enum file_type_e {
+typedef enum e_file_type {
     BALE, DUEL
 } FileType;
 
-/** @date 25 Octobre 2023
- * @brief structure contenant toutes les informations nécéssaire au calcul du vainqueur
+/**
+ * @date 27/10/2023
+ * @brief Contient toutes les informations nécéssaires au calcul du vainqueur
  */
-typedef struct commande_t {
-    Module module;         /*module appeler, cf voir dessous*/
-    FileType type_fichier;   /*type du fichier de vote, cf voir dessous*/
-    char *fichier;      /*nom du fichier de vote*/
-    char *log;          /*potentiel nom du fichier de log*/
-} Commande;
+typedef struct command_t {
+    Module module;        /* Module appelé, cf enum Module */
+    FileType file_type;   /* Type du fichier de vote, cf enum FileType */
+    char *file_name;      /* Nom du fichier de vote */
+    char *log_file;       /* Potentiel nom du fichier de log */
+} Command;
 
 /************
 * fonctions *
 ************/
 
-/** \brief Crée une structure commande
-    \param[in] argv Commande de lancement du programme
-    \return une structure commande
-    \date  23/10/2023
+/**
+ * @date 27/10/2023
+ * @brief Interprète les arguments fournis
+ * 
+ * @param[in] argv Commande de lancement du programme
+ * 
+ * @return Informations extraites dans une structure @ref Command
 */
-Commande intreprete(int argc,char* argv[]);
+Command intreprete(int argc,char* argv[]);
