@@ -3,6 +3,8 @@
  * @author LUDWIG Corentin
  * @brief Header de l'interpreteur de commande
 */
+#ifndef __INTERPRETER__H__
+#define __INTERPRETER__H__
 
 /**
  * @date 27/10/2023
@@ -45,3 +47,5 @@ typedef struct command_t {
  * @return Informations extraites dans une structure @ref Command
 */
 Command intreprete(int argc,char* argv[]);
+
+#endif

@@ -4,8 +4,8 @@
  * @brief Header de l'afficheur
  * @note La sortie par défaut du logger est stdout
 */
-#ifndef __LOGGER_H__
-#define __LOGGER_H__
+#ifndef __LOGGER__H__
+#define __LOGGER__H__
 #include <stdio.h>
 
 /**
