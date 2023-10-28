@@ -24,7 +24,7 @@ void addLineStringBuilder(StringBuilder* string_builder, char* line) {
 }
 
 void printStringBuilder(StringBuilder* string_builder) {
-    printf("%s\n[>>>]: here\n", string_builder->output);
+    printf("%s\n%s[>>>]: here%s\n", string_builder->output, KOC, RSTC);
 }
 
 #define STATUS_LENGTH 67
