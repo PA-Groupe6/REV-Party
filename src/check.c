@@ -1,46 +1,33 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
 #include "utils/sha256/sha256_utils.h"
 
 #define KEY_MAX_LENGTH 64
 
-// free the return value
-BYTE* hexToBin(char* hex) {
-    size_t sizeb = sizeof(BYTE); /* taille de la structure réceptrice */
-    size_t hex_len = strlen(hex); 
-    size_t data_len = hex_len/2;
-    if (hex_len%2!=0) data_len+=1;
+#define LINE_MAX_LENGTH 256
 
-    BYTE* data = malloc(data_len*sizeb + 1);
+/* Réinitialise la couleur de l'affichage */
+#define RSTC "\033[0m"
 
-    /* construction buffer pour appel strtoul */
-    char buffer[sizeb+1];
-    buffer[sizeb] = '\0';
+#define RED "\033[38;5;124m"
 
-    int offset;
+#define YELLOW "\033[38;5;184m"
 
-    for (int i = 0; i<data_len; i++) {
-        offset = i * (sizeb * 2);
-        for (int j = 0; j<(sizeb * 2); j++) {
-            if (offset+j<hex_len) {
-                buffer[j] = hex[offset+j];
-            } else buffer[j] = '\0'; /* rempli le buffer de \0 */
-        }
-        data[i] = strtoul(buffer, NULL, 16);
-    }
+#define GREEN "\033[38;5;40m"
 
-    data[data_len] = 0;
-    return data;
-}
 
-// free the return value
+
+/*
+    Calcul le hash à partir de nom et de la clé
+*/
 char* computeHash(char* name, char* key) {
     size_t name_len = strlen(name);
     size_t key_len = strlen(key);
     size_t total_len = name_len + key_len + 1; /* +1 pour caractère \0 */
 
-    char* to_hash = (char*)malloc(total_len);
+    char* to_hash = (char*)malloc(sizeof(char)*total_len);
     if (to_hash == NULL) {
         perror("Memory allocation");
         exit(EXIT_FAILURE);
@@ -50,6 +37,7 @@ char* computeHash(char* name, char* key) {
     strcpy(to_hash, name);
     strcat(to_hash, key);
 
+    /* calcul du hash */
     char* hash_result = malloc((SHA256_BLOCK_SIZE*2 + 1) * sizeof(char));
     sha256ofString((BYTE*) to_hash, hash_result);
 
@@ -57,26 +45,41 @@ char* computeHash(char* name, char* key) {
     return hash_result;
 }
 
-#define LINE_MAX_LENGTH 256
 
-// récupère les noms des colonnes d'un fichier ouvert csv
+/* 
+    Renvoie une chaine de caractère contenant les noms des colonnes
+*/
 char* getColumnLabel(FILE* file) {
-    char* line = malloc(LINE_MAX_LENGTH*sizeof(char)); /* Buffer pour stocker la ligne */
-    fgets(line, LINE_MAX_LENGTH, file);
+    /* Buffer pour stocker la ligne */
+    char* line = malloc(LINE_MAX_LENGTH*sizeof(char));
+
+    /* Récupération de la première ligne */
+    if(fgets(line, LINE_MAX_LENGTH, file) == NULL) {
+        fprintf(stderr," <getColumnLabel> Echec lecture colonnes");
+        exit(EXIT_FAILURE);
+    }
+
+    /* enlever le '\n' à la fin de la ligne */
     int line_len = strlen(line);
     line[line_len-1] = '\0';
     return line;
 }
 
+
+/* 
+    Cheche le hash dans le csv 
+*/
 char* search(char* hash, FILE* file) {
     int found = 0;
     char* line = malloc(LINE_MAX_LENGTH*sizeof(char)); /* Buffer pour stocker la ligne */
 
+    /* boucle de recherche */
     while (!found && (fgets(line, LINE_MAX_LENGTH, file) != NULL)) {
         if (strstr(line, hash)) {
             found = 1;
         }
     }
+    line[strlen(line)-1] = '\0';
 
     if (found == 0) {
         free(line);
@@ -84,25 +87,35 @@ char* search(char* hash, FILE* file) {
     } return line;
 }
 
+
+/* 
+Sépare chaques éléments d'une chaîne de caractère séparés par le spliter
+*/
 unsigned int splitLine(char*** desti, char* line, char* spliter) {
     unsigned int size = 0;
+    unsigned int memory_size = 0;
     char* token;
     char ** dest = NULL;
+
     /* découpage en tokens */
     token = strtok(line, spliter);
     
     /* récupération des tokens */
     while(token != NULL) {
-        size++;
         /* redimensionnement du tableau */
-        dest = (char**)realloc(dest, size*sizeof(char*));
+        if(memory_size <= size) {
+            memory_size += 5;
+            dest = (char**)realloc(dest, sizeof(char*)*memory_size);
+        }
+        
 
         /* ajout du token dans le tableau */
-        dest[size-1] = (char*)malloc(strlen(token) + 1);
-        strcpy(dest[size-1], token);
+        dest[size] = (char*)malloc(strlen(token) + 1);
+        strcpy(dest[size], token);
 
         /* récupération du prochian token */
         token = strtok(NULL, spliter);
+        size++;
     }
 
     /* renvoie des données */
@@ -110,33 +123,38 @@ unsigned int splitLine(char*** desti, char* line, char* spliter) {
     return size;
 }
 
+
+/*
+    Affiche le vote de l'utilisateur dans la console
+*/
 void displayVote(char* name, char** vote, char** labels, unsigned int nb_columns) {
-    printf("\n <+>--- Bonjour %s, votre vote était :\n\n", name);
+    printf("\n%s<+>%s--- Bonjour%s %s %s, votre vote était :\n %s|%s\n",YELLOW, RSTC, RED, name, RSTC, YELLOW, RSTC);
     for (int i = 0; i < nb_columns; i++) {
-        printf("%-35s -> %5s\n", labels[i], vote[i]);
+        printf(" %s|%s %-35s %s->%s %5s\n", YELLOW, RSTC, labels[i], GREEN, RSTC, vote[i]);
     }
-    printf("\n <+>--- Bonne journée ---<+>\n\n");
+   printf(" %s|\n<+>%s--- Bonne journée ---%s<+>%s\n\n", YELLOW, RSTC, YELLOW, RSTC);
+        
 }
 
+
+
 int main(int argc, char* argv[]) {
+    /* Vérification des arguments */
     if (argc != 3) {
-        fprintf(stderr, "Usage: %s <your_name> <vote_file_path>\n", argv[0]);
+        fprintf(stderr, "Usage: %s <\"FIRST_NAME Last_name\"> <vote_file_path>\n", argv[0]);
         exit(EXIT_FAILURE);
     }
 
     /* récupération de la clé */
     char key[KEY_MAX_LENGTH];
-    printf("Veuillez rentrer votre clé privée de vote:\n");
+    printf("\n\n%s<+>%s Veuillez rentrer votre clé privée de vote:\n%s |\n<+>%s >> %s",YELLOW,RSTC, YELLOW, GREEN, RSTC);
     scanf("%s", key);
 
-    /* convertion de la clé en binaire */
-    BYTE* bin_key = hexToBin(key);
 
     /* calcul du hash */
-    char* hash = computeHash(argv[1], bin_key);
+    char* hash = computeHash(argv[1], key);
 
-    free(bin_key);
-
+    /* ouverture du fichier */
     FILE* file = fopen(argv[2], "r");
     if (!file) {
         perror("Error opening file");
@@ -147,10 +165,9 @@ int main(int argc, char* argv[]) {
     char* str_labels = getColumnLabel(file);
 
     /* Récupération de la ligne du votant */
-    char* str_result = search("Hash", file);
+    char* str_result = search(hash, file);
 
     free(hash);
-
     fclose(file);
 
     if (str_result == NULL) {
@@ -178,9 +195,9 @@ int main(int argc, char* argv[]) {
     /* affichage du résultat */
     displayVote(argv[1], split_result, split_labels, nb_column_result);
 
-    for (int i = 0; split_labels[i] != NULL; i++) free(split_labels[i]);
+    for (int i = 0; i < nb_column_labels ; i++) free(split_labels[i]);
     free(split_labels);
-    for (int i = 0; split_result[i] != NULL; i++) free(split_result[i]);
+    for (int i = 0; i < nb_column_labels; i++) free(split_result[i]);
     free(split_result);
 
     return EXIT_SUCCESS;
