@@ -47,7 +47,7 @@ all: dirs $(EXEC)
 
 # compile l'exécutable dans bin/
 $(EXEC): $(OBJ)
-	@$(CC) $(SRCDIR)/main.c -o $(BINDIR)/$(EXEC) $^ $(LDFLAGS)
+	@$(CC) $(SRCDIR)/main.c -o $(BINDIR)/$(EXEC) $^ $(CFLAGS)
 
 # compile les dépendences dans obj/
 $(OBJDIR)/%.o: $(SRCDIR)/%.c
@@ -59,7 +59,7 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.c
 
 $(CHECK): $(OBJDIR)/utils/sha256/sha256.o $(OBJDIR)/utils/sha256/sha256_utils.o
 	@$(MAKE) dirs
-	@$(CC) $(SRCDIR)/check.c -o $(BINDIR)/$(CHECK) $^ $(LDFLAGS)
+	@$(CC) $(SRCDIR)/$(CHECK).c $^ -o $(BINDIR)/$(CHECK) $(CFLAGS)
 
 # s'assure que les dossier récepteurs sont crées
 dirs:

@@ -144,11 +144,10 @@ unsigned int splitLine(char*** desti, char* line, char* spliter) {
 */
 void displayVote(char* name, char** vote, char** labels, unsigned int nb_columns) {
     printf("\n%s<+>%s--- Bonjour%s %s %s, votre vote était :\n %s|%s\n",YELLOW, RSTC, RED, name, RSTC, YELLOW, RSTC);
-    for (int i = 0; i < nb_columns; i++) {
+    for (unsigned int i = 0; i < nb_columns; i++) {
         printf(" %s|%s %-35s %s->%s %5s\n", YELLOW, RSTC, labels[i], GREEN, RSTC, vote[i]);
     }
    printf(" %s|\n<+>%s--- Bonne journée ---%s<+>%s\n\n", YELLOW, RSTC, YELLOW, RSTC);
-        
 }
 
 
