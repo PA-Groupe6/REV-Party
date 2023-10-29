@@ -1,14 +1,8 @@
-/*-----------------------------------------------------------------*/
 /**
-    Projet REV party - Structure Matrice header
  * @file matrix.h
  * @author VALLAT Ugo
  * @date  29/10/2023
- 
- */
-/*-----------------------------------------------------------------*/
-
-/**
+ *
  * @brief Cette librairie implémente implémente une matrice d'entiers
  *
  * @note Matrice de taille fixe pour garrantir un accès en lecture et

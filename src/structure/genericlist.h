@@ -1,12 +1,15 @@
+
 /**
- * @file list.h
+ * @file genericlist.h
  * @author VALLAT Ugo 
  * @date 29/10/2023
  *
- * @brief Cette librairie implémente une liste pseudo statique d'entiers
+ * @brief Cette librairie implémente une liste générique pseudo statique d'entiers
  *
  * Implémente la liste sous forme d'un tableau statique et alloue
  * de la mémoire dynamiquement lorsque qu'il est plein
+ *
+ * La liste ne contient que des pointeur génériques vers la donnée (void*)
  *
  * @note haute performance en lecture( O(1) ) mais faible en écriture ( O(n))
  *
@@ -15,21 +18,21 @@
  */
 
 
-#ifndef __LIST_H__
-#define __LIST_H__
+#ifndef __GENLIST_H__
+#define __GENLIST_H__
 #include <stdio.h>
 #include <stdbool.h>
 #include <errno.h>
 
 
 /*------------------------------------------------------------------*/
-/*                        STRUCTURE LIST                            */
+/*                     STRUCTURE LIST GENERIC                       */
 /*------------------------------------------------------------------*/
 
 
 /* Définition opaque de la structure list */
-typedef struct s_list List;
-typedef List * ptrList;
+typedef struct s_gen_list GenList;
+typedef GenList * ptrGenList;
 
 
 
@@ -42,17 +45,17 @@ typedef List * ptrList;
  *
  * @return pointeur vers la liste, NULL si erreur
 */
-List* createList(unsigned int size);
+GenList* createList(unsigned int size);
 
 
 /** 
  * @author VALLAT ugo
  * @date  29/10/2023
- * @brief Supprime la liste et libère la mémoire
+ * @brief Supprime la liste mais ne supprime pas la donées pointée
  *
  * @param[in] l liste à supprimer
 */
-void deleteList(ptrList* l);
+void deleteList(ptrGenList* l);
 
 
 /** 
@@ -65,7 +68,7 @@ void deleteList(ptrList* l);
  *
  * @return nouvelle adresse de la liste, NULL si erreur
 */
-List* listAdd(List* l, int v);
+GenList* listAdd(GenList* l, void* v);
 
 
 /** 
@@ -81,7 +84,7 @@ List* listAdd(List* l, int v);
  *
  * @return nouvelle adresse de la liste, NULL si erreur
 */
-List* listInsert(List* l, int v, unsigned int i);
+GenList* listInsert(GenList* l, void* v, unsigned int i);
 
 
 /**
@@ -95,7 +98,7 @@ List* listInsert(List* l, int v, unsigned int i);
  *
  * @return -1 si erreur, 0 sinon
 **/
-int listPop(List* l);
+int listPop(GenList* l);
 
 
 /** 
@@ -110,7 +113,7 @@ int listPop(List* l);
  *
  * @return -1 si erreur, 0 sinon
 */
-int listRemove(List* l, unsigned int i);
+int listRemove(GenList* l, unsigned int i);
 
 
 /**
@@ -123,9 +126,9 @@ int listRemove(List* l, unsigned int i);
  *
  * @pre i < list size
  *
- * @return Valeur lue, -1 si erreur
+ * @return Valeur lue, NULL si erreur
  **/
-int listGet(List* l, unsigned int i);
+void* listGet(GenList* l, unsigned int i);
 
 
 /**
@@ -137,7 +140,7 @@ int listGet(List* l, unsigned int i);
  * @param[in] l Pointeur vers la liste
  * @return true si vide, false sinon
  */
-bool listEmpty(List* l);
+bool listEmpty(GenList* l);
 
 /**
  * @author VALLAT ugo
@@ -149,7 +152,7 @@ bool listEmpty(List* l);
  *
  */
 
-unsigned int listSize(List* l);
+unsigned int listSize(GenList* l);
 
 /**
  * @author VALLAT ugo
@@ -165,7 +168,7 @@ unsigned int listSize(List* l);
  *
  */
 
-int listCopy(List* list_src, List* list_dest);
+int listCopy(GenList* list_src, GenList* list_dest);
 
 
 
@@ -177,7 +180,7 @@ int listCopy(List* list_src, List* list_dest);
  * @param[in] l liste à afficher
  *
  */
-void displayList(List* l);
+void displayList(GenList* l);
 
 
 
@@ -187,8 +190,8 @@ void displayList(List* l);
 /*                         ITERATEUR                                */
 /*------------------------------------------------------------------*/
 
-typedef struct s_listIte ListIte;
-typedef struct s_listIte* ptrListIte;
+typedef struct s_gen_list_ite GenListIte;
+typedef struct s_gen_list_ite* ptrGenListIte;
 
 /* l'itérateur commence au début de la liste */
 #define FROM_BEGIN 1
@@ -207,7 +210,7 @@ typedef struct s_listIte* ptrListIte;
  *
  * @return pointeur vers l'itérateur, NULL si erreur
  **/
-ListIte* createListIte(List* l, int dir);
+GenListIte* createListIte(GenList* l, int dir);
 
 
 
@@ -220,7 +223,7 @@ ListIte* createListIte(List* l, int dir);
  *
  * @return true si il reste des éléments, sinon false
  **/
-bool listIteHasNext(ListIte* ite);
+bool listIteHasNext(GenListIte* ite);
 
 
 /**
@@ -234,7 +237,7 @@ bool listIteHasNext(ListIte* ite);
  *
  * @return -1 si erreur, 0 sinon
  */
-int listIteNext(ListIte* ite);
+int listIteNext(GenListIte* ite);
 
 
 /**
@@ -246,9 +249,9 @@ int listIteNext(ListIte* ite);
  * 
  * @pre doit être sur un élément
  * 
- * @return élément courant, -1 si erreur
+ * @return élément courant, NULL si erreur
  */
-int listIteGetValue(ListIte* ite);
+void* listIteGetValue(GenListIte* ite);
 
 
 /**
@@ -258,7 +261,7 @@ int listIteGetValue(ListIte* ite);
  *
  * @param[in] ite pointeur vers l'itérateur
  **/
-void deleteListIte(ptrListIte* ite);
+void deleteListIte(ptrGenListIte* ite);
 
 
 
@@ -279,7 +282,7 @@ void deleteListIte(ptrListIte* ite);
  * @author VALLAT ugo
  * @date 29/10/2023
  */
-void printListLog(List* l);
+void printListLog(GenList* l);
 
 #endif
 
