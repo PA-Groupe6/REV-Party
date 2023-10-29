@@ -2,11 +2,24 @@
  * @file logger.h
  * @author LAFORGE Mateo
  * @brief Header de l'afficheur
- * @note La sortie par défaut du logger est stdout
+ * 
+ * L'afficheur a pour rôle de fournir une interface
+ * d'affichage formaté généralisée l'ensemble du projet
+ * 
+ * @remark La sortie par défaut du logger est stdout
 */
 #ifndef __LOGGER__H__
 #define __LOGGER__H__
-#include <stdio.h>
+
+/**
+ * @date 29/10/2023
+ * @brief Initialise le logger en définissant sa sortie sur un chemin
+ * @remark en mode DEBUG la sortie sera toujours la valeur par défaut
+ * 
+ * @param[in] file_name Le chemin du fichier où écrira le logger
+ * @note mettre NULL pour laisser la valeur par défaut (stdout)
+*/
+void init_logger(char* file_path);
 
 /**
  * @date 27/10/2023
@@ -41,12 +54,10 @@ void warnl(char* file_name, char* fun_name, char* message );
 void exitl(char* file_name, char* fun_name, char* message , int exit_value);
 
 /**
- * @date 27/10/2023
- * @brief Définit la sortie appropriée du logger
- * @remark en mode DEBUG cette fonction ne fait rien
- * 
- * @param[in] out La nouvelle sortie du logger
+ * @date 29/10/2023
+ * @brief Ferme le logger
+ * @remark Ne fais rien si la sortie est stdout
 */
-void redirect(FILE* out);
+void close_logger();
 
 #endif
