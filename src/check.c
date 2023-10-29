@@ -37,12 +37,28 @@ char* computeHash(char* name, char* key) {
     strcpy(to_hash, name);
     strcat(to_hash, key);
 
-    /* calcul du hash */
     char* hash_result = malloc((SHA256_BLOCK_SIZE*2 + 1) * sizeof(char));
+    if (hash_result == NULL) {
+        free(to_hash);
+        perror("Memory allocation");
+        exit(EXIT_FAILURE);
+    }
+
+    /* calcul du hash */
     sha256ofString((BYTE*) to_hash, hash_result);
 
     free(to_hash);
     return hash_result;
+}
+
+
+/*
+    Enlève le caractère '\n' à la fin d'une chaîne de caractère
+    précondition (la chaîne et valide et se termine par un '\n)
+*/
+void removeReturnChar(char* line) {
+    int line_len = strlen(line);
+    line[line_len-1] = '\0';
 }
 
 
@@ -55,13 +71,12 @@ char* getColumnLabel(FILE* file) {
 
     /* Récupération de la première ligne */
     if(fgets(line, LINE_MAX_LENGTH, file) == NULL) {
-        fprintf(stderr," <getColumnLabel> Echec lecture colonnes");
+        fprintf(stderr,"<getColumnLabel> Echec lecture colonnes\n");
         exit(EXIT_FAILURE);
     }
 
     /* enlever le '\n' à la fin de la ligne */
-    int line_len = strlen(line);
-    line[line_len-1] = '\0';
+    removeReturnChar(line);
     return line;
 }
 
@@ -79,17 +94,18 @@ char* search(char* hash, FILE* file) {
             found = 1;
         }
     }
-    line[strlen(line)-1] = '\0';
 
-    if (found == 0) {
+    if (!found) {
         free(line);
         return NULL;
-    } return line;
+    }
+    removeReturnChar(line);
+    return line;
 }
 
 
 /* 
-Sépare chaques éléments d'une chaîne de caractère séparés par le spliter
+    Sépare chaques éléments d'une chaîne de caractère séparés par le spliter
 */
 unsigned int splitLine(char*** desti, char* line, char* spliter) {
     unsigned int size = 0;
@@ -108,7 +124,6 @@ unsigned int splitLine(char*** desti, char* line, char* spliter) {
             dest = (char**)realloc(dest, sizeof(char*)*memory_size);
         }
         
-
         /* ajout du token dans le tableau */
         dest[size] = (char*)malloc(strlen(token) + 1);
         strcpy(dest[size], token);
@@ -135,7 +150,6 @@ void displayVote(char* name, char** vote, char** labels, unsigned int nb_columns
    printf(" %s|\n<+>%s--- Bonne journée ---%s<+>%s\n\n", YELLOW, RSTC, YELLOW, RSTC);
         
 }
-
 
 
 int main(int argc, char* argv[]) {
@@ -172,29 +186,30 @@ int main(int argc, char* argv[]) {
 
     if (str_result == NULL) {
         free(str_labels);
-        fprintf(stderr, "Votre vote n'as pas été trouvé dans le csv fourni\n");
+        fprintf(stderr, "%sVotre vote n'as pas été trouvé dans le csv fourni%s\n", RED, RSTC);
         exit(EXIT_FAILURE);
     }
 
     /* séparer les colonnes */
-    char** split_result;
     char** split_labels;
-    int nb_column_result, nb_column_labels;
+    char** split_result;
+    int nb_column_labels, nb_column_result;
 
-    nb_column_result = splitLine(&split_result, str_result, ",");
     nb_column_labels = splitLine(&split_labels, str_labels, ",");
+    nb_column_result = splitLine(&split_result, str_result, ",");
 
     free(str_labels);
     free(str_result);
 
     if(nb_column_result != nb_column_labels){
-        fprintf(stderr, "Echec séparation des colonnes\n");
+        fprintf(stderr, "%sEchec séparation des colonnes%s\n", RED, RSTC);
         exit(EXIT_FAILURE);
     }
 
     /* affichage du résultat */
     displayVote(argv[1], split_result, split_labels, nb_column_result);
 
+    // libère tout les tableaux split_labels et split_result
     for (int i = 0; i < nb_column_labels ; i++) free(split_labels[i]);
     free(split_labels);
     for (int i = 0; i < nb_column_labels; i++) free(split_result[i]);
