@@ -2,9 +2,8 @@
 /**
  * Projet REV party - Structur list header
  * @file list.h
- * @author : VALLAT Ugo 
- * @date 20/10/2023
- 
+ * @author VALLAT Ugo 
+ * @date 29/10/2023
  */
 /*-----------------------------------------------------------------*/
 
@@ -16,6 +15,8 @@
  *
  * @note haute performance en lecture( O(1) ) mais faible en écriture ( O(n))
  *
+ * @remark En cas d'erreur, la variable errno est positionnée à la valeur appropriée, il est 
+ * fortement recomandé de la vérifier surtout pour les fonctions ne renvoyant pas de pointeur
  */
 
 
@@ -23,6 +24,7 @@
 #define __LIST_H__
 #include <stdio.h>
 #include <stdbool.h>
+#include <errno.h>
 
 
 /*------------------------------------------------------------------*/
@@ -37,18 +39,20 @@ typedef List * ptrList;
 
 
 /** 
- * @date  20/10/2023
+ * @author VALLAT ugo
+ * @date  29/10/2023
  * @brief Crée une liste vide
  *
  * @param[in] size Espace mémoire initial (en nombre d'éléments)
  *
- * @return pointeur vers la liste, NULL si erreur+
+ * @return pointeur vers la liste, NULL si erreur
 */
 List* createList(unsigned int size);
 
 
 /** 
- * @date  20/10/2023
+ * @author VALLAT ugo
+ * @date  29/10/2023
  * @brief Supprime la liste et libère la mémoire
  *
  * @param[in] l liste à supprimer
@@ -57,34 +61,37 @@ void deleteList(ptrList* l);
 
 
 /** 
- * @date  20/10/2023
- * @brief Add value v to the end of the list
+ * @author VALLAT ugo
+ * @date  29/10/2023
+ * @brief Ajoute l'élément à la fin de la liste
  *
- * @param[in] l pointer to the adress of the list
- * @param[in] v value to add
+ * @param[in] l Pointeur vers la liste
+ * @param[in] v Valeur à ajouter
  *
- * @return new adress of the list, null if error
+ * @return nouvelle adresse de la liste, NULL si erreur
 */
 List* listAdd(List* l, int v);
 
 
 /** 
- * @date  20/10/2023
- * @brief Insert a value in the list to the position require
+ * @author VALLAT ugo
+ * @date  29/10/2023
+ * @brief Insert une valeur à la position i
  *
- * @param[in] l pointer to the adress of the list
- * @param[in] v value to add
+ * @param[in] l Pointeur vers la liste
+ * @param[in] v Valeur à ajouter
  * @param[in] i position
  *
  * @pre i <= listSize
  *
- * @return new adress of the list, null if error
+ * @return nouvelle adresse de la liste, NULL si erreur
 */
 List* listInsert(List* l, int v, unsigned int i);
 
 
 /**
- * @date 20/10/2023
+ * @author VALLAT ugo
+ * @date 29/10/2023
  * @brief Supprime le dernier élément de la liste
  *
  * @param[in] l list
@@ -97,51 +104,60 @@ int listPop(List* l);
 
 
 /** 
- * @date  20/10/2023
- * @brief Remove a value in the list to the position require
+ * @author VALLAT ugo
+ * @date  29/10/2023
+ * @brief Supprime l'élément à la position i
  *
- * @param[in] l pointer to the adress of the list
+ * @param[in] l Pointeur vers la liste
  * @param[in] i position
  *
  * @pre i < listSize
  *
- * @return -1 if error, 0 else
+ * @return -1 si erreur, 0 sinon
 */
 int listRemove(List* l, unsigned int i);
 
 
 /**
- * @date 20/10/2023
- * @brief Return the value at position i
+ * @author VALLAT ugo
+ * @date 29/10/2023
+ * @brief Lire la valeur à la position i
  * 
- * @param[in] l list
- * @param[in] i position of the element to return
+ * @param[in] l Pointeur vers la liste
+ * @param[in] i Position de l'élément
  *
  * @pre i < list size
  *
- * @return value 
+ * @return Valeur lue, -1 si erreur
  **/
 int listGet(List* l, unsigned int i);
 
 
 /**
- * @brief Return if the list is empty
+ * @author VALLAT ugo
+ * @date 29/10/2023
  *
- * @param[in] l 
+ * @brief Renvoie si la liste est vide
+ *
+ * @param[in] l Pointeur vers la liste
+ * @return true si vide, false sinon
  */
 bool listEmpty(List* l);
 
 /**
- * @date  20/10/2023
- * @brief Return the size of the list (position + 1 of the last element)
+ * @author VALLAT ugo
+ * @date  29/10/2023
+ * @brief Renvoie la taille de la liste (position + 1 du dernier élément)
  *
- * @param[in] l
+ * @param[in] l Pointeur vers la liste
+ * @return taille de la liste, -1 si erreur
  *
  */
 
 unsigned int listSize(List* l);
 
 /**
+ * @author VALLAT ugo
  * @date 25/10/2023
  * @brief Copie une liste source dans la liste destination de taille égale ou supérieure
  * 
@@ -159,10 +175,11 @@ int listCopy(List* list_src, List* list_dest);
 
 
 /**
- * @date 20/10/2023
- * @brief display the list in the default output
+ * @author VALLAT ugo
+ * @date 29/10/2023
+ * @brief Afficher la liste dans la sortie par standard
  * 
- * @param[in] l list to display
+ * @param[in] l liste à afficher
  *
  */
 void displayList(List* l);
@@ -185,6 +202,7 @@ typedef struct s_listIte* ptrListIte;
 
 
 /**
+ * @author VALLAT ugo
  * @date 22/10/2023
  * @brief Crée un itérateur sur la liste passée en entrée qui la parcours
  * depuis le début ( @ref FROM_BEGIN) ou la fin ( @ref FROM_END)
@@ -199,6 +217,7 @@ ListIte* createListIte(List* l, int dir);
 
 
 /**
+ * @author VALLAT ugo
  * @date 22/10/2023
  * @brief Renvoie si il reste des éléments à parcourir dans la liste
  * 
@@ -210,6 +229,7 @@ bool listIteHasNext(ListIte* ite);
 
 
 /**
+ * @author VALLAT ugo
  * @date 22/10/2023
  * @brief Décale l'itérateur sur le prochain élément et renvoie sa valeur
  * 
@@ -223,6 +243,7 @@ int listIteNext(ListIte* ite);
 
 
 /**
+ * @author VALLAT ugo
  * @date 22/10/2023
  * @brief Renvoie la valeur courrante
  * 
@@ -230,12 +251,13 @@ int listIteNext(ListIte* ite);
  * 
  * @pre doit être sur un élément
  * 
- * @return élément courant
+ * @return élément courant, -1 si erreur
  */
 int listIteGetValue(ListIte* ite);
 
 
 /**
+ * @author VALLAT ugo
  * @date 22/10/2023
  * @brief Supprime l'itérateur et libère la mémoire
  *
@@ -259,7 +281,8 @@ void deleteListIte(ptrListIte* ite);
  * @brief display in the logger all the information about the list and the elements
  * 
  * @param[in] l list to print in logger
- * @date 20/10/2023
+ * @author VALLAT ugo
+ * @date 29/10/2023
  */
 void printListLog(List* l);
 
