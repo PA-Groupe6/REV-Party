@@ -1,7 +1,7 @@
 
 /**
  * @file list.c
- * @author VALLAT Ugo 
+ * @author VALLAT Ugo
  * @date 30/10/2023
  *
  * @brief Implémentation de la liste pseudo statique d'entiers
@@ -10,15 +10,13 @@
  * de la mémoire dynamiquement lorsque qu'il est plein
  */
 
-
+#include "list.h"
+#include "../logger.h"
 #include <asm-generic/errno-base.h>
 #include <errno.h>
 #include <malloc.h>
 #include <stdbool.h>
 #include <stdlib.h>
-#include "list.h"
-#include "../logger.h"
-
 
 /*------------------------------------------------------------------*/
 /*                        STRUCTURE LIST                            */
@@ -27,10 +25,9 @@
 /* Définition de la structure list*/
 struct s_list {
     unsigned int memory_size; /* Taille du tableau en mémoire */
-    unsigned int size; /* taille de la liste (nombre éléments) */
-    int *tab; /* tableau des valeurs */
+    unsigned int size;        /* taille de la liste (nombre éléments) */
+    int *tab;                 /* tableau des valeurs */
 };
-
 
 /**
  * @brief Verifie si l'argument est NULL, si vrai position errno à EFAULT
@@ -38,12 +35,12 @@ struct s_list {
  * @param[in] arg argument à vérifier
  * @param[in] caller Nom de la fonction appelante
  * @return true si arg = NULL, false sinon
- * 
+ *
  */
-bool testArgNull(void* arg, char* caller) {
-    if(arg == NULL) {
+bool testArgNull(void *arg, char *caller) {
+    if (arg == NULL) {
         char buff[1024];
-        snprintf(buff, 1023,"dans %s > erreur pointeur null", caller);
+        snprintf(buff, 1023, "dans %s > erreur pointeur null", caller);
         warnl("list.c", "hisArgNull", buff);
         errno = EFAULT;
         return true;
@@ -51,15 +48,13 @@ bool testArgNull(void* arg, char* caller) {
     return false;
 }
 
-
-
-List* createList(unsigned int size) {
-    List* l = malloc(sizeof(List));
-    if (l == NULL) 
+List *createList(unsigned int size) {
+    List *l = malloc(sizeof(List));
+    if (l == NULL)
         exitl("list.c.c", "createList", "erreur malloc list", EXIT_FAILURE);
 
-    l->tab = malloc(sizeof(int)*size);
-    if (l->tab == NULL) 
+    l->tab = malloc(sizeof(int) * size);
+    if (l->tab == NULL)
         exitl("list.c.c", "createList", "erreur malloc tab", EXIT_FAILURE);
 
     l->memory_size = size;
@@ -67,10 +62,10 @@ List* createList(unsigned int size) {
     return l;
 }
 
-
-void deleteList(ptrList* l) {
+void deleteList(ptrList *l) {
     /* test l != NULL */
-    if(testArgNull(l, "deleteList") || testArgNull((*l), "deleteList")) return;
+    if (testArgNull(l, "deleteList") || testArgNull((*l), "deleteList"))
+        return;
 
     /* libération de la mémoire */
     free((*l)->tab);
@@ -78,34 +73,31 @@ void deleteList(ptrList* l) {
     *l = NULL;
 }
 
-
-
 /**
  * @brief Modifie l'espace mémoire aloué au tableau
- * 
+ *
  * @param l Pointeur vers la liste
  * @param new_size Nouvelle taille du tableau
  * @pre l != NULL
  */
-void adjustMemorySize(List* l, unsigned int new_size) {
+void adjustMemorySize(List *l, unsigned int new_size) {
     /* nouvelle taille de la liste */
     l->memory_size = new_size;
 
     /* modification taille du tableau */
-    l->tab = realloc(l->tab, new_size*sizeof(int));
-    if(l->tab == NULL)
+    l->tab = realloc(l->tab, new_size * sizeof(int));
+    if (new_size != 0 && l->tab == NULL)
         exitl("list.c", "adjustMemorySize", "echec realloc tab", EXIT_FAILURE);
 }
 
-
-
-List* listAdd(List* l, int v) {
+List *listAdd(List *l, int v) {
     /* test l != NULL */
-    if(testArgNull(l, "listAdd")) return NULL;
+    if (testArgNull(l, "listAdd"))
+        return NULL;
 
     /* agrandissement de la liste si pleine */
-    if(l->size == l->memory_size)
-        adjustMemorySize(l, l->memory_size+8);
+    if (l->size == l->memory_size)
+        adjustMemorySize(l, l->memory_size + 8);
 
     /* Ajout de la valeur */
     l->tab[l->size] = v;
@@ -113,22 +105,23 @@ List* listAdd(List* l, int v) {
     return l;
 }
 
-List* listInsert(List* l, int v, unsigned int i) {
+List *listInsert(List *l, int v, unsigned int i) {
     /* vérification paramêtres */
-    if(testArgNull(l, "listInsert")) return NULL;
-    if (i < 0 || i > l->size) {
+    if (testArgNull(l, "listInsert"))
+        return NULL;
+    if (i > l->size) {
         warnl("list.c.c", "listInsert", "position (i) invalide");
         errno = EINVAL;
         return NULL;
     }
 
     /* agrandissement de la liste si pleine */
-    if(l->size >= l->memory_size)
-        adjustMemorySize(l, l->memory_size+8);
-    
+    if (l->size >= l->memory_size)
+        adjustMemorySize(l, l->memory_size + 8);
+
     /* décale tous les éléments */
-    for (int j = l->size-1; j >= i; j--)
-        l->tab[j+1] = l->tab[j];
+    for (int j = l->size - 1; j >= (int)i; j--)
+        l->tab[j + 1] = l->tab[j];
 
     /* ajoute le nouvel élément */
     l->tab[i] = v;
@@ -137,10 +130,11 @@ List* listInsert(List* l, int v, unsigned int i) {
     return l;
 }
 
-int listPop(List* l) {
+int listPop(List *l) {
     /* vérification paramêtre */
-    if(testArgNull(l, "listPop")) return -1;
-    if(l->size <= 0){
+    if (testArgNull(l, "listPop"))
+        return -1;
+    if (l->size <= 0) {
         warnl("list.c", "listPop", "liste déjà vide");
         errno = EPERM;
         return -1;
@@ -151,50 +145,47 @@ int listPop(List* l) {
     return 0;
 }
 
-
-
-int listRemove(List* l, unsigned int i) {
+int listRemove(List *l, unsigned int i) {
     /* vérification paramêtres */
-    if(testArgNull(l, "listRemove")) return -1;
-    if (i < 0 || i >= l->size) {
+    if (testArgNull(l, "listRemove"))
+        return -1;
+    if (i >= l->size) {
         warnl("list.c.c", "listRemove", "position (i) invalide");
         errno = EINVAL;
         return -1;
     }
     /* suppression de l'élément */
-    for(int j = i; j < l->size-1; j++)
-        l->tab[j] = l->tab[j+1];
+    for (int j = i; j < (int)l->size - 1; j++)
+        l->tab[j] = l->tab[j + 1];
     l->size--;
     adjustMemorySize(l, l->size);
     return 0;
 }
 
-
-bool listEmpty(List* l) {
-    if(testArgNull(l, "listEmpty")) return true;
+bool listEmpty(List *l) {
+    if (testArgNull(l, "listEmpty"))
+        return true;
     return l->size == 0;
 }
 
-unsigned int listSize(List* l) {
-    return l->size;
-}
+unsigned int listSize(List *l) { return l->size; }
 
-
-List* listCopy(List* l) {
+List *listCopy(List *l) {
     /* vérification paramêtre */
-    if(testArgNull(l, "listCopy")) return NULL;
-    
+    if (testArgNull(l, "listCopy"))
+        return NULL;
+
     /* création nouvelle liste */
-    List* new = createList(l->size);
-    if(errno) {
+    List *new = createList(l->size);
+    if (errno) {
         warnl("list.c", "listCopy", "Echec création copie");
         return NULL;
     }
 
     /* copie des éléments */
-    for(int i = 0; i < l->size; i++){
+    for (unsigned int i = 0; i < l->size; i++) {
         listAdd(new, l->tab[i]);
-        if(errno) {
+        if (errno) {
             warnl("list.c", "listCopy", "Echec copie éléments");
             return NULL;
         }
@@ -203,12 +194,11 @@ List* listCopy(List* l) {
     return new;
 }
 
-
-
-int listGet(List* l, unsigned int i) {
+int listGet(List *l, unsigned int i) {
     /* vérification paramêtre */
-    if(testArgNull(l, "listGet")) return -1;
-    if (i < 0 || i >= l->size) {
+    if (testArgNull(l, "listGet"))
+        return -1;
+    if (i >= l->size) {
         warnl("list.c.c", "listGet", "position (i) invalide");
         errno = EINVAL;
         return -1;
@@ -217,16 +207,18 @@ int listGet(List* l, unsigned int i) {
     return l->tab[i];
 }
 
-
-void displayList(List* l) {
+void displayList(List *l) {
     /* vérification paramêtre */
-    if(testArgNull(l, "displayList")) return;
+    if (testArgNull(l, "displayList"))
+        return;
 
     char buff[1024];
-    if(l->size == 0) printl("[]");
+    if (l->size == 0)
+        printl("[]");
     else {
-        sprintf(buff, "[ %d", l->tab[0]); printl(buff);
-        for (int i = 1; i < l->size; i++){
+        sprintf(buff, "[ %d", l->tab[0]);
+        printl(buff);
+        for (unsigned int i = 1; i < l->size; i++) {
             sprintf(buff, ", %d", l->tab[i]);
             printl(buff);
         }
@@ -234,48 +226,40 @@ void displayList(List* l) {
     }
 }
 
-
-
 /*------------------------------------------------------------------*/
 /*                         ITERATEUR                                */
 /*------------------------------------------------------------------*/
 
-
 /* Définition de la structure list_ite */
 struct s_list_ite {
-    List* list; /* liste à parcourir */
-    int cur; /* position actuelle */
-    int (*fnext)(int); /* focntion de déplcament */
-    bool next; /* appel à fonction next */
+    List *list;                 /* liste à parcourir */
+    int cur;                    /* position actuelle */
+    unsigned int (*fnext)(int); /* focntion de déplcament */
+    bool next;                  /* appel à fonction next */
 };
 
+unsigned int next_forward(int i) { return i + 1; }
 
-int next_forward(int i) {
-    return i+1;
-}
+unsigned int next_backward(int i) { return i - 1; }
 
-int next_backward(int i) {
-    return i-1;
-}
-
-
-
-ListIte* createListIte(List* l, int dir) {
-    if(testArgNull(l, "createListIte")) return NULL;
+ListIte *createListIte(List *l, int dir) {
+    if (testArgNull(l, "createListIte"))
+        return NULL;
 
     /* création de l'itérateur */
-    ListIte* ite = malloc(sizeof(ListIte));
+    ListIte *ite = malloc(sizeof(ListIte));
 
     /* copie de la liste */
     ite->list = listCopy(l);
-    if(errno) return NULL;
+    if (errno)
+        return NULL;
 
     /* Initialisation des paramêtres */
-    if(dir == FROM_BEGIN) {
+    if (dir == FROM_BEGIN) {
         ite->fnext = next_forward;
         ite->next = false;
         ite->cur = -1;
-    } else if(dir == FROM_END) {
+    } else if (dir == FROM_END) {
         ite->fnext = next_backward;
         ite->next = false;
         ite->cur = l->size;
@@ -287,17 +271,16 @@ ListIte* createListIte(List* l, int dir) {
     return ite;
 }
 
-
-
-bool listIteHasNext(ListIte* ite) {
-    if(testArgNull(ite, "listIteHasNext")) return false;
-    int next = ite->fnext(ite->cur);
-    return (next >= 0 && next < ite->list->size);
+bool listIteHasNext(ListIte *ite) {
+    if (testArgNull(ite, "listIteHasNext"))
+        return false;
+    unsigned int next = ite->fnext(ite->cur);
+    return (next < ite->list->size);
 }
 
-
-int listIteNext(ListIte* ite) {
-    if(testArgNull(ite, "listIteNext")) return -1;
+int listIteNext(ListIte *ite) {
+    if (testArgNull(ite, "listIteNext"))
+        return -1;
     if (!listIteHasNext(ite)) {
         warnl("list.c", "listIteNext", "aucun élément à lire");
         return -1;
@@ -308,31 +291,23 @@ int listIteNext(ListIte* ite) {
     return 0;
 }
 
-
-int listIteGetValue(ListIte* ite) {
-    if(testArgNull(ite, "listIteGetValue")) return -1;
-    if(!ite->next) {
+int listIteGetValue(ListIte *ite) {
+    if (testArgNull(ite, "listIteGetValue"))
+        return -1;
+    if (!ite->next) {
         warnl("list.c", "listIteGetValue", "lecture sans appel à next");
         return -1;
     }
     return listGet(ite->list, ite->cur);
 }
 
-
-
-void deleteListIte(ptrListIte* ite) {
-    if(testArgNull(ite, "listIteGetValue")) return;
+void deleteListIte(ptrListIte *ite) {
+    if (testArgNull(ite, "listIteGetValue"))
+        return;
     free((*ite)->list);
     free((*ite));
     *ite = NULL;
 }
-
-
-
-
-
-
-
 
 /*------------------------------------------------------------------*/
 /*                              DEBUG                               */
@@ -340,22 +315,28 @@ void deleteListIte(ptrListIte* ite) {
 
 #ifdef DEBUG
 
-void printListLog(List* l) {
-    if(testArgNull(l, "printListLog")) return;
-    char buff[1024];
-    
+void printListLog(List *l) {
+    if (testArgNull(l, "printListLog"))
+        return;
+    char buff[2048];
+
     printl("\n<+>------------[ list.c ]-----------<+>\n\n");
-    sprintf(buff, "[list.c] size = %d\n", l->size); printl(buff);
-    sprintf(buff, "[list.c] memory size = %d\n", l->memory_size); printl(buff);
-    if(l->size == 0) printl("[list.c] list = ");
+    sprintf(buff, "[list.c] size = %d\n", l->size);
+    printl(buff);
+    sprintf(buff, "[list.c] memory size = %d\n", l->memory_size);
+    printl(buff);
+    if (l->size <= 0)
+        printl("[list.c] list = \n");
     else {
-        snprintf(buff, 1024, "[list.c] list = %d", l->tab[0]);printl(buff);
-        for (int i = 1; i < l->size; i++){
-            snprintf(buff, 1024," , %d", l->tab[i]);
+        snprintf(buff, 1024, "[list.c] list = %d", l->tab[0]);
+        printl(buff);
+        for (unsigned int i = 1; i < l->size; i++) {
+            snprintf(buff, 1024, " , %d", l->tab[i]);
             printl(buff);
         }
     }
-    sprintf(buff, "\n\n<->---------------------------------<->\n");
+    snprintf(buff, 2048, "\n\n<->---------------------------------<->\n");
+    fflush(stdout);
 }
 
 #endif
