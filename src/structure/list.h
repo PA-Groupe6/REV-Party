@@ -63,7 +63,7 @@ void deleteList(ptrList* l);
  * @param[in] l Pointeur vers la liste
  * @param[in] v Valeur à ajouter
  *
- * @return nouvelle adresse de la liste, NULL si erreur
+ * @return Pointeur de la liste, NULL si erreur
 */
 List* listAdd(List* l, int v);
 
@@ -135,7 +135,7 @@ int listGet(List* l, unsigned int i);
  * @brief Renvoie si la liste est vide
  *
  * @param[in] l Pointeur vers la liste
- * @return true si vide, false sinon
+ * @return true si vide ou l=NULL, false sinon
  */
 bool listEmpty(List* l);
 
@@ -153,19 +153,16 @@ unsigned int listSize(List* l);
 
 /**
  * @author VALLAT ugo
- * @date 25/10/2023
- * @brief Copie une liste source dans la liste destination de taille égale ou supérieure
+ * @date 30/10/2023
+ * @brief Copie la liste en entrée
  * 
- * @param[in] list_src liste source à copier
- * @param[in] list_dest liste destination
- * 
- * @pre size_src <= size_dest
+ * @param[in] l Pointeur de la liste à copier
  *
- * @return  -1 si erreur, 0 sinon
+ * @return  Pointeur vers la copie, NULL si erreur
  *
  */
 
-int listCopy(List* list_src, List* list_dest);
+List* listCopy(List* l);
 
 
 
@@ -187,8 +184,8 @@ void displayList(List* l);
 /*                         ITERATEUR                                */
 /*------------------------------------------------------------------*/
 
-typedef struct s_listIte ListIte;
-typedef struct s_listIte* ptrListIte;
+typedef struct s_list_ite ListIte;
+typedef struct s_list_ite* ptrListIte;
 
 /* l'itérateur commence au début de la liste */
 #define FROM_BEGIN 1
@@ -206,6 +203,8 @@ typedef struct s_listIte* ptrListIte;
  * @param[in] dir sens de parcours de l'itérateur ( @ref FROM_BEGIN ou @ref FROM_END)
  *
  * @return pointeur vers l'itérateur, NULL si erreur
+ * @note Une copie de la liste est faite au moment de la création, toute modification
+ * de la liste ne sera pas visible par l'itérateur
  **/
 ListIte* createListIte(List* l, int dir);
 
