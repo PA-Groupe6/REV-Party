@@ -39,9 +39,7 @@ struct s_list {
  */
 bool testArgNull(void *arg, char *caller) {
     if (arg == NULL) {
-        char buff[1024];
-        snprintf(buff, 1023, "dans %s > erreur pointeur null", caller);
-        warnl("list.c", "hisArgNull", buff);
+        warnl("list.c", "hisArgNull", "dans %s > erreur pointeur null", caller);
         errno = EFAULT;
         return true;
     }
@@ -51,11 +49,11 @@ bool testArgNull(void *arg, char *caller) {
 List *createList(unsigned int size) {
     List *l = malloc(sizeof(List));
     if (l == NULL)
-        exitl("list.c.c", "createList", "erreur malloc list", EXIT_FAILURE);
+        exitl("list.c.c", "createList", EXIT_FAILURE, "erreur malloc list");
 
     l->tab = malloc(sizeof(int) * size);
     if (l->tab == NULL)
-        exitl("list.c.c", "createList", "erreur malloc tab", EXIT_FAILURE);
+        exitl("list.c.c", "createList", EXIT_FAILURE, "erreur malloc tab");
 
     l->memory_size = size;
     l->size = 0;
@@ -87,7 +85,7 @@ void adjustMemorySize(List *l, unsigned int new_size) {
     /* modification taille du tableau */
     l->tab = realloc(l->tab, new_size * sizeof(int));
     if (new_size != 0 && l->tab == NULL)
-        exitl("list.c", "adjustMemorySize", "echec realloc tab", EXIT_FAILURE);
+        exitl("list.c", "adjustMemorySize", EXIT_FAILURE, "echec realloc tab");
 }
 
 List *listAdd(List *l, int v) {
@@ -168,7 +166,11 @@ bool listEmpty(List *l) {
     return l->size == 0;
 }
 
-unsigned int listSize(List *l) { return l->size; }
+unsigned int listSize(List *l) {
+    if (testArgNull(l, "lestSize"))
+        return 0;
+    return l->size;
+}
 
 List *listCopy(List *l) {
     /* vérification paramêtre */
@@ -212,17 +214,14 @@ void displayList(List *l) {
     if (testArgNull(l, "displayList"))
         return;
 
-    char buff[1024];
     if (l->size == 0)
-        printl("[]");
+        printl("[ ]");
     else {
-        sprintf(buff, "[ %d", l->tab[0]);
-        printl(buff);
+        printl("[ %d,", l->tab[0]);
         for (unsigned int i = 1; i < l->size; i++) {
-            sprintf(buff, ", %d", l->tab[i]);
-            printl(buff);
+            printl(", %d", l->tab[i]);
         }
-        printl("]");
+        printl(" ]");
     }
 }
 
@@ -321,22 +320,17 @@ void printListLog(List *l) {
     char buff[2048];
 
     printl("\n<+>------------[ list.c ]-----------<+>\n\n");
-    sprintf(buff, "[list.c] size = %d\n", l->size);
-    printl(buff);
-    sprintf(buff, "[list.c] memory size = %d\n", l->memory_size);
-    printl(buff);
+    printl("[list.c] size = %d\n", l->size);
+    printl("[list.c] memory size = %d\n", l->memory_size);
     if (l->size <= 0)
-        printl("[list.c] list = \n");
+        printl("[list.c] list = [");
     else {
-        snprintf(buff, 1024, "[list.c] list = %d", l->tab[0]);
-        printl(buff);
+        printl("[list.c] list = [ %d ", l->tab[0]);
         for (unsigned int i = 1; i < l->size; i++) {
-            snprintf(buff, 1024, " , %d", l->tab[i]);
-            printl(buff);
+            printl(", %d", l->tab[i]);
         }
     }
-    snprintf(buff, 2048, "\n\n<->---------------------------------<->\n");
-    fflush(stdout);
+    printl(" ]\n\n<->---------------------------------<->\n");
 }
 
 #endif
