@@ -19,15 +19,15 @@
  * @param[in] file_name Le chemin du fichier où écrira le logger
  * @note mettre NULL pour laisser la valeur par défaut (stdout)
 */
-void init_logger(char* file_path);
+void init_logger(const char* file_path);
 
 /**
  * @date 27/10/2023
  * @brief Écrit dans la sortie du logger
  * 
- * @param[in] msg Le méssage à écrire
+ * @param[in] format Format du message à envoyer suivis d'un varargs (même syntaxe qu'un printf)
 */
-void printl(char* msg);
+void printl(const char* format, ...);
 
 /**
  * @date 27/10/2023
@@ -38,9 +38,9 @@ void printl(char* msg);
  * 
  * @param[in] file_name Nom du fichier appelant
  * @param[in] fun_name Nom de la fonction appelante
- * @param[in] message Message à afficher
+ * @param[in] format Format du message à envoyer suivis d'un varargs (même syntaxe qu'un printf)
  */
-void warnl(char* file_name, char* fun_name, char* message );
+void warnl(const char* file_name, const char* fun_name, const char* format, ...);
 
 /**
  * @date 27/10/2023
@@ -48,10 +48,10 @@ void warnl(char* file_name, char* fun_name, char* message );
  * 
  * @param[in] file_name Nom du fichier appelant
  * @param[in] fun_name Nom de la fonction appelante
- * @param[in] message Message à afficher
  * @param[in] exit_value Valeur de retour du programme
+ * @param[in] format Format du message à envoyer suivis d'un varargs (même syntaxe qu'un printf)
  */
-void exitl(char* file_name, char* fun_name, char* message , int exit_value);
+void exitl(const char* file_name, const char* fun_name, int exit_value, char* format, ...);
 
 /**
  * @date 29/10/2023
