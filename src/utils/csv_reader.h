@@ -6,8 +6,8 @@
 #ifndef __CSV_READER__H__
 #define __CSV_READER__H__
 
-#include "../structure/duel.h"
-#include "../structure/bale.h"
+#include "duel.h"
+#include "bale.h"
 
 
 /**
@@ -18,7 +18,7 @@
  * 
  * @return une matrice @ref Duel
 */
-Duel* csvToDuel(char *file);
+Duel csvToDuel(char *file);
 
 
 /**
@@ -29,7 +29,7 @@ Duel* csvToDuel(char *file);
  * 
  * @return une matrice @ref Bale
 */
-Bale* csvToBale(char *file);
+Bale csvToBale(char *file);
 
 
 #endif
