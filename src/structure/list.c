@@ -2,12 +2,14 @@
 /**
  * @file list.c
  * @author VALLAT Ugo
- * @date 30/10/2023
  *
  * @brief Implémentation de la liste pseudo statique d'entiers
  *
  * Implémente la liste sous forme d'un tableau statique et alloue
  * de la mémoire dynamiquement lorsque qu'il est plein
+ *
+ * @remark En cas d'erreur, toutes les fonctions de list exit le progamme avec un
+ * message d'erreur
  */
 
 #include "list.h"
@@ -30,40 +32,43 @@ struct s_list {
 };
 
 /**
- * @brief Verifie si l'argument est NULL, si vrai position errno à EFAULT
- * et affiche un warning
+ * @date  1/11/2023
+ * @author Ugo VALLAT
+ * @brief Exit le programme avec message si arg == NULL
  * @param[in] arg argument à vérifier
  * @param[in] caller Nom de la fonction appelante
- * @return true si arg = NULL, false sinon
- *
  */
-bool testArgNull(void *arg, char *caller) {
-    if (arg == NULL) {
-        warnl("list.c", "hisArgNull", "dans %s > erreur pointeur null", caller);
-        errno = EFAULT;
-        return true;
-    }
-    return false;
+void testArgNull(void *arg, char *caller) {
+    if (arg == NULL)
+        exitl("list.c", "hisArgNull", EXIT_FAILURE, "dans %s > erreur pointeur null", caller);
 }
 
+/**
+ * @date  1/11/2023
+ * @author Ugo VALLAT
+ */
 List *createList(unsigned int size) {
     List *l = malloc(sizeof(List));
     if (l == NULL)
-        exitl("list.c.c", "createList", EXIT_FAILURE, "erreur malloc list");
+        exitl("list.c", "createList", EXIT_FAILURE, "erreur malloc list");
 
     l->tab = malloc(sizeof(int) * size);
-    if (l->tab == NULL)
-        exitl("list.c.c", "createList", EXIT_FAILURE, "erreur malloc tab");
+    if (l->tab == NULL && size != 0)
+        exitl("list.c", "createList", EXIT_FAILURE, "erreur malloc tab");
 
     l->memory_size = size;
     l->size = 0;
     return l;
 }
 
+/**
+ * @date  1/11/2023
+ * @author Ugo VALLAT
+ */
 void deleteList(ptrList *l) {
     /* test l != NULL */
-    if (testArgNull(l, "deleteList") || testArgNull((*l), "deleteList"))
-        return;
+    testArgNull(l, "deleteList");
+    testArgNull((*l), "deleteList");
 
     /* libération de la mémoire */
     free((*l)->tab);
@@ -72,6 +77,8 @@ void deleteList(ptrList *l) {
 }
 
 /**
+ * @date  1/11/2023
+ * @author Ugo VALLAT
  * @brief Modifie l'espace mémoire aloué au tableau
  *
  * @param l Pointeur vers la liste
@@ -79,6 +86,8 @@ void deleteList(ptrList *l) {
  * @pre l != NULL
  */
 void adjustMemorySize(List *l, unsigned int new_size) {
+    testArgNull(l, "adjustMemorySize");
+
     /* nouvelle taille de la liste */
     l->memory_size = new_size;
 
@@ -88,10 +97,13 @@ void adjustMemorySize(List *l, unsigned int new_size) {
         exitl("list.c", "adjustMemorySize", EXIT_FAILURE, "echec realloc tab");
 }
 
-List *listAdd(List *l, int v) {
+/**
+ * @date  1/11/2023
+ * @author Ugo VALLAT
+ */
+void listAdd(List *l, int v) {
     /* test l != NULL */
-    if (testArgNull(l, "listAdd"))
-        return NULL;
+    testArgNull(l, "listAdd");
 
     /* agrandissement de la liste si pleine */
     if (l->size == l->memory_size)
@@ -100,18 +112,17 @@ List *listAdd(List *l, int v) {
     /* Ajout de la valeur */
     l->tab[l->size] = v;
     l->size++;
-    return l;
 }
 
-List *listInsert(List *l, int v, unsigned int i) {
+/**
+ * @date  1/11/2023
+ * @author Ugo VALLAT
+ */
+void listInsert(List *l, int v, unsigned int i) {
     /* vérification paramêtres */
-    if (testArgNull(l, "listInsert"))
-        return NULL;
-    if (i > l->size) {
-        warnl("list.c.c", "listInsert", "position (i) invalide");
-        errno = EINVAL;
-        return NULL;
-    }
+    testArgNull(l, "listInsert");
+    if (i > l->size)
+        exitl("list.c", "listInsert", EXIT_FAILURE, "position (i) invalide");
 
     /* agrandissement de la liste si pleine */
     if (l->size >= l->memory_size)
@@ -124,95 +135,109 @@ List *listInsert(List *l, int v, unsigned int i) {
     /* ajoute le nouvel élément */
     l->tab[i] = v;
     l->size++;
-
-    return l;
 }
 
-int listPop(List *l) {
+/**
+ * @date  1/11/2023
+ * @author Ugo VALLAT
+ */
+void listPop(List *l) {
     /* vérification paramêtre */
-    if (testArgNull(l, "listPop"))
-        return -1;
-    if (l->size <= 0) {
-        warnl("list.c", "listPop", "liste déjà vide");
-        errno = EPERM;
-        return -1;
-    }
+    testArgNull(l, "listPop");
+    if (l->size <= 0)
+        exitl("list.c", "listPop", EXIT_FAILURE, "liste déjà vide");
+
     /* suppression de l'élément */
     l->size--;
     adjustMemorySize(l, l->size);
-    return 0;
 }
 
-int listRemove(List *l, unsigned int i) {
+/**
+ * @date  1/11/2023
+ * @author Ugo VALLAT
+ */
+void listRemove(List *l, unsigned int i) {
     /* vérification paramêtres */
-    if (testArgNull(l, "listRemove"))
-        return -1;
-    if (i >= l->size) {
-        warnl("list.c.c", "listRemove", "position (i) invalide");
-        errno = EINVAL;
-        return -1;
-    }
+    testArgNull(l, "listRemove");
+    if (i >= l->size)
+        exitl("list.c.c", "listRemove", EXIT_FAILURE, "position (i) invalide");
+
     /* suppression de l'élément */
     for (int j = i; j < (int)l->size - 1; j++)
         l->tab[j] = l->tab[j + 1];
     l->size--;
     adjustMemorySize(l, l->size);
-    return 0;
 }
 
+/**
+ * @date  1/11/2023
+ * @author Ugo VALLAT
+ */
 bool listEmpty(List *l) {
-    if (testArgNull(l, "listEmpty"))
-        return true;
+    testArgNull(l, "listEmpty");
     return l->size == 0;
 }
 
+/**
+ * @date  1/11/2023
+ * @author Ugo VALLAT
+ */
 unsigned int listSize(List *l) {
-    if (testArgNull(l, "lestSize"))
-        return 0;
+    testArgNull(l, "lestSize");
     return l->size;
 }
 
+/**
+ * @date  1/11/2023
+ * @author Ugo VALLAT
+ */
 List *listCopy(List *l) {
     /* vérification paramêtre */
-    if (testArgNull(l, "listCopy"))
-        return NULL;
+    testArgNull(l, "listCopy");
 
     /* création nouvelle liste */
     List *new = createList(l->size);
-    if (errno) {
-        warnl("list.c", "listCopy", "Echec création copie");
-        return NULL;
-    }
 
     /* copie des éléments */
     for (unsigned int i = 0; i < l->size; i++) {
         listAdd(new, l->tab[i]);
-        if (errno) {
-            warnl("list.c", "listCopy", "Echec copie éléments");
-            return NULL;
-        }
     }
-
     return new;
 }
 
+/**
+ * @date  1/11/2023
+ * @author Ugo VALLAT
+ */
 int listGet(List *l, unsigned int i) {
     /* vérification paramêtre */
-    if (testArgNull(l, "listGet"))
-        return -1;
-    if (i >= l->size) {
-        warnl("list.c.c", "listGet", "position (i) invalide");
-        errno = EINVAL;
-        return -1;
-    }
+    testArgNull(l, "listGet");
+    if (i >= l->size)
+        exitl("list.c", "listGet", EXIT_FAILURE, "position (%d) invalide", i);
 
     return l->tab[i];
 }
 
+/**
+ * @date  1/11/2023
+ * @author Ugo VALLAT
+ */
+void listSet(List *l, int v, unsigned int i) {
+    /* vérification paramêtre */
+    testArgNull(l, "listSet");
+    if (i >= l->size)
+        exitl("list.c", "listSet", EXIT_FAILURE, "position (%d) invalide", i);
+
+    l->tab[i] = v;
+}
+
+/**
+ * @date  1/11/2023
+ * @author Ugo VALLAT
+ */
 void displayList(List *l) {
     /* vérification paramêtre */
-    if (testArgNull(l, "displayList"))
-        return;
+    testArgNull(l, "displayList");
 
     if (l->size == 0)
         printl("[ ]");
@@ -229,7 +254,12 @@ void displayList(List *l) {
 /*                         ITERATEUR                                */
 /*------------------------------------------------------------------*/
 
-/* Définition de la structure list_ite */
+/**
+ * @date  1/11/2023
+ * @author Ugo VALLAT
+ *
+ * @brief Définition de la structure list_ite
+ */
 struct s_list_ite {
     List *list;                 /* liste à parcourir */
     int cur;                    /* position actuelle */
@@ -237,21 +267,30 @@ struct s_list_ite {
     bool next;                  /* appel à fonction next */
 };
 
+/**
+ * @date  1/11/2023
+ * @author Ugo VALLAT
+ */
 unsigned int next_forward(int i) { return i + 1; }
 
+/**
+ * @date  1/11/2023
+ * @author Ugo VALLAT
+ */
 unsigned int next_backward(int i) { return i - 1; }
 
+/**
+ * @date  1/11/2023
+ * @author Ugo VALLAT
+ */
 ListIte *createListIte(List *l, int dir) {
-    if (testArgNull(l, "createListIte"))
-        return NULL;
+    testArgNull(l, "createListIte");
 
     /* création de l'itérateur */
     ListIte *ite = malloc(sizeof(ListIte));
 
     /* copie de la liste */
     ite->list = listCopy(l);
-    if (errno)
-        return NULL;
 
     /* Initialisation des paramêtres */
     if (dir == FROM_BEGIN) {
@@ -262,47 +301,52 @@ ListIte *createListIte(List *l, int dir) {
         ite->fnext = next_backward;
         ite->next = false;
         ite->cur = l->size;
-    } else {
-        warnl("list.c", "createListIte", "sens de parcours invalide");
-        free(ite);
-        return NULL;
-    }
+    } else
+        exitl("list.c", "createListIte", EXIT_FAILURE, "sens de parcours invalide");
     return ite;
 }
 
+/**
+ * @date  1/11/2023
+ * @author Ugo VALLAT
+ */
 bool listIteHasNext(ListIte *ite) {
-    if (testArgNull(ite, "listIteHasNext"))
-        return false;
+    testArgNull(ite, "listIteHasNext");
     unsigned int next = ite->fnext(ite->cur);
     return (next < ite->list->size);
 }
 
-int listIteNext(ListIte *ite) {
-    if (testArgNull(ite, "listIteNext"))
-        return -1;
-    if (!listIteHasNext(ite)) {
-        warnl("list.c", "listIteNext", "aucun élément à lire");
-        return -1;
-    }
+/**
+ * @date  1/11/2023
+ * @author Ugo VALLAT
+ */
+void listIteNext(ListIte *ite) {
+    testArgNull(ite, "listIteNext");
+    if (!listIteHasNext(ite))
+        exitl("list.c", "listIteNext", EXIT_FAILURE, "aucun élément à lire");
 
     ite->cur = ite->fnext(ite->cur);
     ite->next = true;
-    return 0;
 }
 
+/**
+ * @date  1/11/2023
+ * @author Ugo VALLAT
+ */
 int listIteGetValue(ListIte *ite) {
-    if (testArgNull(ite, "listIteGetValue"))
-        return -1;
-    if (!ite->next) {
-        warnl("list.c", "listIteGetValue", "lecture sans appel à next");
-        return -1;
-    }
+    testArgNull(ite, "listIteGetValue");
+    if (!ite->next)
+        exitl("list.c", "listIteGetValue", EXIT_FAILURE, "lecture sans appel à next");
+
     return listGet(ite->list, ite->cur);
 }
 
+/**
+ * @date  1/11/2023
+ * @author Ugo VALLAT
+ */
 void deleteListIte(ptrListIte *ite) {
-    if (testArgNull(ite, "listIteGetValue"))
-        return;
+    testArgNull(ite, "deleteListIte");
     free((*ite)->list);
     free((*ite));
     *ite = NULL;
@@ -314,10 +358,12 @@ void deleteListIte(ptrListIte *ite) {
 
 #ifdef DEBUG
 
+/**
+ * @date  1/11/2023
+ * @author Ugo VALLAT
+ */
 void printListLog(List *l) {
-    if (testArgNull(l, "printListLog"))
-        return;
-    char buff[2048];
+    testArgNull(l, "printListLog");
 
     printl("\n<+>------------[ list.c ]-----------<+>\n\n");
     printl("[list.c] size = %d\n", l->size);
