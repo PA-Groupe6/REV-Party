@@ -2,7 +2,7 @@
  * @file matrix.h
  * @author VALLAT Ugo
  *
- * @brief Cette librairie implémente implémente une matrice d'entiers
+ * @brief Cette librairie implémente une matrice d'entiers
  *
  * @note Matrice de taille fixe pour garrantir un accès en lecture et
  *  en écriture de l'ordre de O(1)
@@ -258,7 +258,7 @@ void deleteMatrixIte(ptrMatrixIte *ite);
  * n'est appliqué et la matrice n'est pas modifiée
  * @param[in] buff pointeur vers le buffer fourni à fun
  **/
-void matrixMap(Matrix *m, unsigned int l, unsigned int c, fun_ite fun, void *buff);
+void matrixMap(Matrix *m, int l, int c, fun_ite fun, void *buff);
 
 /**
  * @author VALLAT ugo
@@ -271,7 +271,7 @@ void matrixMap(Matrix *m, unsigned int l, unsigned int c, fun_ite fun, void *buf
  *
  * @return somme des éléments
  **/
-int matrixSom(Matrix *m, unsigned int l, unsigned int c);
+long int matrixSum(Matrix *m, int l, int c);
 
 /**
  * @author VALLAT ugo
@@ -282,9 +282,10 @@ int matrixSom(Matrix *m, unsigned int l, unsigned int c);
  * @param[in] l Ligne cible (-1 pour toutes les lignes)
  * @param[in] c Colonne cible (-1 pour toutes les colonnes)
  *
- * @return Tableau d'entiers de taille 3 contenant [valeur_max, ligne, colonne]
+ * @return Tableau d'entiers de taille 3 contenant [valeur_max, ligne, colonne], NULL
+ * si la matrice est vide
  **/
-int *matrixMax(Matrix *m, unsigned int l, unsigned int c);
+int *matrixMax(Matrix *m, int l, int c);
 
 /**
  * @author VALLAT ugo
@@ -295,9 +296,10 @@ int *matrixMax(Matrix *m, unsigned int l, unsigned int c);
  * @param[in] l Ligne cible (-1 pour toutes les lignes)
  * @param[in] c Colonne cible (-1 pour toutes les colonnes)
  *
- * @return Tableau d'entiers de taille 3 contenant [valeur_min, ligne, colonne]
+ * @return Tableau d'entiers de taille 3 contenant [valeur_min, ligne, colonne], NULL
+ * si la matrice est vide
  **/
-int *matrixMin(Matrix *m, unsigned int l, unsigned int c);
+int *matrixMin(Matrix *m, int l, int c);
 
 /**
  * @author VALLAT ugo
@@ -307,10 +309,11 @@ int *matrixMin(Matrix *m, unsigned int l, unsigned int c);
  * @param[in] v Valeur de la case courante
  * @param[in] l Ligne courante
  * @param[in] c Colonne courante
+ * @param[in] buff Buffer utilisable par fun_filter
  *
  * @return true si l'élément est conservé, sinon false
  **/
-typedef bool (*fun_filter)(int v, unsigned int l, unsigned int c);
+typedef bool (*fun_filter)(int v, unsigned int l, unsigned int c, void *buff);
 
 /**
  * @author VALLAT ugo
@@ -320,10 +323,12 @@ typedef bool (*fun_filter)(int v, unsigned int l, unsigned int c);
  *
  * @param[in] m Pointeur vers la matrice
  * @param[in] fun Fonction de filtrage de type fun_filter
+ * @param[in] buff Buffer utilisé par fun_filter
+ * @pre fun != NULL
  *
  * @return Pointeur vers la copie filtrée
  **/
-Matrix *matrixFilter(Matrix *m, fun_filter fun);
+Matrix *matrixFilter(Matrix *m, fun_filter fun, void *buff);
 
 /**
  * @author VALLAT ugo
