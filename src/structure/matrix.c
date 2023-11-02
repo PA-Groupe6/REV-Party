@@ -21,6 +21,7 @@
 #include <stdlib.h>
 
 #include "../logger.h"
+#include "data_struct_utils.h"
 #include "genericlist.h"
 #include "list.h"
 #include "matrix.h"
@@ -46,19 +47,6 @@ struct s_matrix {
 /**
  * @date  1/11/2023
  * @author Ugo VALLAT
- * @brief Exit le programme avec message si arg == NULL
- * @param[in] arg argument à vérifier
- * @param[in] caller Nom de la fonction appelante
- *
- */
-void testArgNull(void *arg, char *caller) {
-    if (arg == NULL)
-        exitl("matrix.c", "hisArgNull", EXIT_FAILURE, "dans %s > erreur pointeur null", caller);
-}
-
-/**
- * @date  1/11/2023
- * @author Ugo VALLAT
  */
 Matrix *createMatrix(unsigned int nbl, unsigned int nbc, int default_value) {
     /* Création matrice */
@@ -78,6 +66,9 @@ Matrix *createMatrix(unsigned int nbl, unsigned int nbc, int default_value) {
         /* remplir la ligne */
         for (unsigned int j = 0; j < nbc; j++)
             listAdd(l, default_value);
+
+        /* ajouter ligne à la matrice */
+        genListAdd(m->tab, l);
     }
 
     m->default_value = default_value;
@@ -91,14 +82,14 @@ Matrix *createMatrix(unsigned int nbl, unsigned int nbc, int default_value) {
  * @author Ugo VALLAT
  */
 void deleteMatrix(ptrMatrix *m) {
-    testArgNull(m, "deleteMatrix");
-    testArgNull(*m, "deleteMatrix");
+    testArgNull(m, "matrix.c", "deleteMatrix", "m");
+    testArgNull(*m, "matrix.c", "deleteMatrix", "*m");
 
     /* parcours de la liste générique */
     List *l;
     GenListIte *ite = createGenListIte((*m)->tab, FROM_BEGIN);
     while (genListIteHasNext(ite)) {
-        genListIteHasNext(ite);
+        genListIteNext(ite);
         /* suppression de la ligne */
         l = (List *)genListIteGetValue(ite);
         deleteList(&l);
@@ -119,7 +110,7 @@ void deleteMatrix(ptrMatrix *m) {
  */
 void matrixSet(Matrix *m, unsigned int l, unsigned int c, int v) {
     /* test des arguments */
-    testArgNull(m, "matrixSet");
+    testArgNull(m, "matrix.c", "matrixSet", "m");
     if (l >= m->nbl || c >= m->nbc)
         exitl("matrix.c", "matrixSet", EXIT_FAILURE,
               "position invalide (%d,%d) dans matrice (%d,%d)", l, c, m->nbl, m->nbc);
@@ -132,7 +123,7 @@ void matrixSet(Matrix *m, unsigned int l, unsigned int c, int v) {
  * @author Ugo VALLAT
  */
 void matrixErase(Matrix *m, unsigned int l, unsigned int c) {
-    testArgNull(m, "matrixErase");
+    testArgNull(m, "matrix.c", "matrixErase", "m");
     if (l >= m->nbl || c >= m->nbc)
         exitl("matrix.c", "matrixErase", EXIT_FAILURE,
               "position invalide (%d,%d) dans matrice (%d,%d)", l, c, m->nbl, m->nbc);
@@ -144,7 +135,7 @@ void matrixErase(Matrix *m, unsigned int l, unsigned int c) {
  * @author Ugo VALLAT
  */
 int matrixGet(Matrix *m, unsigned int l, unsigned int c) {
-    testArgNull(m, "matrixGet");
+    testArgNull(m, "matrix.c", "matrixGet", "m");
     if (l >= m->nbl || c >= m->nbc)
         exitl("matrix.c", "matrixGet", EXIT_FAILURE,
               "position invalide (%d,%d) dans matrice (%d,%d)", l, c, m->nbl, m->nbc);
@@ -157,7 +148,7 @@ int matrixGet(Matrix *m, unsigned int l, unsigned int c) {
  * @author Ugo VALLAT
  */
 unsigned int *matrixShape(Matrix *m) {
-    testArgNull(m, "matrixShape");
+    testArgNull(m, "matrix.c", "matrixShape", "m");
     unsigned int *shape = malloc(sizeof(unsigned int) * 2);
     if (shape == NULL)
         exitl("matrix.c", "matrixShape", EXIT_FAILURE, "Echec malloc tableau shape");
@@ -172,7 +163,7 @@ unsigned int *matrixShape(Matrix *m) {
  * @author Ugo VALLAT
  */
 void matrixInsertLine(Matrix *m, unsigned int l) {
-    testArgNull(m, "matrixInsertLine");
+    testArgNull(m, "matrix.c", "matrixInsertLine", "m");
     if (l > m->nbl)
         exitl("matrix.c", "matrixInsertLine", EXIT_FAILURE, "position %d invalide", l);
 
@@ -193,7 +184,7 @@ void matrixInsertLine(Matrix *m, unsigned int l) {
  * @author Ugo VALLAT
  */
 void matrixRemoveLine(Matrix *m, unsigned int l) {
-    testArgNull(m, "matrixRemoveLine");
+    testArgNull(m, "matrix.c", "matrixRemoveLine", "m");
     if (l >= m->nbl)
         exitl("matrix.c", "matrixRemoveLine", EXIT_FAILURE, "position %d invalide", l);
 
@@ -208,7 +199,7 @@ void matrixRemoveLine(Matrix *m, unsigned int l) {
  * @author Ugo VALLAT
  */
 void matrixInsertColumn(Matrix *m, unsigned int c) {
-    testArgNull(m, "matrixInsertColumn");
+    testArgNull(m, "matrix.c", "matrixInsertColumn", "m");
     if (c > m->nbc)
         exitl("matrix.c", "matrixInsertColumn", EXIT_FAILURE, "position %d invalide", c);
 
@@ -229,7 +220,7 @@ void matrixInsertColumn(Matrix *m, unsigned int c) {
  * @author Ugo VALLAT
  */
 void matrixRemoveColumn(Matrix *m, unsigned int c) {
-    testArgNull(m, "matrixRemoveColumn");
+    testArgNull(m, "matrix.c", "matrixRemoveColumn", "m");
     if (c >= m->nbc)
         exitl("matrix.c", "matrixRemoveColumn", EXIT_FAILURE, "position %d invalide", c);
 
@@ -239,7 +230,7 @@ void matrixRemoveColumn(Matrix *m, unsigned int c) {
     while (genListIteHasNext(ite)) {
         genListIteNext(ite);
         line = genListIteGetValue(ite);
-        listRemove(line, m->default_value);
+        listRemove(line, c);
     }
     deleteGenListIte(&ite);
     m->nbc--;
@@ -258,8 +249,8 @@ struct s_matrixIte {
     Matrix *matrix;            /* matrice à parcourir */
     int cur_l;                 /* ligne actuelle */
     int cur_c;                 /* colonne actuelle */
-    unsigned int line;         /* ligne à parcourir (-1 = toutes) */
-    unsigned int column;       /* colonne à parcourir (-1 = toutes) */
+    int line;                  /* ligne à parcourir (-1 = toutes) */
+    int column;                /* colonne à parcourir (-1 = toutes) */
     fun_ite fun;               /* fonction à appliquer à chaque élément */
     void *buff;                /* buffer utilisé par la fonction fun */
     bool next;                 /* appel à fonction next */
@@ -285,8 +276,8 @@ int default_fun(int v, unsigned int l, unsigned int c, void *buff) { return v; }
  * @author Ugo VALLAT
  */
 MatrixIte *createMatrixIte(Matrix *m, int l, int c, fun_ite fun, void *buff) {
-    testArgNull(m, "createMatrixIte");
-    if (l >= m->nbl || l < -1 || c >= m->nbc || c < -1)
+    testArgNull(m, "matrix.c", "createMatrixIte", "m");
+    if (l >= (int)m->nbl || l < -1 || c >= (int)m->nbc || c < -1)
         exitl("matrix.c", "createMatrixIte", EXIT_FAILURE,
               "argument invalide (%d,%d) dans matrice (%d,%d)", l, c, m->nbl, m->nbc);
 
@@ -334,7 +325,7 @@ MatrixIte *createMatrixIte(Matrix *m, int l, int c, fun_ite fun, void *buff) {
  * @param ite Itérateur à vérifier (contient la taille de référence et la matrice)
  */
 void testMatrixModification(MatrixIte *ite) {
-    testArgNull(ite, "matrixIteHasNext");
+    testArgNull(ite, "matrix.c", "matrixIteHasNext", "ite");
     if (!(ite->shape_ref[0] == ite->matrix->nbl && ite->shape_ref[1] == ite->matrix->nbc))
         exitl("matrix.c", "testMatrixModification ", EXIT_FAILURE,
               "Matrice modifiée pdurant parcours");
@@ -345,21 +336,24 @@ void testMatrixModification(MatrixIte *ite) {
  * @author Ugo VALLAT
  */
 bool matrixIteHasNext(MatrixIte *ite) {
-    testArgNull(ite, "matrixIteHasNext");
+    testArgNull(ite, "matrix.c", "matrixIteHasNext", "ite");
     testMatrixModification(ite);
+    int nbl = (int)ite->matrix->nbl;
+    int nbc = (int)ite->matrix->nbc;
 
     /* Parcours une case */
     if (ite->line > -1 && ite->column > -1)
         return ite->cur_l != ite->line && ite->cur_c != ite->column;
     /* parcours une colonne */
-    if (ite->line == -1)
-        return ite->cur_c < ite->matrix->nbc - 1;
+    if (ite->line == -1 && ite->column != -1)
+        return ite->cur_l < nbl - 1;
     /* parcours une ligne */
-    if (ite->column == -1)
-        return ite->cur_l < ite->matrix->nbl - 1;
+    if (ite->line != -1 && ite->column == -1)
+        return ite->cur_c < nbc - 1;
     /* parcours toute la matrice */
     if (ite->line == -1 && ite->column == -1)
-        return (ite->cur_c < ite->matrix->nbc - 1 || ite->cur_l < ite->matrix->nbl - 1);
+        return (ite->cur_c < nbc - 1 || ite->cur_l < nbl - 1);
+
     /* Erreur structure */
     exitl("matrix.c", "matrixIteHasNext", EXIT_FAILURE, "Erreur parametre ligne/colonne : (%d,%d)",
           ite->line, ite->column);
@@ -371,9 +365,8 @@ bool matrixIteHasNext(MatrixIte *ite) {
  * @author Ugo VALLAT
  */
 int matrixIteNext(MatrixIte *ite) {
-    testArgNull(ite, "matrixIteNext");
+    testArgNull(ite, "matrix.c", "matrixIteNext", "ite");
     testMatrixModification(ite);
-
     if (!matrixIteHasNext(ite))
         exitl("matrix.c", "matrixIteNext", EXIT_FAILURE, "Fin de matrice atteint");
 
@@ -385,16 +378,16 @@ int matrixIteNext(MatrixIte *ite) {
         ite->cur_c = ite->column;
     }
     /* parcours une colonne */
-    if (ite->line == -1) {
+    if (ite->line == -1 && ite->column != -1) {
         ite->cur_l = ite->cur_l + 1;
     }
     /* parcours une ligne */
-    if (ite->column == -1) {
+    if (ite->line != -1 && ite->column == -1) {
         ite->cur_c = ite->cur_c + 1;
     }
     /* parcours toute la matrice */
     if (ite->line == -1 && ite->column == -1) {
-        if (ite->cur_c < ite->matrix->nbc - 1)
+        if (ite->cur_c < ((int)ite->matrix->nbc) - 1)
             ite->cur_c++;
         else {
             ite->cur_l++;
@@ -420,7 +413,7 @@ int matrixIteNext(MatrixIte *ite) {
  * @author Ugo VALLAT
  */
 int matrixIteGetValue(MatrixIte *ite) {
-    testArgNull(ite, "matrixIteGetValue");
+    testArgNull(ite, "matrix.c", "matrixIteGetValue", "ite");
     testMatrixModification(ite);
 
     if (!(ite->next)) {
@@ -435,7 +428,316 @@ int matrixIteGetValue(MatrixIte *ite) {
  * @author Ugo VALLAT
  */
 void deleteMatrixIte(ptrMatrixIte *ite) {
-    testArgNull(ite, "matrixIteGetValue");
+    testArgNull(ite, "matrix.c", "matrixIteGetValue", "ite");
     free(*ite);
     *ite = NULL;
 }
+
+/*------------------------------------------------------------------*/
+/*                            UTILS                                 */
+/*------------------------------------------------------------------*/
+
+/**
+ * @date  1/11/2023
+ * @author Ugo VALLAT
+ */
+void matrixMap(Matrix *m, int l, int c, fun_ite fun, void *buff) {
+    testArgNull(m, "matrix.c", "matrixMap", "m");
+    if (l >= (int)m->nbl || l < -1 || c >= (int)m->nbc || c < -1)
+        exitl("matrix.c", "matrixMap", EXIT_FAILURE,
+              "argument invalide (l,c)=(%d,%d) dans matrice (%d,%d)", l, c, m->nbl, m->nbc);
+
+    MatrixIte *ite = createMatrixIte(m, l, c, fun, buff);
+    while (matrixIteHasNext(ite)) {
+        matrixIteNext(ite);
+    }
+    deleteMatrixIte(&ite);
+}
+
+/**
+ * @date  1/11/2023
+ * @author Ugo VALLAT
+ * @brief Ajoute la valeur courante au buffer
+ * @param[in] v Valeur à ajouter
+ * @param[in] l Ligne courante
+ * @param[in] c Colonne courante
+ * @param[in] buff Pointeur vers la somme des éléments
+ * @return élément courant
+ */
+int fun_som(int v, unsigned int l, unsigned int c, void *buff) {
+    long int *som = (long int *)buff;
+    if (v > 0)
+        (*som) += v;
+    return v;
+}
+
+/**
+ * @date  1/11/2023
+ * @author Ugo VALLAT
+ */
+long int matrixSum(Matrix *m, int l, int c) {
+    testArgNull(m, "matrix.c", "matrixSum", "m");
+    if (l >= (int)m->nbl || l < -1 || c >= (int)m->nbc || c < -1)
+        exitl("matrix.c", "matrixSum", EXIT_FAILURE,
+              "argument invalide (l,c)=(%d,%d) dans matrice (%d,%d)", l, c, m->nbl, m->nbc);
+    /* création buffer sum */
+    long int *sum = malloc(sizeof(long int));
+    if (sum == NULL)
+        exitl("matrix.c", "matrixSum", EXIT_FAILURE, "Echec malloc buffer sum");
+    *sum = 0;
+
+    /* parcours de la matrice */
+    MatrixIte *ite = createMatrixIte(m, l, c, fun_som, sum);
+    while (matrixIteHasNext(ite))
+        matrixIteNext(ite);
+    deleteMatrixIte(&ite);
+
+    /* renvoie de la valeur */
+    long int vsum = *sum;
+    free(sum);
+    return vsum;
+}
+
+/**
+ * @date  1/11/2023
+ * @author Ugo VALLAT
+ * @brief Compare la valeur courante à celle du buffer et stock le maximum dans le buffer (avec ses
+ * coordonnées)
+ * @param[in] v Valeur courante à comparer
+ * @param[in] l Ligne courante
+ * @param[in] c Colonne courante
+ * @param[in] buff Pointeur vers le tableau [max, ligne_max, colone_max]
+ * @return élément courant
+ */
+int fun_max(int v, unsigned int l, unsigned int c, void *buff) {
+    int *max = (int *)buff;
+    if (max[1] == -1 || max[2] == -1) { /* première valeur */
+        max[0] = v;
+        max[1] = l;
+        max[2] = c;
+    } else if (v > *max) {
+        max[0] = v;
+        max[1] = l;
+        max[2] = c;
+    }
+    return v;
+}
+
+/**
+ * @date  1/11/2023
+ * @author Ugo VALLAT
+ */
+int *matrixMax(Matrix *m, int l, int c) {
+    testArgNull(m, "matrix.c", "matrixMax", "m");
+    if (l >= (int)m->nbl || l < -1 || c >= (int)m->nbc || c < -1)
+        exitl("matrix.c", "matrixMax", EXIT_FAILURE,
+              "argument invalide (l,c)=(%d,%d) dans matrice (%d,%d)", l, c, m->nbl, m->nbc);
+
+    /* création buffer max */
+    int *max = malloc(sizeof(int) * 3);
+    if (max == NULL)
+        exitl("matrix.c", "matrixMax", EXIT_FAILURE, "Echec malloc tab max");
+    max[0] = 0;
+    max[1] = -1;
+    max[2] = -1;
+
+    /* parcours de la matrice */
+    MatrixIte *ite = createMatrixIte(m, l, c, fun_max, max);
+    while (matrixIteHasNext(ite))
+        matrixIteNext(ite);
+    deleteMatrixIte(&ite);
+
+    /* renvoie de la valeur */
+    if (max[1] == -1 || max[2] == -1) {
+        free(max);
+        max = NULL;
+    }
+    return max;
+}
+
+/**
+ * @date  1/11/2023
+ * @author Ugo VALLAT
+ * @brief Compare la valeur courante à celle du buffer et stock le minimum dans le buffer (avec ses
+ * coordonnées)
+ * @param[in] v Valeur courante à comparer
+ * @param[in] l Ligne courante
+ * @param[in] c Colonne courante
+ * @param[in] buff Pointeur vers le tableau [min, ligne_min, colone_min]
+ * @return élément courant
+ */
+int fun_min(int v, unsigned int l, unsigned int c, void *buff) {
+    int *min = (int *)buff;
+    if (min[1] == -1 || min[2] == -1) { /* première valeur */
+        min[0] = v;
+        min[1] = l;
+        min[2] = c;
+    } else if (v < *min) {
+        min[0] = v;
+        min[1] = l;
+        min[2] = c;
+    }
+    return v;
+}
+
+/**
+ * @date  1/11/2023
+ * @author Ugo VALLAT
+ */
+int *matrixMin(Matrix *m, int l, int c) {
+    testArgNull(m, "matrix.c", "matrixMin", "m");
+    if (l >= (int)m->nbl || l < -1 || c >= (int)m->nbc || c < -1)
+        exitl("matrix.c", "matrixMin", EXIT_FAILURE,
+              "argument invalide (l,c)=(%d,%d) dans matrice (%d,%d)", l, c, m->nbl, m->nbc);
+
+    /* création buffer min */
+    int *min = malloc(sizeof(int) * 3);
+    if (min == NULL)
+        exitl("matrix.c", "matrixMin", EXIT_FAILURE, "Echec malloc tab min");
+    min[0] = 0;
+    min[1] = -1;
+    min[2] = -1;
+
+    /* parcours de la matrice */
+    MatrixIte *ite = createMatrixIte(m, l, c, fun_min, min);
+    while (matrixIteHasNext(ite))
+        matrixIteNext(ite);
+    deleteMatrixIte(&ite);
+
+    /* renvoie de la valeur */
+    if (min[1] == -1 || min[2] == -1) {
+        free(min);
+        min = NULL;
+    }
+    return min;
+}
+
+/**
+ * @brief Structure utilisée par filter pour générer la nouvelle matrice
+ *
+ */
+typedef struct s_filter {
+    fun_filter fun;     /* Fonction de filtrage */
+    void *fun_buff;     /* buffer utilisé par la fonction de filtrage */
+    Matrix *new_matrix; /* matrice filtrée */
+} Filter;
+
+/**
+ * @date  1/11/2023
+ * @author Ugo VALLAT
+ * @brief Ajoute l'élément courant à la nouvelle matrice si la fonction @ref fun_filter
+ * renvoie true
+ * @param[in] v Valeur courante
+ * @param[in] l Ligne courante
+ * @param[in] c Colonne courante
+ * @param[in] buff Pointeur vers la structure Filter
+ * @return élément courant
+ */
+int applyFunFilter(int v, unsigned int l, unsigned int c, void *buff) {
+    Filter *filter = (Filter *)buff;
+    if (filter->fun(v, l, c, filter->fun_buff))
+        matrixSet(filter->new_matrix, l, c, v);
+    return v;
+}
+
+/**
+ * @date  1/11/2023
+ * @author Ugo VALLAT
+ */
+Matrix *matrixFilter(Matrix *m, fun_filter fun, void *buff) {
+    testArgNull(m, "matrix.c", "matrixFilter", "m");
+    testArgNull(fun, "matrix.c", "matrixFilter", "fun");
+
+    /* Création nouvelle matrice et buffer */
+    Filter *filter = malloc(sizeof(Filter));
+    if (filter == NULL)
+        exitl("matrix.c", "matrixFilter", EXIT_FAILURE, "Echec malloc Filter");
+    filter->new_matrix = createMatrix(m->nbl, m->nbc, m->default_value);
+    filter->fun = fun;
+    filter->fun_buff = buff;
+
+    /* parcours de la matrice */
+    MatrixIte *ite = createMatrixIte(m, -1, -1, applyFunFilter, filter);
+    while (matrixIteHasNext(ite))
+        matrixIteNext(ite);
+    deleteMatrixIte(&ite);
+
+    /* renvoie de la nouvelle matrice */
+    Matrix *new = filter->new_matrix;
+    free(filter);
+    return new;
+}
+
+/**
+ * @date  1/11/2023
+ * @author Ugo VALLAT
+ * @brief Ajoute l'élément courant à la nouvelle matrice
+ * @param[in] v Valeur courante
+ * @param[in] l Ligne courante
+ * @param[in] c Colonne courante
+ * @param[in] buff Pointeur vers la nouvelle matrice
+ * @return élément courant
+ */
+int fun_copy(int v, unsigned int l, unsigned int c, void *buff) {
+    Matrix *m = (Matrix *)buff;
+    matrixSet(m, l, c, v);
+    return v;
+}
+
+/**
+ * @date  1/11/2023
+ * @author Ugo VALLAT
+ */
+Matrix *matrixCopy(Matrix *m) {
+    testArgNull(m, "matrix.c", "matrixCopy", "m");
+
+    /* Création nouvelle matrice */
+    Matrix *new = createMatrix(m->nbl, m->nbc, m->default_value);
+
+    /* parcours de la matrice */
+    MatrixIte *ite = createMatrixIte(m, -1, -1, fun_copy, new);
+    while (matrixIteHasNext(ite))
+        matrixIteNext(ite);
+    deleteMatrixIte(&ite);
+
+    return new;
+}
+
+/**
+ * @date  1/11/2023
+ * @author Ugo VALLAT
+ */
+void displayMatrix(Matrix *m) {
+    testArgNull(m, "matrix.c", "displayMatrix", "m");
+
+    GenListIte *ite = createGenListIte(m->tab, FROM_BEGIN);
+    printf(" [ \n");
+    while (genListIteHasNext(ite)) {
+        genListIteNext(ite);
+        printf("   ");
+        displayList((List *)genListIteGetValue(ite));
+        printf("\n");
+    }
+    printf(" ] \n");
+    deleteGenListIte(&ite);
+}
+
+/*------------------------------------------------------------------*/
+/*                              DEBUG                               */
+/*------------------------------------------------------------------*/
+
+#ifdef DEBUG
+
+void printMatrixLog(Matrix *m) {
+    testArgNull(m, "matrix.c", "displayMatrix", "m");
+
+    printl("\n<+>------------[ matrix ]-----------<+>\n\n");
+    printl("[matrix] nbl = %d\n", m->nbl);
+    printl("[matrix] nbc = %d\n", m->nbc);
+    printl("[matrix] default_value = %d\n", m->default_value);
+    printl("[matrix] matrice :\n");
+    displayMatrix(m);
+    printl("\n\n<->---------------------------------<->\n");
+}
+
+#endif
