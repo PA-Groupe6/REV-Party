@@ -14,6 +14,7 @@
 
 #include "list.h"
 #include "../logger.h"
+#include "data_struct_utils.h"
 #include <asm-generic/errno-base.h>
 #include <errno.h>
 #include <malloc.h>
@@ -30,18 +31,6 @@ struct s_list {
     unsigned int size;        /* taille de la liste (nombre éléments) */
     int *tab;                 /* tableau des valeurs */
 };
-
-/**
- * @date  1/11/2023
- * @author Ugo VALLAT
- * @brief Exit le programme avec message si arg == NULL
- * @param[in] arg argument à vérifier
- * @param[in] caller Nom de la fonction appelante
- */
-void testArgNull(void *arg, char *caller) {
-    if (arg == NULL)
-        exitl("list.c", "hisArgNull", EXIT_FAILURE, "dans %s > erreur pointeur null", caller);
-}
 
 /**
  * @date  1/11/2023
@@ -67,8 +56,8 @@ List *createList(unsigned int size) {
  */
 void deleteList(ptrList *l) {
     /* test l != NULL */
-    testArgNull(l, "deleteList");
-    testArgNull((*l), "deleteList");
+    testArgNull(l, "list.c", "deleteList", "l");
+    testArgNull((*l), "list.c", "deleteList", "*l");
 
     /* libération de la mémoire */
     free((*l)->tab);
@@ -85,8 +74,8 @@ void deleteList(ptrList *l) {
  * @param new_size Nouvelle taille du tableau
  * @pre l != NULL
  */
-void adjustMemorySize(List *l, unsigned int new_size) {
-    testArgNull(l, "adjustMemorySize");
+void adjustMemorySizeList(List *l, unsigned int new_size) {
+    testArgNull(l, "list.c", "adjustMemorySizeList", "l");
 
     /* nouvelle taille de la liste */
     l->memory_size = new_size;
@@ -94,7 +83,7 @@ void adjustMemorySize(List *l, unsigned int new_size) {
     /* modification taille du tableau */
     l->tab = realloc(l->tab, new_size * sizeof(int));
     if (new_size != 0 && l->tab == NULL)
-        exitl("list.c", "adjustMemorySize", EXIT_FAILURE, "echec realloc tab");
+        exitl("list.c", "adjustMemorySizeList", EXIT_FAILURE, "echec realloc tab");
 }
 
 /**
@@ -103,11 +92,11 @@ void adjustMemorySize(List *l, unsigned int new_size) {
  */
 void listAdd(List *l, int v) {
     /* test l != NULL */
-    testArgNull(l, "listAdd");
+    testArgNull(l, "list.c", "listAdd", "l");
 
     /* agrandissement de la liste si pleine */
     if (l->size == l->memory_size)
-        adjustMemorySize(l, l->memory_size + 8);
+        adjustMemorySizeList(l, l->memory_size + 8);
 
     /* Ajout de la valeur */
     l->tab[l->size] = v;
@@ -120,13 +109,13 @@ void listAdd(List *l, int v) {
  */
 void listInsert(List *l, int v, unsigned int i) {
     /* vérification paramêtres */
-    testArgNull(l, "listInsert");
+    testArgNull(l, "list.c", "listInsert", "l");
     if (i > l->size)
         exitl("list.c", "listInsert", EXIT_FAILURE, "position (i) invalide");
 
     /* agrandissement de la liste si pleine */
     if (l->size >= l->memory_size)
-        adjustMemorySize(l, l->memory_size + 8);
+        adjustMemorySizeList(l, l->memory_size + 8);
 
     /* décale tous les éléments */
     for (int j = l->size - 1; j >= (int)i; j--)
@@ -143,13 +132,13 @@ void listInsert(List *l, int v, unsigned int i) {
  */
 void listPop(List *l) {
     /* vérification paramêtre */
-    testArgNull(l, "listPop");
+    testArgNull(l, "list.c", "listPop", "l");
     if (l->size <= 0)
         exitl("list.c", "listPop", EXIT_FAILURE, "liste déjà vide");
 
     /* suppression de l'élément */
     l->size--;
-    adjustMemorySize(l, l->size);
+    adjustMemorySizeList(l, l->size);
 }
 
 /**
@@ -158,7 +147,7 @@ void listPop(List *l) {
  */
 void listRemove(List *l, unsigned int i) {
     /* vérification paramêtres */
-    testArgNull(l, "listRemove");
+    testArgNull(l, "list.c", "listRemove", "l");
     if (i >= l->size)
         exitl("list.c.c", "listRemove", EXIT_FAILURE, "position (i) invalide");
 
@@ -166,7 +155,7 @@ void listRemove(List *l, unsigned int i) {
     for (int j = i; j < (int)l->size - 1; j++)
         l->tab[j] = l->tab[j + 1];
     l->size--;
-    adjustMemorySize(l, l->size);
+    adjustMemorySizeList(l, l->size);
 }
 
 /**
@@ -174,7 +163,7 @@ void listRemove(List *l, unsigned int i) {
  * @author Ugo VALLAT
  */
 bool listEmpty(List *l) {
-    testArgNull(l, "listEmpty");
+    testArgNull(l, "list.c", "listEmpty", "l");
     return l->size == 0;
 }
 
@@ -183,7 +172,7 @@ bool listEmpty(List *l) {
  * @author Ugo VALLAT
  */
 unsigned int listSize(List *l) {
-    testArgNull(l, "lestSize");
+    testArgNull(l, "list.c", "lestSize", "l");
     return l->size;
 }
 
@@ -193,7 +182,7 @@ unsigned int listSize(List *l) {
  */
 List *listCopy(List *l) {
     /* vérification paramêtre */
-    testArgNull(l, "listCopy");
+    testArgNull(l, "list.c", "listCopy", "l");
 
     /* création nouvelle liste */
     List *new = createList(l->size);
@@ -211,7 +200,7 @@ List *listCopy(List *l) {
  */
 int listGet(List *l, unsigned int i) {
     /* vérification paramêtre */
-    testArgNull(l, "listGet");
+    testArgNull(l, "list.c", "listGet", "l");
     if (i >= l->size)
         exitl("list.c", "listGet", EXIT_FAILURE, "position (%d) invalide", i);
 
@@ -224,7 +213,7 @@ int listGet(List *l, unsigned int i) {
  */
 void listSet(List *l, int v, unsigned int i) {
     /* vérification paramêtre */
-    testArgNull(l, "listSet");
+    testArgNull(l, "list.c", "listSet", "l");
     if (i >= l->size)
         exitl("list.c", "listSet", EXIT_FAILURE, "position (%d) invalide", i);
 
@@ -237,14 +226,14 @@ void listSet(List *l, int v, unsigned int i) {
  */
 void displayList(List *l) {
     /* vérification paramêtre */
-    testArgNull(l, "displayList");
+    testArgNull(l, "list.c", "displayList", "l");
 
     if (l->size == 0)
         printl("[ ]");
     else {
-        printl("[ %d,", l->tab[0]);
+        printl("[ %3d", l->tab[0]);
         for (unsigned int i = 1; i < l->size; i++) {
-            printl(", %d", l->tab[i]);
+            printl(", %3d", l->tab[i]);
         }
         printl(" ]");
     }
@@ -284,7 +273,7 @@ unsigned int next_backward(int i) { return i - 1; }
  * @author Ugo VALLAT
  */
 ListIte *createListIte(List *l, int dir) {
-    testArgNull(l, "createListIte");
+    testArgNull(l, "list.c", "createListIte", "l");
 
     /* création de l'itérateur */
     ListIte *ite = malloc(sizeof(ListIte));
@@ -311,7 +300,7 @@ ListIte *createListIte(List *l, int dir) {
  * @author Ugo VALLAT
  */
 bool listIteHasNext(ListIte *ite) {
-    testArgNull(ite, "listIteHasNext");
+    testArgNull(ite, "list.c", "listIteHasNext", "ite");
     unsigned int next = ite->fnext(ite->cur);
     return (next < ite->list->size);
 }
@@ -321,7 +310,7 @@ bool listIteHasNext(ListIte *ite) {
  * @author Ugo VALLAT
  */
 void listIteNext(ListIte *ite) {
-    testArgNull(ite, "listIteNext");
+    testArgNull(ite, "list.c", "listIteNext", "ite");
     if (!listIteHasNext(ite))
         exitl("list.c", "listIteNext", EXIT_FAILURE, "aucun élément à lire");
 
@@ -334,7 +323,7 @@ void listIteNext(ListIte *ite) {
  * @author Ugo VALLAT
  */
 int listIteGetValue(ListIte *ite) {
-    testArgNull(ite, "listIteGetValue");
+    testArgNull(ite, "list.c", "listIteGetValue", "ite");
     if (!ite->next)
         exitl("list.c", "listIteGetValue", EXIT_FAILURE, "lecture sans appel à next");
 
@@ -346,7 +335,7 @@ int listIteGetValue(ListIte *ite) {
  * @author Ugo VALLAT
  */
 void deleteListIte(ptrListIte *ite) {
-    testArgNull(ite, "deleteListIte");
+    testArgNull(ite, "list.c", "deleteListIte", "ite");
     free((*ite)->list);
     free((*ite));
     *ite = NULL;
@@ -363,20 +352,20 @@ void deleteListIte(ptrListIte *ite) {
  * @author Ugo VALLAT
  */
 void printListLog(List *l) {
-    testArgNull(l, "printListLog");
+    testArgNull(l, "list.c", "printListLog", "l");
 
-    printl("\n<+>------------[ list.c ]-----------<+>\n\n");
+    printl("\n<+>------------[ list ]-----------<+>\n\n");
     printl("[list.c] size = %d\n", l->size);
     printl("[list.c] memory size = %d\n", l->memory_size);
     if (l->size <= 0)
         printl("[list.c] list = [");
     else {
-        printl("[list.c] list = [ %d ", l->tab[0]);
+        printl("[list.c] list = [ %3d ", l->tab[0]);
         for (unsigned int i = 1; i < l->size; i++) {
-            printl(", %d", l->tab[i]);
+            printl(", %3d", l->tab[i]);
         }
     }
-    printl(" ]\n\n<->---------------------------------<->\n");
+    printl(" ]\n\n<->-------------------------------<->\n");
 }
 
 #endif
