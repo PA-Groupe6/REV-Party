@@ -41,6 +41,11 @@ void deleteStringBuilder(ptrStringBuilder* string_builder) {
     string_builder = NULL;
 }
 
+void deleteStringBuilder(ptrStringBuilder* string_builder) {
+    free((*string_builder)->output);
+    string_builder = NULL;
+}
+
 #define STATUS_LENGTH 67
 #define STATUS_PAD_CHAR '>'
 
