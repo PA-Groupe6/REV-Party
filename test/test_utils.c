@@ -13,18 +13,23 @@ StringBuilder* createStringBuilder() {
     return string_builder;
 }
 
+void addLineStringBuilder(StringBuilder* string_builder, const char* line) {
+    strcpy(string_builder->output + string_builder->lastLine, line);
+    string_builder->lastLine += strlen(line);
+}
+
 void emptyStringBuilder(StringBuilder* string_builder) {
     string_builder->lastLine = 0;
     string_builder->output[0] = '\0';
 }
 
-void addLineStringBuilder(StringBuilder* string_builder, char* line) {
-    strcpy(string_builder->output + string_builder->lastLine, line);
-    string_builder->lastLine+=strlen(line);
+void printStringBuilder(const StringBuilder* string_builder) {
+    printf("%s\n%s[>>>]: here%s\n", string_builder->output, KOC, RSTC);
 }
 
-void printStringBuilder(StringBuilder* string_builder) {
-    printf("%s\n%s[>>>]: here%s\n", string_builder->output, KOC, RSTC);
+void deleteStringBuilder(ptrStringBuilder* string_builder) {
+    free((*string_builder)->output);
+    string_builder = NULL;
 }
 
 #define STATUS_LENGTH 67
