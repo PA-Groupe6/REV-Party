@@ -10,12 +10,16 @@
 #ifndef __DS_UTILS_H__
 #define __DS_UTILS_H__
 
+#define MAX_LENGHT_LABEL 256
+
 /**
- * @date  1/11/2023
- * @author Ugo VALLAT
+ * @date  5/11/2023
  * @brief Exit le programme avec message si arg == NULL
  * @param[in] arg argument à vérifier
  * @param[in] caller Nom de la fonction appelante
+ * @pre file != NULL
+ * @pre fun != NULL
+ * @pre name != NULL
  *
  */
 void testArgNull(void *arg, char *file, char *fun, char *name);

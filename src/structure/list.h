@@ -15,7 +15,6 @@
 
 #ifndef __LIST_H__
 #define __LIST_H__
-#include "matrix.h"
 #include <errno.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -29,8 +28,7 @@ typedef struct s_list List;
 typedef List *ptrList;
 
 /**
- * @author VALLAT ugo
- * @date  1/11/2023
+ * @date  5/11/2023
  * @brief Crée une liste vide
  *
  * @param[in] size Espace mémoire initial (en nombre d'éléments)
@@ -40,67 +38,68 @@ typedef List *ptrList;
 List *createList(unsigned int size);
 
 /**
- * @author VALLAT ugo
- * @date  1/11/2023
+ * @date  5/11/2023
  * @brief Supprime la liste et libère la mémoire
  *
  * @param[in] l liste à supprimer
+ * @pre l != NULL
+ * @pre *l != NULL
  */
 void deleteList(ptrList *l);
 
 /**
- * @author VALLAT ugo
- * @date  1/11/2023
+ * @date  5/11/2023
  * @brief Ajoute l'élément à la fin de la liste
  *
  * @param[in] l Pointeur vers la liste
  * @param[in] v Valeur à ajouter
+ * @pre l != NULL
  */
 void listAdd(List *l, int v);
 
 /**
- * @author VALLAT ugo
- * @date  1/11/2023
+ * @date  5/11/2023
  * @brief Insert une valeur à la position i
  *
  * @param[in] l Pointeur vers la liste
  * @param[in] v Valeur à ajouter
  * @param[in] i position
+ * @pre l != NULL
  *
  * @pre i <= listSize
  */
 void listInsert(List *l, int v, unsigned int i);
 
 /**
- * @author VALLAT ugo
- * @date 1/11/2023
+ * @date 5/11/2023
  * @brief Supprime le dernier élément de la liste
  *
  * @param[in] l list
+ * @pre l != NULL
  *
  * @pre taille liste > 0
  **/
 void listPop(List *l);
 
 /**
- * @author VALLAT ugo
- * @date  1/11/2023
+ * @date  5/11/2023
  * @brief Supprime l'élément à la position i
  *
  * @param[in] l Pointeur vers la liste
  * @param[in] i position
+ * @pre l != NULL
  *
  * @pre i < listSize
  */
 void listRemove(List *l, unsigned int i);
 
 /**
- * @author VALLAT ugo
- * @date 1/11/2023
+ * @date 5/11/2023
  * @brief Lire la valeur à la position i
  *
  * @param[in] l Pointeur vers la liste
  * @param[in] i Position de l'élément
+ * @pre l != NULL
  *
  * @pre i < list size
  *
@@ -116,23 +115,23 @@ int listGet(List *l, unsigned int i);
  * @param[in] l Pointeur vers la liste
  * @param[in] v Nouvelle valeur
  * @param[in] i Position
+ * @pre l != NULL
  */
 void listSet(List *l, int v, unsigned int i);
 
 /**
- * @author VALLAT ugo
- * @date 1/11/2023
+ * @date 5/11/2023
  *
  * @brief Renvoie si la liste est vide
  *
  * @param[in] l Pointeur vers la liste
+ * @pre l != NULL
  * @return true si vide, false sinon
  */
 bool listEmpty(List *l);
 
 /**
- * @author VALLAT ugo
- * @date  1/11/2023
+ * @date  5/11/2023
  * @brief Renvoie la taille de la liste (position + 1 du dernier élément)
  *
  * @param[in] l Pointeur vers la liste
@@ -143,11 +142,11 @@ bool listEmpty(List *l);
 unsigned int listSize(List *l);
 
 /**
- * @author VALLAT ugo
  * @date 30/10/2023
  * @brief Copie la liste en entrée
  *
  * @param[in] l Pointeur de la liste à copier
+ * @pre l != NULL
  *
  * @return  Pointeur vers la copie
  *
@@ -156,8 +155,7 @@ unsigned int listSize(List *l);
 List *listCopy(List *l);
 
 /**
- * @author VALLAT ugo
- * @date 1/11/2023
+ * @date 5/11/2023
  * @brief Afficher la liste dans la sortie par standard
  *
  * @param[in] l liste à afficher
@@ -178,13 +176,13 @@ typedef struct s_list_ite *ptrListIte;
 #define FROM_END 0
 
 /**
- * @author VALLAT ugo
- * @date 1/11/2023
+ * @date 5/11/2023
  * @brief Crée un itérateur sur la liste passée en entrée qui la parcours
  * depuis le début ( @ref FROM_BEGIN) ou la fin ( @ref FROM_END)
  *
  * @param[in] l liste à parcourrir
  * @param[in] dir sens de parcours de l'itérateur ( @ref FROM_BEGIN ou @ref FROM_END)
+ * @pre l != NULL
  *
  * @return pointeur vers l'itérateur
  *
@@ -194,33 +192,33 @@ typedef struct s_list_ite *ptrListIte;
 ListIte *createListIte(List *l, int dir);
 
 /**
- * @author VALLAT ugo
- * @date 1/11/2023
+ * @date 5/11/2023
  * @brief Renvoie si il reste des éléments à parcourir dans la liste
  *
  * @param[in] ite pointeur vers l'itérateur
+ * @pre ite != NULL
  *
  * @return true si il reste des éléments, sinon false
  **/
 bool listIteHasNext(ListIte *ite);
 
 /**
- * @author VALLAT ugo
- * @date 1/11/2023
+ * @date 5/11/2023
  * @brief Décale l'itérateur sur le prochain élément et renvoie sa valeur
  *
  * @param[in] ite pointeur vers l'itérateur
+ * @pre ite != NULL
  *
- * @pre doit avoir un prochain élément
+ * @pre listIteHasNext(ite) == true
  */
 void listIteNext(ListIte *ite);
 
 /**
- * @author VALLAT ugo
- * @date 1/11/2023
+ * @date 5/11/2023
  * @brief Renvoie la valeur courrante
  *
  * @param[in] ite pointeur vers l'itérateur
+ * @pre ite != NULL
  *
  * @pre doit être sur un élément
  *
@@ -229,11 +227,12 @@ void listIteNext(ListIte *ite);
 int listIteGetValue(ListIte *ite);
 
 /**
- * @author VALLAT ugo
- * @date 1/11/2023
+ * @date 5/11/2023
  * @brief Supprime l'itérateur et libère la mémoire
  *
  * @param[in] ite pointeur vers l'itérateur
+ * @pre ite != NULL
+ * @pre *ite != NULL
  **/
 void deleteListIte(ptrListIte *ite);
 
@@ -244,11 +243,11 @@ void deleteListIte(ptrListIte *ite);
 #ifdef DEBUG
 
 /**
+ * @date 5/11/2023
  * @brief display in the logger all the information about the list and the elements
  *
  * @param[in] l list to print in logger
- * @author VALLAT ugo
- * @date 1/11/2023
+ * @pre l != NULL
  */
 void printListLog(List *l);
 
