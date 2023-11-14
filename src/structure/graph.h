@@ -20,6 +20,7 @@
 #define __GRAPH_H__
 #include "data_struct_utils.h"
 #include "genericlist.h"
+#include "matrix.h"
 #include <errno.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -255,6 +256,7 @@ unsigned int graphIteGetValue(GraphIte *ite);
  * @param[in] ite pointeur vers l'itérateur
  * @pre ite != NULL
  * @pre *ite != NULL
+ * @return adresse du buffer
  */
 void deleteGraphIte(ptrGraphIte *ite);
 
@@ -299,14 +301,8 @@ GenList *graphMin(Graph *g);
 /**
  * @date 5/11/2023
  * @brief Définie le type des fonctions prise en paramêtre du filter
- *
- * @param[in] wieght Poids de l'
- * @param[in] src sommet origine
- * @param[in] dest sommet destination
- * @param[in] buff pointeur vers un buffer pouvant stocker un résultat
  */
-typedef unsigned int (*fun_filter)(unsigned int weight, unsigned int src, unsigned int dest,
-                                   void *buff);
+typedef fun_filter_matrix fun_filter_graph;
 
 /**
  * @date 5/11/2023
@@ -320,7 +316,7 @@ typedef unsigned int (*fun_filter)(unsigned int weight, unsigned int src, unsign
  *
  * @return Pointeur vers la copie filtrée
  */
-Graph *graphFilter(Graph *g, fun_filter fun, void *buff);
+Graph *graphFilter(Graph *g, fun_filter_graph fun, void *buff);
 
 /**
  * @date 5/11/2023

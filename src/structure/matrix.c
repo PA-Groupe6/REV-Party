@@ -15,7 +15,6 @@
  */
 
 #include <asm-generic/errno-base.h>
-#include <errno.h>
 #include <malloc.h>
 #include <stdbool.h>
 #include <stdlib.h>
@@ -144,19 +143,24 @@ int matrixGet(Matrix *m, unsigned int l, unsigned int c) {
 }
 
 /**
- * @date  1/11/2023
+ * @date  14/11/2023
  * @author Ugo VALLAT
  */
-unsigned int *matrixShape(Matrix *m) {
-    testArgNull(m, "matrix.c", "matrixShape", "m");
-    unsigned int *shape = malloc(sizeof(unsigned int) * 2);
-    if (shape == NULL)
-        exitl("matrix.c", "matrixShape", EXIT_FAILURE, "Echec malloc tableau shape");
-
-    shape[0] = m->nbl;
-    shape[1] = m->nbc;
-    return shape;
+unsigned int matrixNbLines(Matrix *m) {
+    testArgNull(m, "matrix.c", "matrixNbLines", "m");
+    return m->nbl;
 }
+
+
+/**
+ * @date  14/11/2023
+ * @author Ugo VALLAT
+ */
+unsigned int matrixNbColonnes(Matrix *m) {
+    testArgNull(m, "matrix.c", "matrixNbColonnes", "m");
+    return m->nbc;
+}
+
 
 /**
  * @date  1/11/2023
@@ -427,10 +431,12 @@ int matrixIteGetValue(MatrixIte *ite) {
  * @date  1/11/2023
  * @author Ugo VALLAT
  */
-void deleteMatrixIte(ptrMatrixIte *ite) {
+void* deleteMatrixIte(ptrMatrixIte *ite) {
     testArgNull(ite, "matrix.c", "matrixIteGetValue", "ite");
+    void* buff = (*ite)->buff;
     free(*ite);
     *ite = NULL;
+    return buff;
 }
 
 /*------------------------------------------------------------------*/
@@ -510,15 +516,17 @@ long int matrixSum(Matrix *m, int l, int c) {
  * @return élément courant
  */
 int fun_max(int v, unsigned int l, unsigned int c, void *buff) {
-    int *max = (int *)buff;
-    if (max[1] == -1 || max[2] == -1) { /* première valeur */
-        max[0] = v;
-        max[1] = l;
-        max[2] = c;
-    } else if (v > *max) {
-        max[0] = v;
-        max[1] = l;
-        max[2] = c;
+    GenList* lmax = (GenList*)buff;
+    int* cur;
+    if(genListEmpty(lmax) || ((int*)genListGet(lmax, 0))[0] <= v) {
+        if(((int*)genListGet(lmax, 0))[0] < v)
+            while(!genListEmpty(lmax))
+                free(genListPop(lmax));
+        cur = malloc(sizeof(int)*3);
+        cur[0] = v;
+        cur[1] = l;
+        cur[2] = c;
+        genListAdd(lmax, cur);
     }
     return v;
 }
@@ -527,32 +535,20 @@ int fun_max(int v, unsigned int l, unsigned int c, void *buff) {
  * @date  1/11/2023
  * @author Ugo VALLAT
  */
-int *matrixMax(Matrix *m, int l, int c) {
+GenList *matrixMax(Matrix *m, int l, int c) {
     testArgNull(m, "matrix.c", "matrixMax", "m");
     if (l >= (int)m->nbl || l < -1 || c >= (int)m->nbc || c < -1)
         exitl("matrix.c", "matrixMax", EXIT_FAILURE,
               "argument invalide (l,c)=(%d,%d) dans matrice (%d,%d)", l, c, m->nbl, m->nbc);
 
     /* création buffer max */
-    int *max = malloc(sizeof(int) * 3);
-    if (max == NULL)
-        exitl("matrix.c", "matrixMax", EXIT_FAILURE, "Echec malloc tab max");
-    max[0] = 0;
-    max[1] = -1;
-    max[2] = -1;
+    GenList* lmax = createGenList(1);
+
+    int col = ((int*)genListGet(lmax, 0))[2];
 
     /* parcours de la matrice */
-    MatrixIte *ite = createMatrixIte(m, l, c, fun_max, max);
-    while (matrixIteHasNext(ite))
-        matrixIteNext(ite);
-    deleteMatrixIte(&ite);
-
-    /* renvoie de la valeur */
-    if (max[1] == -1 || max[2] == -1) {
-        free(max);
-        max = NULL;
-    }
-    return max;
+    matrixMap(m, l, c, fun_max, lmax);
+    return lmax;
 }
 
 /**
@@ -567,15 +563,17 @@ int *matrixMax(Matrix *m, int l, int c) {
  * @return élément courant
  */
 int fun_min(int v, unsigned int l, unsigned int c, void *buff) {
-    int *min = (int *)buff;
-    if (min[1] == -1 || min[2] == -1) { /* première valeur */
-        min[0] = v;
-        min[1] = l;
-        min[2] = c;
-    } else if (v < *min) {
-        min[0] = v;
-        min[1] = l;
-        min[2] = c;
+    GenList* lmin = (GenList*)buff;
+    int* cur;
+    if(genListEmpty(lmin) || ((int*)genListGet(lmin, 0))[0] <= v) {
+        if(((int*)genListGet(lmin, 0))[0] < v)
+            while(!genListEmpty(lmin))
+                free(genListPop(lmin));
+        cur = malloc(sizeof(int)*3);
+        cur[0] = v;
+        cur[1] = l;
+        cur[2] = c;
+        genListAdd(lmin, cur);
     }
     return v;
 }
@@ -584,32 +582,18 @@ int fun_min(int v, unsigned int l, unsigned int c, void *buff) {
  * @date  1/11/2023
  * @author Ugo VALLAT
  */
-int *matrixMin(Matrix *m, int l, int c) {
+GenList *matrixMin(Matrix *m, int l, int c) {
     testArgNull(m, "matrix.c", "matrixMin", "m");
     if (l >= (int)m->nbl || l < -1 || c >= (int)m->nbc || c < -1)
         exitl("matrix.c", "matrixMin", EXIT_FAILURE,
               "argument invalide (l,c)=(%d,%d) dans matrice (%d,%d)", l, c, m->nbl, m->nbc);
 
     /* création buffer min */
-    int *min = malloc(sizeof(int) * 3);
-    if (min == NULL)
-        exitl("matrix.c", "matrixMin", EXIT_FAILURE, "Echec malloc tab min");
-    min[0] = 0;
-    min[1] = -1;
-    min[2] = -1;
+    GenList* lmin = createGenList(1);
 
     /* parcours de la matrice */
-    MatrixIte *ite = createMatrixIte(m, l, c, fun_min, min);
-    while (matrixIteHasNext(ite))
-        matrixIteNext(ite);
-    deleteMatrixIte(&ite);
-
-    /* renvoie de la valeur */
-    if (min[1] == -1 || min[2] == -1) {
-        free(min);
-        min = NULL;
-    }
-    return min;
+    matrixMap(m, l, c, fun_max, lmin);
+    return lmin;
 }
 
 /**
@@ -617,7 +601,7 @@ int *matrixMin(Matrix *m, int l, int c) {
  *
  */
 typedef struct s_filter {
-    fun_filter fun;     /* Fonction de filtrage */
+    fun_filter_matrix fun;     /* Fonction de filtrage */
     void *fun_buff;     /* buffer utilisé par la fonction de filtrage */
     Matrix *new_matrix; /* matrice filtrée */
 } Filter;
@@ -644,7 +628,7 @@ int applyFunFilter(int v, unsigned int l, unsigned int c, void *buff) {
  * @date  1/11/2023
  * @author Ugo VALLAT
  */
-Matrix *matrixFilter(Matrix *m, fun_filter fun, void *buff) {
+Matrix *matrixFilter(Matrix *m, fun_filter_matrix fun, void *buff) {
     testArgNull(m, "matrix.c", "matrixFilter", "m");
     testArgNull(fun, "matrix.c", "matrixFilter", "fun");
 
@@ -711,14 +695,14 @@ void displayMatrix(Matrix *m) {
     testArgNull(m, "matrix.c", "displayMatrix", "m");
 
     GenListIte *ite = createGenListIte(m->tab, FROM_BEGIN);
-    printf(" [ \n");
+    printl(" [ \n");
     while (genListIteHasNext(ite)) {
         genListIteNext(ite);
         printf("   ");
         displayList((List *)genListIteGetValue(ite));
         printf("\n");
     }
-    printf(" ] \n");
+    printl(" ] \n");
     deleteGenListIte(&ite);
 }
 

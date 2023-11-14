@@ -78,8 +78,9 @@ void listInsert(List *l, int v, unsigned int i);
  * @pre l != NULL
  *
  * @pre taille liste > 0
+ * @return valeur avant suppression
  **/
-void listPop(List *l);
+int listPop(List *l);
 
 /**
  * @date  5/11/2023
@@ -90,8 +91,9 @@ void listPop(List *l);
  * @pre l != NULL
  *
  * @pre i < listSize
+ * @return valeur avant suppression
  */
-void listRemove(List *l, unsigned int i);
+int listRemove(List *l, unsigned int i);
 
 /**
  * @date 5/11/2023
