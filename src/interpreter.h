@@ -20,7 +20,7 @@ typedef enum e_module {
  * @brief Types de fichier csv pouvant être renseigné par l'utilisateur
  */
 typedef enum e_file_type {
-    BALE, DUEL
+    BALE, DUEL, JUDGMENT
 } FileType;
 
 /**
