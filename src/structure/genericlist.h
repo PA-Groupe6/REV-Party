@@ -34,12 +34,11 @@ typedef GenList *ptrGenList;
  * @date  5/11/2023
  * @brief Crée une liste vide
  *
- * @param[in] memory_size Espace mémoire initial (en nombre d'éléments)
+ * @param[in] size Espace mémoire initial (en nombre d'éléments)
  *
  * @return pointeur vers la liste
- * @note Alloue la mémoire mais n'est pas initialisée (taille liste = 0)
  */
-GenList *createGenList(unsigned memory_size);
+GenList *createGenList(unsigned int size);
 
 /**
  * @date  5/11/2023
@@ -72,7 +71,7 @@ void genListAdd(GenList *l, void *v);
  *
  * @pre i <= listSize
  */
-void genListInsert(GenList *l, void *v, unsigned i);
+void genListInsert(GenList *l, void *v, unsigned int i);
 
 /**
  * @date 5/11/2023
@@ -97,7 +96,7 @@ void* genListPop(GenList *l);
  * @pre i < listSize
  * @return Valeur avant supression
  */
-void* genListRemove(GenList *l, unsigned i);
+void* genListRemove(GenList *l, unsigned int i);
 
 /**
  * @brief Lire la valeur à la position i
@@ -110,7 +109,7 @@ void* genListRemove(GenList *l, unsigned i);
  *
  * @return Valeur lue
  **/
-void *genListGet(GenList *l, unsigned i);
+void *genListGet(GenList *l, unsigned int i);
 
 /**
  * @author VALLAT Ugo
@@ -122,7 +121,7 @@ void *genListGet(GenList *l, unsigned i);
  * @param[in] i Position
  * @pre l != NULL
  */
-void genListSet(GenList *l, void *v, unsigned i);
+void genListSet(GenList *l, void *v, unsigned int i);
 
 /**
  * @date 5/11/2023
@@ -147,7 +146,7 @@ bool genListEmpty(GenList *l);
  *
  */
 
-unsigned genListSize(GenList *l);
+unsigned int genListSize(GenList *l);
 
 /**
  * @date 30/10/2023
@@ -160,6 +159,16 @@ unsigned genListSize(GenList *l);
  *
  */
 GenList *genListCopy(GenList *l);
+
+/**
+ * @date 5/11/2023
+ * @brief Afficher la valeur des pointeurs dans la sortie par standard
+ *
+ * @param[in] l liste à afficher
+ * @pre l != NULL
+ *
+ */
+void displayGenList(GenList *l);
 
 /*------------------------------------------------------------------*/
 /*                         ITERATEUR                                */
@@ -232,5 +241,21 @@ void *genListIteGetValue(GenListIte *ite);
  **/
 void deleteGenListIte(ptrGenListIte *ite);
 
+/*------------------------------------------------------------------*/
+/*                              DEBUG                               */
+/*------------------------------------------------------------------*/
+
+#ifdef DEBUG
+
+/**
+ * @date 5/11/2023
+ * @brief display in the logger all the information about the list and the elements
+ *
+ * @param[in] l list to print in logger
+ * @pre l != NULL
+ */
+void printGenListLog(GenList *l);
+
+#endif
 
 #endif

@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=-Wextra -Wall -Werror -pedantic -std=c99 -pthread
+CFLAGS=-Wextra -Wall -Werror -pedantic -std=c99
 
 BINDIR=bin
 OBJDIR=obj
@@ -74,15 +74,14 @@ TSTDIR=test
 
 # procédure de test générique
 run_test= if [ -f $(TSTDIR)/$(2)test_$(1).c ]; then \
-		mkdir -p $(BINDIR)/$(2); \
-		$(CC) $(TSTDIR)/$(2)test_$(1).c $(3) -o $(BINDIR)/$(2)t$(1) $(CFLAGS) -g -rdynamic; \
+		$(CC) $(TSTDIR)/$(2)test_$(1).c $(3) -o $(TSTDIR)/$(2)t$(1) $(CFLAGS); \
 		echo "$(EXECC)Executing tests on $(TSTC)$(1).c$(RSTC)"; \
-		if valgrind --leak-check=full $(BINDIR)/$(2)t$(1); then \
+		if $(TSTDIR)/$(2)t$(1); then \
 			echo "\n$(BOLD)$(SUCCC)|>-------------------------------= Tests Passed =- $(RSTC)\n"; \
 		else \
 			echo "\n$(BOLD)$(FAILC)|>-------------------------------= Tests Failed =- (xcode: $$?) $(RSTC)\n"; \
 		fi; \
-		rm $(BINDIR)/$(2)t$(1); \
+		rm $(TSTDIR)/$(2)t$(1); \
 	else \
 		echo "$(BOLD)$(ERRC)fatal error$(RSTC): $(TSTDIR)/$(2)test_$(1).c doesn't exist$(RSTC)"; \
 	fi; \
@@ -90,17 +89,8 @@ run_test= if [ -f $(TSTDIR)/$(2)test_$(1).c ]; then \
 
 # TODO règles modules
 
-OBJ_STRUCT = $(OBJDIR)/structure/list.o $(OBJDIR)/structure/genericlist.o $(OBJDIR)/structure/matrix.o \
-	$(OBJDIR)/structure/data_struct_utils.o $(OBJDIR)/structure/bale.o
-
-OBJ_TEST = $(OBJDIR)/logger.o $(OBJDIR)/test_utils.o
-
  $(OBJDIR)/test_utils.o:
 	@$(CC) -c $(TSTDIR)/test_utils.c -o $@ $(CFLAGS)
-
- $(OBJDIR)/structure/label_test_set.o:
-	@$(CC) -c  $(TSTDIR)/structure/label_test_set.c -o $@ $(CFLAGS)
-
 
 tlogger: $(OBJDIR)/logger.o $(OBJDIR)/test_utils.o
 	@$(call run_test,logger,,$^)
@@ -108,37 +98,32 @@ tlogger: $(OBJDIR)/logger.o $(OBJDIR)/test_utils.o
 tinterpreter: $(OBJDIR)/logger.o $(OBJDIR)/test_utils.o
 	@$(call run_test,interpreter,,$^)
 
-tbale: $(OBJDIR)/structure/bale.o $(OBJDIR)/structure/data_struct_utils.o $(OBJDIR)/structure/list.o  $(OBJDIR)/structure/matrix.o $(OBJDIR)/structure/genericlist.o $(OBJDIR)/logger.o $(OBJDIR)/test_utils.o $(OBJDIR)/structure/label_test_set.o
+tbale: $(OBJDIR)/structure/data_struct_utils.o $(OBJDIR)/structure/list.o  $(OBJDIR)/structure/matrix.o $(OBJDIR)/structure/genericlist.o $(OBJDIR)/structure/bale.o $(OBJDIR)/logger.o $(OBJDIR)/test_utils.o
 	@$(call run_test,bale,structure/,$^)
 
-tduel: $(OBJDIR)/structure/duel.o $(OBJDIR)/logger.o $(OBJDIR)/test_utils.o $(OBJDIR)/structure/data_struct_utils.o
+tduel: $(OBJDIR)/structure/duel.o $(OBJDIR)/logger.o $(OBJDIR)/test_utils.o
 	@$(call run_test,duel,structure/,$^)
 
-tgenericlist: $(OBJDIR)/structure/genericlist.o $(OBJDIR)/logger.o $(OBJDIR)/test_utils.o $(OBJDIR)/structure/data_struct_utils.o
-	@$(call run_test,genericlist,structure/,$^)
+tgenericlinkedlist: $(OBJDIR)/structure/genericlinkedlist.o $(OBJDIR)/logger.o $(OBJDIR)/test_utils.o
+	@$(call run_test,genericlinkedlist,structure/,$^)
 
-tgraph: $(OBJDIR)/structure/graph.o $(OBJDIR)/logger.o $(OBJDIR)/test_utils.o $(OBJDIR)/structure/data_struct_utils.o
+tgraph: $(OBJDIR)/structure/graph.o $(OBJDIR)/logger.o $(OBJDIR)/test_utils.o
 	@$(call run_test,graph,structure/,$^)
 
-tlist: $(OBJDIR)/structure/list.o $(OBJDIR)/logger.o $(OBJDIR)/test_utils.o $(OBJDIR)/structure/data_struct_utils.o $(OBJDIR)/structure/genericlist.o
+tlist: $(OBJDIR)/structure/list.o $(OBJDIR)/logger.o $(OBJDIR)/test_utils.o
 	@$(call run_test,list,structure/,$^)
 
-tmatrix: $(OBJDIR)/structure/matrix.o $(OBJDIR)/structure/data_struct_utils.o $(OBJDIR)/structure/genericlist.o $(OBJDIR)/structure/list.o $(OBJDIR)/logger.o $(OBJDIR)/test_utils.o
+tmatrix: $(OBJDIR)/structure/matrix.o $(OBJDIR)/logger.o $(OBJDIR)/test_utils.o
 	@$(call run_test,matrix,structure/,$^)
 
 tsha256: $(OBJDIR)/utils/sha256/sha256.o $(OBJDIR)/test_utils.o
 	@$(call run_test,sha256,utils/sha256/,$^)
 
-tcsv_reader: $(OBJDIR)/utils/csv_reader.o $(OBJDIR)/test_utils.o $(OBJDIR)/structure/genericlist.o $(OBJDIR)/structure/bale.o $(OBJDIR)/logger.o $(OBJDIR)/structure/matrix.o $(OBJDIR)/test_utils.o $(OBJDIR)/structure/data_struct_utils.o $(OBJDIR)/structure/list.o
+tcsv_reader: $(OBJDIR)/utils/csv_reader.o $(OBJDIR)/test_utils.o
 	@$(call run_test,csv_reader,utils/,$^)
 
 tutils_sd: $(OBJDIR)/utils/utils_sd.o $(OBJDIR)/test_utils.o
 	@$(call run_test,utils_sd,utils/,$^)
-
-tsingle_member: $(OBJDIR)/module/single_member_two_rounds.o $(OBJDIR)/module/single_member_one_round.o $(OBJDIR)/utils/csv_reader.o $(OBJ_TEST) $(OBJ_STRUCT) 
-	@$(call run_test,single_member,module/,$^)
-
-
 
 ################################
 #             MISC             #

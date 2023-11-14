@@ -3,7 +3,7 @@
  * @author VALLAT Ugo, LUDWIG Corentin
  * @brief Structure Duel header
  *
- * @brief Une matrice de duels correspond à une matrice où chaque ligne correspond au
+ * @brief Une matrice de duels correspond à une matric où chaque ligne correspond au
  * score d'un candidat en duel face à un autre candidat de la colonne
  *
  * Les lignes et les colonnes son étiquetée avec le nom du candidat.
@@ -30,6 +30,12 @@
 #include <stdio.h>
 #include "matrix.h"
 
+/**
+ * @def DEFAULT_VALUE
+ * @brief valeur par défaut d'une case
+ * @note ne doit pas faire partie de l'ensemble des valeurs possibles des éléments stockés
+ */
+#define DEFAULT_VALUE -2
 
 /*------------------------------------------------------------------*/
 /*                         STRUCTURE DUEL                           */
@@ -54,7 +60,7 @@ typedef Duel *ptrDuel;
  * @return pointeur vers la matrice de duels
  * @post Les labels sont ajoutés au colonne dans le même ordre que la liste
  */
-Duel *createDuel(unsigned nb_candidats, GenList *labels);
+Duel *createDuel(unsigned int nbl, unsigned int nbc, GenList *labels);
 
 /**
  * @date 5/11/2023
@@ -109,6 +115,18 @@ unsigned int duelNbCandidat(Duel *d);
 
 /**
  * @date 5/11/2023
+ * @brief Renvoie le numéro de la colonne associée au label
+ *
+ * @param[in] d matrice de duels à utiliser
+ * @param[in] label  label de la colonne recherchée
+ * @pre d != NULL
+ *
+ * @return numéro de la colonne
+ */
+int duelLabelToColumn(Duel *d, char *label);
+
+/**
+ * @date 5/11/2023
  * @brief Renvoie l'indice de la ligne/colonne associé au label
  *
  * @param[in] d matrice de duels à utiliser
@@ -116,7 +134,7 @@ unsigned int duelNbCandidat(Duel *d);
  * @pre d != NULL
  * @pre Exist label
  *
- * @return Indice associé,-1 si introuvable
+ * @return Indice associé
  */
 int duelLabelToIndex(Duel *d, char *label);
 
@@ -219,7 +237,6 @@ int duelIteGetValue(DuelIte *ite);
  */
 void* deleteDuelIte(ptrDuelIte *ite);
 
-
 /*------------------------------------------------------------------*/
 /*                            UTILS                                 */
 /*------------------------------------------------------------------*/
@@ -308,5 +325,24 @@ Duel *duelFilter(Duel *d, fun_filter_duel fun, void *buff);
  */
 
 Duel *duelCopy(Duel *d);
+
+/**
+ * @date 5/11/2023
+ * @brief Afficher la matrice de duels dans la sortie standard stdout
+ *
+ * @param[in] d matrice de duels à afficher
+ * @pre d != NULL
+ */
+void displayDuel(Duel *d);
+
+/*------------------------------------------------------------------*/
+/*                              DEBUG                               */
+/*------------------------------------------------------------------*/
+
+#ifdef DEBUG
+
+void printDuelLog(Duel *d);
+
+#endif
 
 #endif
