@@ -17,7 +17,6 @@
 #include <asm-generic/errno-base.h>
 #include <malloc.h>
 #include <stdbool.h>
-#include <stdio.h>
 #include <stdlib.h>
 
 #include "../logger.h"
@@ -274,10 +273,7 @@ struct s_matrixIte {
  * @param buff Buffer (non utilisé)
  * @return valeur de v en entrée
  */
-int default_fun(int v, unsigned int l, unsigned int c, void *buff) { 
-    (void)l; (void)c; (void)buff;
-    return v; 
-}
+int default_fun(int v, unsigned int l, unsigned int c, void *buff) { return v; }
 
 /**
  * @date  1/11/2023
@@ -296,7 +292,7 @@ MatrixIte *createMatrixIte(Matrix *m, int l, int c, fun_ite fun, void *buff) {
     ite->shape_ref[0] = m->nbl;
     ite->shape_ref[1] = m->nbc;
     ite->buff = buff;
-    
+
     /* Initialisation de la fonction */
     if (fun != NULL)
         ite->fun = fun;
@@ -349,9 +345,6 @@ bool matrixIteHasNext(MatrixIte *ite) {
     int nbl = (int)ite->matrix->nbl;
     int nbc = (int)ite->matrix->nbc;
 
-    /* matrice vide */
-    if(ite->matrix->nbl == 0 || ite->matrix->nbc == 0)
-        return false;
     /* Parcours une case */
     if (ite->line > -1 && ite->column > -1)
         return ite->cur_l != ite->line && ite->cur_c != ite->column;
@@ -478,7 +471,6 @@ void matrixMap(Matrix *m, int l, int c, fun_ite fun, void *buff) {
  * @return élément courant
  */
 int fun_som(int v, unsigned int l, unsigned int c, void *buff) {
-    (void)l; (void)c;
     long int *som = (long int *)buff;
     if (v > 0)
         (*som) += v;
@@ -527,10 +519,9 @@ int fun_max(int v, unsigned int l, unsigned int c, void *buff) {
     GenList* lmax = (GenList*)buff;
     int* cur;
     if(genListEmpty(lmax) || ((int*)genListGet(lmax, 0))[0] <= v) {
-        if(!genListEmpty(lmax) && ((int*)genListGet(lmax, 0))[0] < v) {
+        if(((int*)genListGet(lmax, 0))[0] < v)
             while(!genListEmpty(lmax))
                 free(genListPop(lmax));
-        }
         cur = malloc(sizeof(int)*3);
         cur[0] = v;
         cur[1] = l;
@@ -552,6 +543,9 @@ GenList *matrixMax(Matrix *m, int l, int c) {
 
     /* création buffer max */
     GenList* lmax = createGenList(1);
+
+    int col = ((int*)genListGet(lmax, 0))[2];
+
     /* parcours de la matrice */
     matrixMap(m, l, c, fun_max, lmax);
     return lmax;
@@ -571,9 +565,8 @@ GenList *matrixMax(Matrix *m, int l, int c) {
 int fun_min(int v, unsigned int l, unsigned int c, void *buff) {
     GenList* lmin = (GenList*)buff;
     int* cur;
-    if(v < 1) return v;
-    if(genListEmpty(lmin) || ((int*)genListGet(lmin, 0))[0] >= v) {
-        if(!genListEmpty(lmin) && ((int*)genListGet(lmin, 0))[0] > v)
+    if(genListEmpty(lmin) || ((int*)genListGet(lmin, 0))[0] <= v) {
+        if(((int*)genListGet(lmin, 0))[0] < v)
             while(!genListEmpty(lmin))
                 free(genListPop(lmin));
         cur = malloc(sizeof(int)*3);
@@ -599,7 +592,7 @@ GenList *matrixMin(Matrix *m, int l, int c) {
     GenList* lmin = createGenList(1);
 
     /* parcours de la matrice */
-    matrixMap(m, l, c, fun_min, lmin);
+    matrixMap(m, l, c, fun_max, lmin);
     return lmin;
 }
 
@@ -637,6 +630,7 @@ int applyFunFilter(int v, unsigned int l, unsigned int c, void *buff) {
  */
 Matrix *matrixFilter(Matrix *m, fun_filter_matrix fun, void *buff) {
     testArgNull(m, "matrix.c", "matrixFilter", "m");
+    testArgNull(fun, "matrix.c", "matrixFilter", "fun");
 
     /* Création nouvelle matrice et buffer */
     Filter *filter = malloc(sizeof(Filter));
@@ -692,3 +686,42 @@ Matrix *matrixCopy(Matrix *m) {
 
     return new;
 }
+
+/**
+ * @date  1/11/2023
+ * @author Ugo VALLAT
+ */
+void displayMatrix(Matrix *m) {
+    testArgNull(m, "matrix.c", "displayMatrix", "m");
+
+    GenListIte *ite = createGenListIte(m->tab, FROM_BEGIN);
+    printl(" [ \n");
+    while (genListIteHasNext(ite)) {
+        genListIteNext(ite);
+        printf("   ");
+        displayList((List *)genListIteGetValue(ite));
+        printf("\n");
+    }
+    printl(" ] \n");
+    deleteGenListIte(&ite);
+}
+
+/*------------------------------------------------------------------*/
+/*                              DEBUG                               */
+/*------------------------------------------------------------------*/
+
+#ifdef DEBUG
+
+void printMatrixLog(Matrix *m) {
+    testArgNull(m, "matrix.c", "displayMatrix", "m");
+
+    printl("\n<+>------------[ matrix ]-----------<+>\n\n");
+    printl("[matrix] nbl = %d\n", m->nbl);
+    printl("[matrix] nbc = %d\n", m->nbc);
+    printl("[matrix] default_value = %d\n", m->default_value);
+    printl("[matrix] matrice :\n");
+    displayMatrix(m);
+    printl("\n\n<->---------------------------------<->\n");
+}
+
+#endif

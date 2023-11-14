@@ -27,8 +27,8 @@
 
 /* Définition de la structure list*/
 struct s_list {
-    unsigned memory_size; /* Taille du tableau en mémoire */
-    unsigned size;        /* taille de la liste (nombre éléments) */
+    unsigned int memory_size; /* Taille du tableau en mémoire */
+    unsigned int size;        /* taille de la liste (nombre éléments) */
     int *tab;                 /* tableau des valeurs */
 };
 
@@ -36,17 +36,16 @@ struct s_list {
  * @date  1/11/2023
  * @author Ugo VALLAT
  */
-List *createList(unsigned memory_size) {
+List *createList(unsigned int size) {
     List *l = malloc(sizeof(List));
     if (l == NULL)
         exitl("list.c", "createList", EXIT_FAILURE, "erreur malloc list");
-    
-    if(memory_size == 0) memory_size = 1;
-    l->tab = malloc(sizeof(int) * memory_size);
-    if (l->tab == NULL)
+
+    l->tab = malloc(sizeof(int) * size);
+    if (l->tab == NULL && size != 0)
         exitl("list.c", "createList", EXIT_FAILURE, "erreur malloc tab");
 
-    l->memory_size = memory_size;
+    l->memory_size = size;
     l->size = 0;
     return l;
 }
@@ -75,7 +74,7 @@ void deleteList(ptrList *l) {
  * @param new_size Nouvelle taille du tableau
  * @pre l != NULL
  */
-void adjustMemorySizeList(List *l, unsigned new_size) {
+void adjustMemorySizeList(List *l, unsigned int new_size) {
     testArgNull(l, "list.c", "adjustMemorySizeList", "l");
 
     /* nouvelle taille de la liste */
@@ -108,7 +107,7 @@ void listAdd(List *l, int v) {
  * @date  1/11/2023
  * @author Ugo VALLAT
  */
-void listInsert(List *l, int v, unsigned i) {
+void listInsert(List *l, int v, unsigned int i) {
     /* vérification paramêtres */
     testArgNull(l, "list.c", "listInsert", "l");
     if (i > l->size)
@@ -148,7 +147,7 @@ int listPop(List *l) {
  * @date  1/11/2023
  * @author Ugo VALLAT
  */
-int listRemove(List *l, unsigned i) {
+int listRemove(List *l, unsigned int i) {
     /* vérification paramêtres */
     testArgNull(l, "list.c", "listRemove", "l");
     if (i >= l->size)
@@ -178,7 +177,7 @@ bool listEmpty(List *l) {
  * @date  1/11/2023
  * @author Ugo VALLAT
  */
-unsigned listSize(List *l) {
+unsigned int listSize(List *l) {
     testArgNull(l, "list.c", "lestSize", "l");
     return l->size;
 }
@@ -195,7 +194,7 @@ List *listCopy(List *l) {
     List *new = createList(l->size);
 
     /* copie des éléments */
-    for (unsigned i = 0; i < l->size; i++) {
+    for (unsigned int i = 0; i < l->size; i++) {
         listAdd(new, l->tab[i]);
     }
     return new;
@@ -205,7 +204,7 @@ List *listCopy(List *l) {
  * @date  1/11/2023
  * @author Ugo VALLAT
  */
-int listGet(List *l, unsigned i) {
+int listGet(List *l, unsigned int i) {
     /* vérification paramêtre */
     testArgNull(l, "list.c", "listGet", "l");
     if (i >= l->size)
@@ -218,7 +217,7 @@ int listGet(List *l, unsigned i) {
  * @date  1/11/2023
  * @author Ugo VALLAT
  */
-void listSet(List *l, int v, unsigned i) {
+void listSet(List *l, int v, unsigned int i) {
     /* vérification paramêtre */
     testArgNull(l, "list.c", "listSet", "l");
     if (i >= l->size)
@@ -227,9 +226,23 @@ void listSet(List *l, int v, unsigned i) {
     l->tab[i] = v;
 }
 
-void listClear(List *l) {
-    testArgNull(l, "list.c", "listClear", "l");
-    l->size = 0;
+/**
+ * @date  1/11/2023
+ * @author Ugo VALLAT
+ */
+void displayList(List *l) {
+    /* vérification paramêtre */
+    testArgNull(l, "list.c", "displayList", "l");
+
+    if (l->size == 0)
+        printl("[ ]");
+    else {
+        printl("[ %*d", DISPLAY_LENGHT_BOX, l->tab[0]);
+        for (unsigned int i = 1; i < l->size; i++) {
+            printl(" , %*d",DISPLAY_LENGHT_BOX, l->tab[i]);
+        }
+        printl(" ]");
+    }
 }
 
 /*------------------------------------------------------------------*/
@@ -245,7 +258,7 @@ void listClear(List *l) {
 struct s_list_ite {
     List *list;                 /* liste à parcourir */
     int cur;                    /* position actuelle */
-    unsigned (*fnext)(int); /* focntion de déplcament */
+    unsigned int (*fnext)(int); /* focntion de déplcament */
     bool next;                  /* appel à fonction next */
 };
 
@@ -253,13 +266,13 @@ struct s_list_ite {
  * @date  1/11/2023
  * @author Ugo VALLAT
  */
-unsigned next_forward(int i) { return i + 1; }
+unsigned int next_forward(int i) { return i + 1; }
 
 /**
  * @date  1/11/2023
  * @author Ugo VALLAT
  */
-unsigned next_backward(int i) { return i - 1; }
+unsigned int next_backward(int i) { return i - 1; }
 
 /**
  * @date  1/11/2023
@@ -294,7 +307,7 @@ ListIte *createListIte(List *l, int dir) {
  */
 bool listIteHasNext(ListIte *ite) {
     testArgNull(ite, "list.c", "listIteHasNext", "ite");
-    unsigned next = ite->fnext(ite->cur);
+    unsigned int next = ite->fnext(ite->cur);
     return (next < ite->list->size);
 }
 
@@ -329,7 +342,36 @@ int listIteGetValue(ListIte *ite) {
  */
 void deleteListIte(ptrListIte *ite) {
     testArgNull(ite, "list.c", "deleteListIte", "ite");
-    deleteList(&((*ite)->list));
+    free((*ite)->list);
     free((*ite));
     *ite = NULL;
 }
+
+/*------------------------------------------------------------------*/
+/*                              DEBUG                               */
+/*------------------------------------------------------------------*/
+
+#ifdef DEBUG
+
+/**
+ * @date  1/11/2023
+ * @author Ugo VALLAT
+ */
+void printListLog(List *l) {
+    testArgNull(l, "list.c", "printListLog", "l");
+
+    printl("\n<+>------------[ list ]-----------<+>\n\n");
+    printl("[list.c] size = %d\n", l->size);
+    printl("[list.c] memory size = %d\n", l->memory_size);
+    if (l->size <= 0)
+        printl("[list.c] list = [");
+    else {
+        printl("[list.c] list = [ %3d ", l->tab[0]);
+        for (unsigned int i = 1; i < l->size; i++) {
+            printl(", %3d", l->tab[i]);
+        }
+    }
+    printl(" ]\n\n<->-------------------------------<->\n");
+}
+
+#endif

@@ -15,13 +15,8 @@
 /* Taille maximale des labels */
 #define MAX_LENGHT_LABEL 256
 
-
-/**
- * @def DEFAULT_VALUE
- * @brief valeur par défaut d'une case
- * @note ne doit pas faire partie de l'ensemble des valeurs possibles des éléments stockés
- */
-#define DEFAULT_VALUE -2
+/* taille affichage Cases */
+#define DISPLAY_LENGHT_BOX 16
 
 
 /**

@@ -34,11 +34,6 @@
 #include "../logger.h"
 #include <string.h>
 
-
-#define RSTC "\033[0m"
-#define YELLOW "\033[38;5;184m"
-
-
 /**
  * @date  13/11/2023
  * @brief Définition de la structure Bale
@@ -277,6 +272,7 @@ GenList *baleMin(Bale *b, int l, int c) {
  */
 Bale *baleFilter(Bale *b, fun_filter_bale fun, void *buff) {
     testArgNull(b, "bale.c", "baleFilter", "b");
+    testArgNull(fun, "bale.c", "baleMax", "fun");
 
     Bale* new = malloc(sizeof(Bale));
     new->default_value = b->default_value;
@@ -299,3 +295,55 @@ Bale *baleCopy(Bale *b) {
     cp->matrix = matrixCopy(b->matrix);
     return cp;
 }
+
+/**
+ * @date 13/11/2023
+ * @author Ugo VALLAT
+ * @brief Afficher le ballot dans la sortie standard stdout
+ */
+void displayBale(Bale *b) {
+    testArgNull(b, "bale.c", "displayBale", "b");
+
+    unsigned int* shape = matrixShape(b->matrix);
+    if(shape[0] < 1 || shape[1] < 1) {
+        printf("[]");
+        free(shape);
+        return;
+    }
+    free(shape);
+
+    /* calcul taille des colonnes */
+    int column_size = 0;
+    int size;
+    for(int i = 0; i < genListSize(b->labels); i++) {
+        size = strlen((char*)genListGet(b->labels, i));
+        if(size > column_size) column_size = size;
+    }
+
+    /* affichage labels */
+    printl("   [ %*s ",DISPLAY_LENGHT_BOX, (char*)genListGet(b->labels, 0));
+    for(unsigned int i = 1; i < genListSize(b->labels); i++)
+        printl(", %*s ",DISPLAY_LENGHT_BOX, (char*)genListGet(b->labels, i));
+    printl("]\n");
+
+    /* affichage matrice */
+    displayMatrix(b->matrix);
+}
+
+/*------------------------------------------------------------------*/
+/*                              DEBUG                               */
+/*------------------------------------------------------------------*/
+
+#ifdef DEBUG
+
+/**
+ * @date 13/11/2023
+ * @author Ugo VALLAT
+ * @brief Affiche dans le logger toutes les informations sur le ballot
+ */
+void printBaleLog(Bale *b) {
+    displayBale(b);
+}
+
+#endif
+

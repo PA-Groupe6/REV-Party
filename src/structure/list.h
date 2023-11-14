@@ -31,12 +31,11 @@ typedef List *ptrList;
  * @date  5/11/2023
  * @brief Crée une liste vide
  *
- * @param[in] memory_size Espace mémoire initial (en nombre d'éléments)
+ * @param[in] size Espace mémoire initial (en nombre d'éléments)
  *
  * @return pointeur vers la liste
- * @note Alloue la mémoire mais n'est pas initialisée (taille liste = 0)
  */
-List *createList(unsigned memory_size);
+List *createList(unsigned int size);
 
 /**
  * @date  5/11/2023
@@ -69,7 +68,7 @@ void listAdd(List *l, int v);
  *
  * @pre i <= listSize
  */
-void listInsert(List *l, int v, unsigned i);
+void listInsert(List *l, int v, unsigned int i);
 
 /**
  * @date 5/11/2023
@@ -94,7 +93,7 @@ int listPop(List *l);
  * @pre i < listSize
  * @return valeur avant suppression
  */
-int listRemove(List *l, unsigned i);
+int listRemove(List *l, unsigned int i);
 
 /**
  * @date 5/11/2023
@@ -108,7 +107,7 @@ int listRemove(List *l, unsigned i);
  *
  * @return Valeur lue
  **/
-int listGet(List *l, unsigned i);
+int listGet(List *l, unsigned int i);
 
 /**
  * @author VALLAT Ugo
@@ -120,7 +119,7 @@ int listGet(List *l, unsigned i);
  * @param[in] i Position
  * @pre l != NULL
  */
-void listSet(List *l, int v, unsigned i);
+void listSet(List *l, int v, unsigned int i);
 
 /**
  * @date 5/11/2023
@@ -142,7 +141,7 @@ bool listEmpty(List *l);
  *
  */
 
-unsigned listSize(List *l);
+unsigned int listSize(List *l);
 
 /**
  * @date 30/10/2023
@@ -158,11 +157,13 @@ unsigned listSize(List *l);
 List *listCopy(List *l);
 
 /**
- * @brief Remet la liste à 0
- * 
- * @param l Liste à vider
+ * @date 5/11/2023
+ * @brief Afficher la liste dans la sortie par standard
+ *
+ * @param[in] l liste à afficher
+ *
  */
-void listClear(List *l);
+void displayList(List *l);
 
 /*------------------------------------------------------------------*/
 /*                         ITERATEUR                                */
@@ -236,5 +237,22 @@ int listIteGetValue(ListIte *ite);
  * @pre *ite != NULL
  **/
 void deleteListIte(ptrListIte *ite);
+
+/*------------------------------------------------------------------*/
+/*                              DEBUG                               */
+/*------------------------------------------------------------------*/
+
+#ifdef DEBUG
+
+/**
+ * @date 5/11/2023
+ * @brief display in the logger all the information about the list and the elements
+ *
+ * @param[in] l list to print in logger
+ * @pre l != NULL
+ */
+void printListLog(List *l);
+
+#endif
 
 #endif
