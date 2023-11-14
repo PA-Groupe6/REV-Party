@@ -113,7 +113,7 @@ tgraph: $(OBJDIR)/structure/graph.o $(OBJDIR)/logger.o $(OBJDIR)/test_utils.o
 tlist: $(OBJDIR)/structure/list.o $(OBJDIR)/logger.o $(OBJDIR)/test_utils.o
 	@$(call run_test,list,structure/,$^)
 
-tmatrix: $(OBJDIR)/structure/matrix.o $(OBJDIR)/logger.o $(OBJDIR)/test_utils.o
+tmatrix: $(OBJDIR)/structure/matrix.o $(OBJDIR)/structure/data_struct_utils.o $(OBJDIR)/structure/genericlist.o $(OBJDIR)/structure/list.o $(OBJDIR)/logger.o $(OBJDIR)/test_utils.o
 	@$(call run_test,matrix,structure/,$^)
 
 tsha256: $(OBJDIR)/utils/sha256/sha256.o $(OBJDIR)/test_utils.o
