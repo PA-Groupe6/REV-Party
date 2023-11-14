@@ -304,13 +304,10 @@ Bale *baleCopy(Bale *b) {
 void displayBale(Bale *b) {
     testArgNull(b, "bale.c", "displayBale", "b");
 
-    unsigned int* shape = matrixShape(b->matrix);
-    if(shape[0] < 1 || shape[1] < 1) {
-        printf("[]");
-        free(shape);
+    if(baleNbCandidat(b) < 1 || baleNbVoter(b) < 1) {
+        printl("[]");
         return;
     }
-    free(shape);
 
     /* calcul taille des colonnes */
     int column_size = 0;
