@@ -28,6 +28,7 @@
 #include <errno.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include "matrix.h"
 
 /**
  * @def DEFAULT_VALUE
@@ -101,16 +102,16 @@ Duel *duelSetValue(Duel *d, unsigned int l, unsigned int c, int v);
 int duelGetValue(Duel *d, unsigned int l, unsigned int c);
 
 /**
- * @date 5/11/2023
- * @brief Renvoie les dimension de la matrice de duels sous la forme d'un couple (nb_lignes,
- * nb_colonnes)
+ * @date 14/11/2023
+ * @brief Donne le nombre de candidats (nombre de lignes / colonnes)
  *
  * @param[in] d matrice de duels à utiliser
  * @pre d != NULL
  *
- * @return tableau d'entier de taille 2 : [nombre_lignes, nombre_colonnes]
+ * @return Nombre de candidat
  */
-unsigned int *duelShape(Duel *d);
+unsigned int duelNbCandidat(Duel *d);
+
 
 /**
  * @date 5/11/2023
@@ -232,8 +233,9 @@ int duelIteGetValue(DuelIte *ite);
  * @pre ite != NULL
  *
  * @param[in] ite pointeur vers l'itérateur
+ * @return adresse du buffer
  */
-void deleteDuelIte(ptrDuelIte *ite);
+void* deleteDuelIte(ptrDuelIte *ite);
 
 /*------------------------------------------------------------------*/
 /*                            UTILS                                 */
@@ -295,19 +297,7 @@ GenList *duelMax(Duel *d, int l, int c);
  **/
 GenList *duelMin(Duel *d, int l, int c);
 
-/**
- * @date 5/11/2023
- * @brief Définie le type des fonctions prise en paramêtre du filter
- *
- * @param[in] v Valeur de la case courante
- * @param[in] l Ligne courante
- * @param[in] c Colonne courante
- * @param[in] buff Buffer
- * @pre d != NULL
- *
- * @return true si l'élément est conservé, sinon false
- */
-typedef bool (*fun_filter)(int v, int l, int c, void *buff);
+typedef fun_filter_matrix fun_filter_duel;
 
 /**
  * @date 5/11/2023
@@ -322,7 +312,7 @@ typedef bool (*fun_filter)(int v, int l, int c, void *buff);
  *
  * @return Pointeur vers la copie filtrée
  */
-Duel *duelFilter(Duel *d, fun_filter fun, void *buff);
+Duel *duelFilter(Duel *d, fun_filter_duel fun, void *buff);
 
 /**
  * @date 5/11/2023

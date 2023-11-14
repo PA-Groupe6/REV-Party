@@ -98,7 +98,7 @@ tlogger: $(OBJDIR)/logger.o $(OBJDIR)/test_utils.o
 tinterpreter: $(OBJDIR)/logger.o $(OBJDIR)/test_utils.o
 	@$(call run_test,interpreter,,$^)
 
-tbale: $(OBJDIR)/structure/bale.o $(OBJDIR)/logger.o $(OBJDIR)/test_utils.o
+tbale: $(OBJDIR)/structure/data_struct_utils.o $(OBJDIR)/structure/list.o  $(OBJDIR)/structure/matrix.o $(OBJDIR)/structure/genericlist.o $(OBJDIR)/structure/bale.o $(OBJDIR)/logger.o $(OBJDIR)/test_utils.o
 	@$(call run_test,bale,structure/,$^)
 
 tduel: $(OBJDIR)/structure/duel.o $(OBJDIR)/logger.o $(OBJDIR)/test_utils.o
