@@ -16,6 +16,7 @@
 
 #ifndef __MATRIX_H__
 #define __MATRIX_H__
+
 #include "genericlist.h"
 #include <errno.h>
 #include <stdbool.h>
@@ -52,7 +53,7 @@ void deleteMatrix(ptrMatrix *m);
 
 /**
  * @date  31/10/2023
- * @brief Positionne un élément dans la matrice à l'emplacement (l,c)
+ * @brief Positionne un élément dans la matrice à l'lacement (l,c)
  *
  * @param[in] m Pointeur vers la matrice
  * @param[in] l Ligne de destination (l,c)
@@ -60,7 +61,7 @@ void deleteMatrix(ptrMatrix *m);
  * @param[in] v valeur à ajouter
  *
  * @pre l < nb_lignes && c < nb_colonnes
- * @pre m != NULL
+ * @pre m != NULL 
  */
 void matrixSet(Matrix *m, unsigned int l, unsigned int c, int v);
 
@@ -93,16 +94,26 @@ void matrixErase(Matrix *m, unsigned int l, unsigned int c);
 int matrixGet(Matrix *m, unsigned int l, unsigned int c);
 
 /**
- * @date  5/11/2023
- * @brief Renvoie les dimension de la matrice sous la forme [nb_lignes, nb_colonnes]
+ * @date  14/11/2023
+ * @brief Renvoie le nombre de lignes
  *
  * @param[in] m Pointeur vers la matrice
  * @pre m != NULL
  *
- * @return tableau d'entiers naturels de taille 2 : [nombre_lignes, nombre_colonnes]
+ * @return nombre de lignes
  */
+unsigned int matrixNbLines(Matrix *m);
 
-unsigned int *matrixShape(Matrix *m);
+/**
+ * @date  14/11/2023
+ * @brief Renvoie le nombre de colonnes
+ *
+ * @param[in] m Pointeur vers la matrice
+ * @pre m != NULL
+ *
+ * @return nombre de colonnes
+ */
+unsigned int matrixNbColonnes(Matrix *m);
 
 /**
  * @date  5/11/2023
@@ -239,8 +250,9 @@ int matrixIteGetValue(MatrixIte *ite);
  * @param[in] ite pointeur vers l'itérateur
  * @pre ite != NULL
  * @pre *ite != NULL
+ * @return adresse du buffer
  **/
-void deleteMatrixIte(ptrMatrixIte *ite);
+void* deleteMatrixIte(ptrMatrixIte *ite);
 
 /*------------------------------------------------------------------*/
 /*                            UTILS                                 */
@@ -306,18 +318,18 @@ GenList *matrixMax(Matrix *m, int l, int c);
 GenList *matrixMin(Matrix *m, int l, int c);
 
 /**
- * @date 5/11/2023
+ * @date 13/11/2023
  * @brief Définie le type des fonctions prise en paramêtre du filter
  *
  * @param[in] v Valeur de la case courante
  * @param[in] l Ligne courante
  * @param[in] c Colonne courante
- * @param[in] buff Buffer utilisable par fun_filter
- * @pre l < nb_lignes && c < nb_colonnes
+ * @param[in] buff Buffer
+ * @pre l < nb_ligne && c < nb_colonnes
  *
  * @return true si l'élément est conservé, sinon false
- **/
-typedef bool (*fun_filter)(int v, unsigned int l, unsigned int c, void *buff);
+ */
+typedef bool (*fun_filter_matrix)(int v, unsigned int l, unsigned int c, void *buff);
 
 /**
  * @date 5/11/2023
@@ -332,7 +344,7 @@ typedef bool (*fun_filter)(int v, unsigned int l, unsigned int c, void *buff);
  *
  * @return Pointeur vers la copie filtrée
  **/
-Matrix *matrixFilter(Matrix *m, fun_filter fun, void *buff);
+Matrix *matrixFilter(Matrix *m, fun_filter_matrix fun, void *buff);
 
 /**
  * @date 5/11/2023

@@ -130,32 +130,38 @@ void listInsert(List *l, int v, unsigned int i) {
  * @date  1/11/2023
  * @author Ugo VALLAT
  */
-void listPop(List *l) {
+int listPop(List *l) {
     /* vérification paramêtre */
     testArgNull(l, "list.c", "listPop", "l");
     if (l->size <= 0)
         exitl("list.c", "listPop", EXIT_FAILURE, "liste déjà vide");
 
     /* suppression de l'élément */
+    int elem = l->tab[l->size-1];
     l->size--;
     adjustMemorySizeList(l, l->size);
+    return elem;
 }
 
 /**
  * @date  1/11/2023
  * @author Ugo VALLAT
  */
-void listRemove(List *l, unsigned int i) {
+int listRemove(List *l, unsigned int i) {
     /* vérification paramêtres */
     testArgNull(l, "list.c", "listRemove", "l");
     if (i >= l->size)
         exitl("list.c.c", "listRemove", EXIT_FAILURE, "position (i) invalide");
+    
+    int elem = l->tab[i];
 
     /* suppression de l'élément */
     for (int j = i; j < (int)l->size - 1; j++)
         l->tab[j] = l->tab[j + 1];
     l->size--;
     adjustMemorySizeList(l, l->size);
+
+    return elem;
 }
 
 /**
@@ -231,9 +237,9 @@ void displayList(List *l) {
     if (l->size == 0)
         printl("[ ]");
     else {
-        printl("[ %3d", l->tab[0]);
+        printl("[ %*d", DISPLAY_LENGHT_BOX, l->tab[0]);
         for (unsigned int i = 1; i < l->size; i++) {
-            printl(", %3d", l->tab[i]);
+            printl(" , %*d",DISPLAY_LENGHT_BOX, l->tab[i]);
         }
         printl(" ]");
     }

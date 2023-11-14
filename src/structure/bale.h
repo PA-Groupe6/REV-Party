@@ -23,9 +23,12 @@
 #ifndef __BALE_H__
 #define __BALE_H__
 #include "genericlist.h"
+#include "matrix.h"
 #include <errno.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include "data_struct_utils.h"
+
 /**
  * @def DEFAULT_VALUE
  * @brief valeur par défaut d'une case
@@ -52,9 +55,11 @@ typedef Bale *ptrBale;
  * @param[in] nbc Nombre de colonnes de données (hors étiquettes)
  * @param[in] labels Liste générique des labels (liste de char*)
  * @pre genericListSize(labels) == nbc && Forall x in labels, typeof(x) == char*
+ * @pre sizeof(label) < @ref MAX_LENGHT_LABEL
  *
  * @return pointeur vers le ballot
  * @post Les labels sont ajoutés au colonne dans le même ordre que la liste
+ * @remark Copie les labels dans le balot avec strncpy()
  */
 Bale *createBale(unsigned int nbl, unsigned int nbc, GenList *labels);
 
@@ -98,26 +103,36 @@ Bale *baleSetValue(Bale *b, unsigned int l, unsigned int c, int v);
 int baleGetValue(Bale *b, unsigned int l, unsigned int c);
 
 /**
- * @date 5/11/2023
- * @brief Renvoie les dimension du ballot sous la forme d'un couple (nb_lignes, nb_colonnes)
+ * @date 14/11/2023
+ * @brief Renvoie le nombre de votants (nombre lignes)
  *
  * @param[in] b Ballot à utiliser
  * @pre b != NULL
  *
- * @return tableau d'entier de taille 2 : [nombre_lignes, nombre_colonnes]
+ * @return nombre de votants
  */
-unsigned int *baleShape(Bale *b);
+unsigned int baleNbVoter(Bale *b);
+
+/**
+ * @date 14/11/2023
+ * @brief Renvoie le nombre de candidats (nombre colonnes)
+ *
+ * @param[in] b Ballot à utiliser
+ * @pre b != NULL
+ *
+ * @return nombre de candidats
+ */
+unsigned int baleNbCandidat(Bale *b);
 
 /**
  * @date 5/11/2023
- * @brief Renvoie le numéro de la colonne associée à l'étiquette
+ * @brief Renvoie le numéro de la colonne associée à l'étiquette, -1 si introvable
  *
  * @param[in] b Ballot à utiliser
  * @param[in] label  Etiquette de la colonne recherchée
  * @pre b != NULL
- * @pre Exist label
  *
- * @return numéro de la colonne
+ * @return numéro de la colonne, -1 si introvable
  */
 int baleLabelToColumn(Bale *b, char *label);
 
@@ -142,8 +157,8 @@ char *baleColumnToLabel(Bale *b, unsigned int c);
  * @date 5/11/2023
  * @brief Définition opaque de la structure BaleIte
  */
-typedef struct s_baleIte BaleIte;
-typedef struct s_baleIte *ptrBaleIte;
+typedef MatrixIte BaleIte;
+typedef MatrixIte* ptrBaleIte;
 
 /**
  * @date 5/11/2023
@@ -219,8 +234,9 @@ int baleIteGetValue(BaleIte *ite);
  * @param[in] ite pointeur vers l'itérateur
  * @pre ite != NULL
  * @pre *ite != NULL
+ * @return adresse du buffer
  */
-void deleteBaleIte(ptrBaleIte *ite);
+void* deleteBaleIte(ptrBaleIte *ite);
 
 /*------------------------------------------------------------------*/
 /*                            UTILS                                 */
@@ -286,19 +302,7 @@ GenList *baleMax(Bale *b, int l, int c);
  **/
 GenList *baleMin(Bale *b, int l, int c);
 
-/**
- * @date 5/11/2023
- * @brief Définie le type des fonctions prise en paramêtre du filter
- *
- * @param[in] v Valeur de la case courante
- * @param[in] l Ligne courante
- * @param[in] c Colonne courante
- * @param[in] buff Buffer
- * @pre l < nb_ligne && c < nb_colonnes
- *
- * @return true si l'élément est conservé, sinon false
- */
-typedef bool (*fun_filter)(int v, unsigned int l, unsigned int c, void *buff);
+typedef fun_filter_matrix fun_filter_bale;
 
 /**
  * @date 5/11/2023
@@ -313,7 +317,7 @@ typedef bool (*fun_filter)(int v, unsigned int l, unsigned int c, void *buff);
  *
  * @return Pointeur vers la copie filtrée
  */
-Bale *baleFilter(Bale *b, fun_filter fun, void *buff);
+Bale *baleFilter(Bale *b, fun_filter_bale fun, void *buff);
 
 /**
  * @date 5/11/2023

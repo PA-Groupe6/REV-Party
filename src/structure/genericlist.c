@@ -138,32 +138,36 @@ void genListInsert(GenList *l, void *v, unsigned int i) {
  * @date  1/11/2023
  * @author Ugo VALLAT
  */
-void genListPop(GenList *l) {
+void* genListPop(GenList *l) {
     /* vérification paramêtre */
     testArgNull(l, "genericlist.c", "listPop", "l");
     if (l->size <= 0)
         exitl("list.c", "listPop", EXIT_FAILURE, "liste déjà vide");
 
     /* suppression de l'élément */
+    void* elem = l->tab[l->size-1];
     l->size--;
     adjustMemorySizeGenList(l, l->size);
+    return elem;
 }
 
 /**
  * @date  1/11/2023
  * @author Ugo VALLAT
  */
-void genListRemove(GenList *l, unsigned int i) {
+void* genListRemove(GenList *l, unsigned int i) {
     /* vérification paramêtres */
     testArgNull(l, "genericlist.c", "genListRemove", "l");
     if (i >= l->size)
         exitl("genericlist.c", "genListRemove", EXIT_FAILURE, "position (%d) invalide", i);
 
+    void* elem = l->tab[i];
     /* suppression de l'élément */
     for (int j = i; j < (int)l->size - 1; j++)
         l->tab[j] = l->tab[j + 1];
     l->size--;
     adjustMemorySizeGenList(l, l->size);
+    return elem;
 }
 
 /**

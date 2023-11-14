@@ -81,8 +81,9 @@ void genListInsert(GenList *l, void *v, unsigned int i);
  * @pre l != NULL
  *
  * @pre taille liste > 0
+ * @return Valeur avant supression
  **/
-void genListPop(GenList *l);
+void* genListPop(GenList *l);
 
 /**
  * @date  5/11/2023
@@ -93,8 +94,9 @@ void genListPop(GenList *l);
  * @pre l != NULL
  *
  * @pre i < listSize
+ * @return Valeur avant supression
  */
-void genListRemove(GenList *l, unsigned int i);
+void* genListRemove(GenList *l, unsigned int i);
 
 /**
  * @brief Lire la valeur à la position i
