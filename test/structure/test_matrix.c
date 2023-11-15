@@ -20,10 +20,10 @@
 #include "../../src/structure/matrix.h"
 
 /* dimension de la matrice de test */
-#define NB_LINE 10
-#define NB_COLUMN 20
+#define NB_LINE 10      /* NB_LINE > 2 */
+#define NB_COLUMN 20    /* NB_COLUMN > 2 */
 #define DEFAULT_VALUE -1
-#define OTHER_VALUE 2
+#define OTHER_VALUE 2   /* OTHER_VALUE != DEFAULT_VALUE */
 
 
 StringBuilder* string_builder;
@@ -31,6 +31,23 @@ int return_value;
 
 void segfault_handler() {
 
+}
+
+/**
+ * @author Ugo VALLAT
+ * @date 15/11/2023
+ * @brief Crée une matrice(l,c) dont chaque case(i,j) = i*c+j 
+ * 
+ * @return nouvelle matrice
+ */
+Matrix* newMatrix(unsigned int nbl, unsigned int nbc) {
+    Matrix* m = createMatrix(nbl, nbc, DEFAULT_VALUE);
+    for(unsigned int l = 0; l < nbl; l++) {
+        for(unsigned int c = 0; c < nbc; c++) {
+            matrixSet(m, l, c, l*nbc+c);
+        }
+    }
+    return m;
 }
 
 bool testCreateMatrix() {
@@ -304,9 +321,160 @@ bool testMatrixInsertRemoveColumn() {
             if(matrixGet(m, l, c) != OTHER_VALUE) return false;
         }
     }
+    addLineStringBuilder(string_builder, "\n\t- test passé\n");
     deleteMatrix(&m);
     return true;
 }
+
+int fun_for_ite(int v, unsigned l, unsigned c, void* buff) {
+    bool* test = (bool*)buff;
+    if(v != (int)(l*NB_COLUMN+c)) *test = false;
+    return 0;
+}
+
+bool testMatrixIte() {
+    emptyStringBuilder(string_builder);
+    addLineStringBuilder(string_builder, "\n <+>--- Test Matrix Insert/Remove Column ---<+>");
+
+    Matrix* m;
+    MatrixIte *ite;
+
+    /*  
+        =================================================
+         TEST MATRIX (0,0) / (NB_LINE,0) / (0,NB_COLUMN) 
+        =================================================
+    */
+    /* test itérateur matrice (0,0)*/
+    addLineStringBuilder(string_builder, "\ntest iterateur avec matrice (0,0) ...");
+    m = createMatrix(0, 0, -1);
+    ite = createMatrixIte(m, -1, -1, NULL, NULL);
+    if(!ite) return false;
+    if(matrixIteHasNext(ite)) return false;
+    deleteMatrixIte(&ite);
+    deleteMatrix(&m);
+    addLineStringBuilder(string_builder, "\n\t- test passé\n");
+
+    /* test itérateur matrice (NB_LINE,0) */
+    addLineStringBuilder(string_builder, "\ntest iterateur avec matrice (NB_LINE,0) ...");
+    m = createMatrix(NB_LINE, 0, -1);
+    ite = createMatrixIte(m, -1, -1, NULL, NULL);
+    if(!ite) return false;
+    if(matrixIteHasNext(ite)) return false;
+    deleteMatrixIte(&ite);
+    ite = createMatrixIte(m, 1, -1, NULL, NULL);
+    if(!ite) return false;
+    if(matrixIteHasNext(ite)) return false;
+    deleteMatrixIte(&ite);
+    deleteMatrix(&m);
+    addLineStringBuilder(string_builder, "\n\t- test passé\n");
+
+    /* test itérateur matrice (0,NB_COLUMN) */
+    addLineStringBuilder(string_builder, "\ntest iterateur avec matrice (0,NB_COLUMN) ...");
+    m = createMatrix(0, NB_COLUMN, -1);
+    ite = createMatrixIte(m, -1, -1, NULL, NULL);
+    if(!ite) return false;
+    if(matrixIteHasNext(ite)) return false;
+    deleteMatrixIte(&ite);
+    ite = createMatrixIte(m, -1, 1, NULL, NULL);
+    if(!ite) return false;
+    if(matrixIteHasNext(ite)) return false;
+    deleteMatrixIte(&ite);
+    deleteMatrix(&m);
+    addLineStringBuilder(string_builder, "\n\t- test passé\n");
+
+
+    /*  
+        =================================
+         TEST MATRIX (NB_LINE,NB_COLUMN)  
+        =================================
+    */
+    m = newMatrix(NB_LINE, NB_COLUMN);
+
+    /* test itérateur sur case*/
+    addLineStringBuilder(string_builder, "\ntest iterateur sur case avec matrice (NB_LINE,NB_COLUMN) ...");
+    for(unsigned l = 0; l < NB_LINE; l++) {
+        for(unsigned c = 0; c < NB_COLUMN; c++) {
+            ite = createMatrixIte(m, l, c, NULL, NULL);
+            if(!ite) return false;
+            if(!matrixIteHasNext(ite)) return false;
+            if(matrixIteNext(ite) != (int)(l*NB_COLUMN+c)) return false;
+            if(matrixIteGetValue(ite) != (int)(l*NB_COLUMN+c)) return false;
+            if(matrixIteHasNext(ite)) return false;
+            deleteMatrixIte(&ite);
+        }
+    }
+    addLineStringBuilder(string_builder, "\n\t- test passé\n");
+
+    /* test itérateur sur ligne*/
+    addLineStringBuilder(string_builder, "\ntest iterateur sur ligne avec matrice (NB_LINE,NB_COLUMN)...");
+    for(unsigned l = 0; l < NB_LINE; l++) {
+        ite = createMatrixIte(m, l, -1, NULL, NULL);
+        if(!ite) return false;
+        for(unsigned c = 0; c < NB_COLUMN; c++) {
+            if(!matrixIteHasNext(ite)) return false;
+            if(matrixIteNext(ite) != (int)(l*NB_COLUMN+c)) return false;
+            if(matrixIteGetValue(ite) != (int)(l*NB_COLUMN+c)) return false;
+        }
+        if(matrixIteHasNext(ite)) return false;
+        deleteMatrixIte(&ite);
+    }
+    addLineStringBuilder(string_builder, "\n\t- test passé\n");
+
+
+    /* test itérateur sur colonne*/
+    addLineStringBuilder(string_builder, "\ntest iterateur sur colonne avec matrice (NB_LINE,NB_COLUMN)...");
+    for(unsigned c = 0; c < NB_COLUMN; c++) {
+        ite = createMatrixIte(m, -1, c, NULL, NULL);
+        if(!ite) return false;
+        for(unsigned l = 0; l < NB_LINE; l++) {
+            if(!matrixIteHasNext(ite)) return false;
+            if(matrixIteNext(ite) != (int)(l*NB_COLUMN+c)) return false;
+            if(matrixIteGetValue(ite) != (int)(l*NB_COLUMN+c)) return false;
+        }
+        if(matrixIteHasNext(ite)) return false;
+        deleteMatrixIte(&ite);
+    }
+    addLineStringBuilder(string_builder, "\n\t- test passé\n");
+
+    /* test itérateur sur matrice*/
+    addLineStringBuilder(string_builder, "\ntest iterateur sur matrice avec matrice (NB_LINE,NB_COLUMN)...");
+    ite = createMatrixIte(m, -1, -1, NULL, NULL);
+    if(!ite) return false;
+    for(unsigned l = 0; l < NB_LINE; l++) {
+        for(unsigned c = 0; c < NB_COLUMN; c++) {
+            if(!matrixIteHasNext(ite)) return false;
+            if(matrixIteNext(ite) != (int)(l*NB_COLUMN+c)) return false;
+            if(matrixIteGetValue(ite) != (int)(l*NB_COLUMN+c)) return false;
+        }
+    }
+    if(matrixIteHasNext(ite)) return false;
+    deleteMatrixIte(&ite);
+    addLineStringBuilder(string_builder, "\n\t- test passé\n");
+
+    /* test itérateur avec fun */
+    bool test = true;
+    ite = createMatrixIte(m, -1, -1, fun_for_ite, &test);
+    if(!ite) return false;
+    for(unsigned l = 0; l < NB_LINE; l++) {
+        for(unsigned c = 0; c < NB_COLUMN; c++) {
+            if(!matrixIteHasNext(ite)) return false;
+            if(matrixIteNext(ite) != (int)(l*NB_COLUMN+c)) return false;
+            if(matrixIteGetValue(ite) != 0) return false;
+        }
+    }
+    if(matrixIteHasNext(ite)) return false;
+    deleteMatrixIte(&ite);
+    if(!test) return false;
+    for(unsigned l = 0; l < NB_LINE; l++) {
+        for(unsigned c = 0; c < NB_COLUMN; c++) {
+            if(matrixGet(m, l, c) != 0) return false;
+        }
+    }
+    deleteMatrix(&m);
+    return true;
+}
+
+
 
 
 
@@ -347,6 +515,13 @@ int main() {
         printFailure("testMatrixInsertRemoveColumn");
         printStringBuilder(string_builder);
     } else printSuccess("testMatrixInsertRemoveColumn");
+
+    if (!testMatrixIte()) {
+        return_value += 32; /* 2^5 */
+        printFailure("testMatrixIte");
+        printStringBuilder(string_builder);
+    } else printSuccess("testMatrixIte");
+
 
 
     return return_value;
