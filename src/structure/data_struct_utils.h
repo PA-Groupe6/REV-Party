@@ -16,7 +16,7 @@
 #define MAX_LENGHT_LABEL 256
 
 /* taille affichage Cases */
-#define DISPLAY_LENGHT_BOX 16
+#define DISPLAY_LENGHT_BOX 4
 
 
 /**
