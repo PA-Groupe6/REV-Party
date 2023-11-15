@@ -348,6 +348,9 @@ bool matrixIteHasNext(MatrixIte *ite) {
     int nbl = (int)ite->matrix->nbl;
     int nbc = (int)ite->matrix->nbc;
 
+    /* matrice vide */
+    if(ite->matrix->nbl == 0 || ite->matrix->nbc == 0)
+        return false;
     /* Parcours une case */
     if (ite->line > -1 && ite->column > -1)
         return ite->cur_l != ite->line && ite->cur_c != ite->column;
