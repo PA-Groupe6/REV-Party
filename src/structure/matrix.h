@@ -124,6 +124,7 @@ unsigned int matrixNbColonnes(Matrix *m);
  *
  * @pre l <= nb_lignes
  * @pre m != NULL
+ * @post Nouvelle ligne contient la valeur par défault
  */
 void matrixInsertLine(Matrix *m, unsigned int l);
 
@@ -148,6 +149,7 @@ void matrixRemoveLine(Matrix *m, unsigned int l);
  *
  * @pre c <= nb_colonnes
  * @pre m != NULL
+ * @post Nouvelle colonne contient la valeur par défault
  */
 void matrixInsertColumn(Matrix *m, unsigned int c);
 
