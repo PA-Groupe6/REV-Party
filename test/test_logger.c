@@ -114,6 +114,30 @@ bool testPrintl() {
     return true;
 }
 
+bool containsFile() {
+    // LOGGER_LOG_FILE contains LOGGER_EXPECTED_LOG_FILE
+
+}
+
+void testWarnl() {
+    beforeEach();
+
+    char data[BLOCK_SIZE];
+
+    // ### test sur stdout (codes couleur)
+    redirectStandardOutput();
+    init_logger(NULL);
+    
+    close_logger();
+    revertStandardOutputRedirection();
+
+    init_logger(LOGGER_LOG_FILE);
+
+    close_logger();
+
+    return true;
+}
+
 void test_fun(bool(*f)(), int fnb, char* fname) {
     bool test_success = f();
     afterEach();
@@ -128,6 +152,7 @@ int main() {
     beforeAll();
 
     test_fun(testPrintl, 1, "testPrintl");
+    test_fun(testWarnl, 2, "testWarnl");
 
     afterAll();
     return return_value;
