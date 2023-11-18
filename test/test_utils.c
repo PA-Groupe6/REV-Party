@@ -24,7 +24,7 @@ void emptyStringBuilder(StringBuilder* string_builder) {
 }
 
 void printStringBuilder(const StringBuilder* string_builder) {
-    printf("%s\n%s[>>>]: here%s\n", string_builder->output, KOC, RSTC);
+    printf("%s%s[>>>]: here%s\n", string_builder->output, KOC, RSTC);
 }
 
 void deleteStringBuilder(ptrStringBuilder* string_builder) {
@@ -67,6 +67,6 @@ void printFailure(char* test_name) {
     /* taille du message sans test_name + taille test_name + '\0' */
     int msg_size = 29 + strlen(test_name) + 1;
     char message[msg_size];
-    sprintf(message, "(%sKO%s) %s passed ", KOC, RSTC, test_name);
+    sprintf(message, "(%sKO%s) %s failed ", KOC, RSTC, test_name);
     printStatus(message);
 }
