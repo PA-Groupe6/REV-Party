@@ -22,13 +22,24 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <errno.h>
-#include <duel.h>
+#include "../structure/duel.h"
 
 
 /*------------------------------------------------------------------*/
 /*                        MODULE CONDORCET                       */
 /*------------------------------------------------------------------*/
 
+
+/**
+ * @author IVANOVA ALina 
+ * @date 04/11/2023
+ * @brief on utilise la méthode vainqueur de Condorcet pour savoir qu'il existe le candidat gagnant
+ * 
+ * @param[in] duel matrice des duels entre tous le candidats
+ *
+ * @return Le nom du candidat gagnant
+*/
+bool CondorcetWinnerCriterion(Duel* duel);
 
 
 /**
@@ -67,5 +78,3 @@ char theWinnerSchulze(Duel* duel);
 
 
 #endif
-
-
