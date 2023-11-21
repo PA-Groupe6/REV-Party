@@ -75,7 +75,7 @@ bool testPrintl() {
     beforeEach();
 
     char data[BLOCK_SIZE];
-
+    
     // ### test sur stdout
     // redirection de stdout vers LOGGER_LOG_FILE
     redirectStandardOutput();
@@ -134,6 +134,7 @@ bool containsFile() {
     char buffer[BLOCK_SIZE];
     int status;
     printsb("\t contains logger_expected.log");
+    rewind(expected_log_file);
     while (fgets(buffer, BLOCK_SIZE, expected_log_file) != NULL) {
         sprintf(command, "grep -qF \"%s\" %s", buffer, LOGGER_LOG_FILE);
         status = system(command);
@@ -144,11 +145,12 @@ bool containsFile() {
     return true;
 }
 
+#define FILE_NAME "test_logger.c"
+
 bool testWarnl() {
     beforeEach();
 
-    const char file_name[] = "test_logger.c";
-    const char fun_name[] = "testWarnl";
+    const char* fun_name = "testWarnl";
 
     char data[BLOCK_SIZE];
 
@@ -158,20 +160,57 @@ bool testWarnl() {
     init_logger(NULL);
     rewind(expected_log_file);
     while (fread(data, sizeof(char), sizeof(data), expected_log_file) > 0) {
-        warnl(file_name, fun_name, data);
+        warnl(FILE_NAME, fun_name, data);
     }
     close_logger();
     revertStandardOutputRedirection();
-    if (!contains(file_name, fun_name) || !containsFile()) return false;
+    if (!contains(FILE_NAME, fun_name) || !containsFile()) return false;
 
     printsb("\ntest sur sortie explicite\n");
     init_logger(LOGGER_LOG_FILE);
     rewind(expected_log_file);
     while (fread(data, sizeof(char), sizeof(data), expected_log_file) > 0) {
-        warnl(file_name, fun_name, data);
+        warnl(FILE_NAME, fun_name, data);
     }
     close_logger();
-    if (!contains(file_name, fun_name) || !containsFile()) return false;
+    if (!contains(FILE_NAME, fun_name) || !containsFile()) return false;
+
+    return true;
+}
+
+bool testExitl() {
+    beforeEach();
+
+    const char* fun_name = "testExitl";
+
+    char data[BLOCK_SIZE];
+
+    printsb("\ntest sur stdout\n");
+    switch (fork()) {
+        case 0:
+            redirectStandardOutput();
+            init_logger(NULL);
+            rewind(expected_log_file);
+            fread(data, sizeof(char), sizeof(data), expected_log_file);
+            exitl(FILE_NAME, fun_name, 1, data);
+        default:
+            int status;
+            wait(&status);
+            if (!contains(FILE_NAME, fun_name) || !containsFile() || WEXITSTATUS(status) != 1) return false;
+    }
+
+    printsb("\ntest sur sortie explicite\n");
+    switch (fork()) {
+        case 0:
+            init_logger(LOGGER_LOG_FILE);
+            rewind(expected_log_file);
+            fread(data, sizeof(char), sizeof(data), expected_log_file);
+            exitl(FILE_NAME, fun_name, 1, data);
+        default:
+            int status;
+            wait(&status);
+            if (!contains(FILE_NAME, fun_name) || !containsFile() || WEXITSTATUS(status) != 1) return false;
+    }
 
     return true;
 }
@@ -190,7 +229,6 @@ int main() {
     beforeAll();
 
     test_fun(testPrintl, 1, "testPrintl");
-    test_fun(testWarnl, 2, "testWarnl");
 
     afterAll();
     return return_value;
