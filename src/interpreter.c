@@ -32,12 +32,15 @@ Command intreprete(int argc, char *argv[])
 {
     Command command;
     int c;
+    command.file_type = 0;
+    command.module = 0;
+    command.has_log_file = false;
     while ((c = getopt(argc, argv, "-i:-d:-j:-o:-m:")) != -1)
     {
         switch (c)
         {
         case 'i':
-            if (command.module)
+            if (command.module == 0)
             {
                 command.file_type = BALE;
                 command.file_name = optarg;
@@ -49,7 +52,7 @@ Command intreprete(int argc, char *argv[])
             break;
 
         case 'd':
-            if (command.module)
+            if (command.module == 0)
             {
                 command.file_type = DUEL;
                 command.file_name = optarg;
@@ -61,14 +64,14 @@ Command intreprete(int argc, char *argv[])
             break;
 
         case 'j':
-            if(command.module)
+            if(command.module == 0)
             {
                 command.file_type = JUDGMENT;
                 command.file_name = optarg;
             }
 
         case 'o':
-        if (command.log_file){
+        if (!command.has_log_file){
             command.log_file = optarg;
         } else {
             exitl("interpreter", "StringToModule", "erreur dans la commande",2); // TO DO
@@ -76,7 +79,7 @@ Command intreprete(int argc, char *argv[])
             break;
 
         case 'm':
-        if (command.log_file){
+        if (command.module == 0){
             command.module = stringToModule(optarg);
         } else {
             exitl("interpreter", "StringToModule", "erreur dans la commande",2); // TO DO
@@ -89,6 +92,13 @@ Command intreprete(int argc, char *argv[])
         }
     }
 
+    if(command.module == 0 ){
+        exitl("interpreter", "StringToModule", "erreur dans la commande",1);
+    }
+
+    if(command.file_type == 0 ){
+        exitl("interpreter", "StringToModule", "erreur dans la commande",1);
+    }
 
 
     if(command.module!=JUGEMENT_MAJORITAIRE && command.file_type == JUDGMENT ){
