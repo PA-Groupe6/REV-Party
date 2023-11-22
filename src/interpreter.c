@@ -8,25 +8,25 @@
 //@date 10/25/2023
 Module stringToModule(char *nom)
 {
-    if (strcmp(nom, "uni1"))
+    if (strcmp(nom, "uni1") == 0)
         return UNI1;
-    if (strcmp(nom, "uni2"))
+    if (strcmp(nom, "uni2") == 0)
         return UNI2;
-    if (strcmp(nom, "cm"))
+    if (strcmp(nom, "cm") == 0)
         return MINIMAX;
-    if (strcmp(nom, "cp"))
+    if (strcmp(nom, "cp") == 0)
         return RANGEMENT;
-    if (strcmp(nom, "cs"))
+    if (strcmp(nom, "cs") == 0)
         return SCHULZE;
-    if (strcmp(nom, "jm"))
+    if (strcmp(nom, "jm") == 0)
         return JUGEMENT_MAJORITAIRE;
-    if (strcmp(nom, "all"))
+    if (strcmp(nom, "all") == 0)
         return ALL;
     exitl("interpreter", "StringToModule", "methode inconnue",3);
 }
 
 //@autor Corentin
-//@date 10/25/2023
+//@date 22/11/2023
 
 Command intreprete(int argc, char *argv[])
 {
@@ -47,7 +47,7 @@ Command intreprete(int argc, char *argv[])
             }
             else
             {
-                exitl("interpreter", "StringToModule", "options -i et -d incompatible",2);
+                exitl("interpreter", "StringToModule", "Les balises i j et d sont incompatible\n",2);
             }
             break;
 
@@ -59,7 +59,7 @@ Command intreprete(int argc, char *argv[])
             }
             else
             {
-                exitl("interpreter", "StringToModule", "options -i et -d incompatible",2);
+                exitl("interpreter", "StringToModule", "Les balises i j et d sont incompatible\n",2);
             }
             break;
 
@@ -69,12 +69,17 @@ Command intreprete(int argc, char *argv[])
                 command.file_type = JUDGMENT;
                 command.file_name = optarg;
             }
+            else
+            {
+                exitl("interpreter", "StringToModule", "Les balises i j et d sont incompatible\n",2);
+            }
+            break;
 
         case 'o':
         if (!command.has_log_file){
             command.log_file = optarg;
         } else {
-            exitl("interpreter", "StringToModule", "erreur dans la commande",2); // TO DO
+            exitl("interpreter", "StringToModule", "il ne peut avoir qu'un fichier de log\n",2); // TO DO
         }
             break;
 
@@ -82,32 +87,32 @@ Command intreprete(int argc, char *argv[])
         if (command.module == 0){
             command.module = stringToModule(optarg);
         } else {
-            exitl("interpreter", "StringToModule", "erreur dans la commande",2); // TO DO
+            exitl("interpreter", "StringToModule", "il ne peut avoir qu'une seul balise de module\n",2); // TO DO
         }
             break;
 
         case '?':
-            exitl("interpreter", "StringToModule", "erreur dans la commande",2); // TO DO
+            exitl("interpreter", "StringToModule", "balise non reconnu ou argument manquant\n",2); // TO DO
             break;
         }
     }
 
     if(command.module == 0 ){
-        exitl("interpreter", "StringToModule", "erreur dans la commande",1);
+        exitl("interpreter", "StringToModule", "la commande doit avoir un -m\n",1);
     }
 
     if(command.file_type == 0 ){
-        exitl("interpreter", "StringToModule", "erreur dans la commande",1);
+        exitl("interpreter", "StringToModule", "la commande doit avoir un -i, -d ou -j\n",1);
     }
 
 
-    if(command.module!=JUGEMENT_MAJORITAIRE && command.file_type == JUDGMENT ){
-        exitl("interpreter", "StringToModule", "erreur dans la commande",1);
-    }
+    // if(command.module!=JUGEMENT_MAJORITAIRE && command.file_type == JUDGMENT ){
+    //     exitl("interpreter", "StringToModule", "la balise j ne peut etre utiliser que par pour un methode de jugement majoritaire\n",1);
+    // }
     
 
-    if((command.module==UNI1 || command.module==UNI2) && command.file_type==BALE){
-        exitl("interpreter", "StringToModule", "erreur dans la commande",1); // TO DO
+    if((command.module==UNI1 || command.module==UNI2 || command.module==JUGEMENT_MAJORITAIRE) && command.file_type==BALE){
+        exitl("interpreter", "StringToModule", "les methodes uninominals et jugement majoritaire ne peuvent etre appeler avec la balise -i\n",1); // TO DO
     }
 
 
