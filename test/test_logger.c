@@ -61,6 +61,7 @@ void redirectStandardOutput() {
 }
 
 void revertStandardOutputRedirection() {
+    fclose(log_file);
     stdout = original_stdout;
 }
 
@@ -75,6 +76,7 @@ bool testPrintl() {
     beforeEach();
 
     char data[BLOCK_SIZE];
+    memset(data, 0, BLOCK_SIZE);
     
     // ### test sur stdout
     // redirection de stdout vers LOGGER_LOG_FILE
@@ -83,7 +85,7 @@ bool testPrintl() {
     printsb("\ntest sur stdout\n");
     init_logger(NULL);
     rewind(expected_log_file);
-    while (fread(data, sizeof(char), sizeof(data), expected_log_file) > 0) {
+    while (fread(data, sizeof(char), BLOCK_SIZE, expected_log_file) > 0) {
         printl(data);
     }
     close_logger();
@@ -96,7 +98,7 @@ bool testPrintl() {
     printsb("\ntest sur sortie explicite\n");
     init_logger(LOGGER_LOG_FILE);
     rewind(expected_log_file);
-    while (fread(data, sizeof(char), sizeof(data), expected_log_file) > 0) {
+    while (fread(data, sizeof(char), BLOCK_SIZE, expected_log_file) > 0) {
         printl(data);
     }
     close_logger();
@@ -153,6 +155,7 @@ bool testWarnl() {
     const char* fun_name = "testWarnl";
 
     char data[BLOCK_SIZE];
+    memset(data, 0, BLOCK_SIZE);
 
     // ### test sur stdout (codes couleur)
     redirectStandardOutput();
@@ -184,15 +187,20 @@ bool testExitl() {
     const char* fun_name = "testExitl";
 
     char data[BLOCK_SIZE];
+    memset(data, 0, BLOCK_SIZE);
+
     int status;
+
     printsb("\ntest sur stdout\n");
     switch (fork()) {
         case 0:
+            deleteStringBuilder(&string_builder);
             redirectStandardOutput();
             init_logger(NULL);
             rewind(expected_log_file);
             fread(data, sizeof(char), sizeof(data), expected_log_file);
-            exitl(FILE_NAME, fun_name, 1, data);
+            fclose(expected_log_file);
+            exitl(FILE_NAME, fun_name, 1, data); // fall through
         default:
             wait(&status);
             if (!contains(FILE_NAME, fun_name) || !containsFile() || WEXITSTATUS(status) != 1) return false;
@@ -201,10 +209,12 @@ bool testExitl() {
     printsb("\ntest sur sortie explicite\n");
     switch (fork()) {
         case 0:
+            deleteStringBuilder(&string_builder);
             init_logger(LOGGER_LOG_FILE);
             rewind(expected_log_file);
             fread(data, sizeof(char), sizeof(data), expected_log_file);
-            exitl(FILE_NAME, fun_name, 1, data);
+            fclose(expected_log_file);
+            exitl(FILE_NAME, fun_name, 1, data); // fall through
         default:
             wait(&status);
             if (!contains(FILE_NAME, fun_name) || !containsFile() || WEXITSTATUS(status) != 1) return false;
@@ -227,6 +237,8 @@ int main() {
     beforeAll();
 
     test_fun(testPrintl, 1, "testPrintl");
+    test_fun(testWarnl, 2, "testWarnl");
+    test_fun(testExitl, 4, "testExitl");
 
     afterAll();
     return return_value;
