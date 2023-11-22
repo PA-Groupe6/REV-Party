@@ -7,6 +7,10 @@
 #include <unistd.h>
 #include "interpreter.h"
 
+#define MAX_FILE_NAME 256
+
+
+
 //@autor Corentin
 //@date 10/25/2023
 Module stringToModule(char *nom)
@@ -38,7 +42,8 @@ Command intreprete(int argc, char *argv[])
     command.file_type = 0;
     command.module = 0;
     command.has_log_file = false;
-    command.file_name = malloc(256);
+    command.file_name = malloc(MAX_FILE_NAME);
+    command.log_file = malloc(MAX_FILE_NAME);
     while ((c = getopt(argc, argv, "-i:-d:-j:-o:-m:")) != -1)
     {
         switch (c)
@@ -47,7 +52,7 @@ Command intreprete(int argc, char *argv[])
             if (command.module == 0)
             {
                 command.file_type = BALE;
-                command.file_name = optarg;
+                strcpy(command.file_name,optarg);
             }
             else
             {
@@ -59,7 +64,7 @@ Command intreprete(int argc, char *argv[])
             if (command.module == 0)
             {
                 command.file_type = DUEL;
-                command.file_name = optarg;
+                strcpy(command.file_name,optarg);
             }
             else
             {
@@ -71,7 +76,7 @@ Command intreprete(int argc, char *argv[])
             if(command.module == 0)
             {
                 command.file_type = JUDGMENT;
-                command.file_name = optarg;
+                strcpy(command.file_name,optarg);
             }
             else
             {
@@ -81,7 +86,7 @@ Command intreprete(int argc, char *argv[])
 
         case 'o':
         if (!command.has_log_file){
-            command.log_file = optarg;
+            strcpy(command.log_file,optarg);
         } else {
             exitl("interpreter", "intrepreter", "il ne peut avoir qu'un fichier de log\n",2); // TO DO
         }
@@ -117,9 +122,9 @@ Command intreprete(int argc, char *argv[])
     }
 
 
-    // if(command.module!=JUGEMENT_MAJORITAIRE && command.file_type == JUDGMENT ){
-    //     exitl("interpreter", "intreprete", "la balise j ne peut etre utiliser que par pour un methode de jugement majoritaire\n",1);
-    // }
+    if(command.module!=JUGEMENT_MAJORITAIRE && command.file_type == JUDGMENT ){
+        exitl("interpreter", "intreprete", "la balise j ne peut etre utiliser que par pour un methode de jugement majoritaire\n",1);
+    }
     
 
     if((command.module==UNI1 || command.module==UNI2 || command.module==JUGEMENT_MAJORITAIRE) && command.file_type==BALE){
