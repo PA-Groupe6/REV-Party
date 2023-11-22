@@ -3,6 +3,7 @@
 #include <string.h>
 #include "logger.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include <unistd.h>
 #include "interpreter.h"
 
@@ -37,6 +38,7 @@ Command intreprete(int argc, char *argv[])
     command.file_type = 0;
     command.module = 0;
     command.has_log_file = false;
+    command.file_name = malloc(256);
     while ((c = getopt(argc, argv, "-i:-d:-j:-o:-m:")) != -1)
     {
         switch (c)
@@ -99,9 +101,7 @@ Command intreprete(int argc, char *argv[])
         }
     }
 
-    if (!access(command.file_name, F_OK) != -1) {
-        pexitl("interpreter", "intrepreter", "fichier d'entree inexistant\n",2);
-    }
+
 
 
     if(command.module == 0 ){
@@ -110,6 +110,10 @@ Command intreprete(int argc, char *argv[])
 
     if(command.file_type == 0 ){
         exitl("interpreter", "intrepreter", "la commande doit avoir un -i, -d ou -j\n",1);
+    }
+
+    if (access(command.file_name, F_OK) == -1) {
+        exitl("interpreter", "intrepreter", "fichier d'entree inexistant\n",2);
     }
 
 
