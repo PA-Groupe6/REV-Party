@@ -10,10 +10,32 @@
 #define USLESS_CHAR 14
 #define NB_CADIDATES 10
 
-void freeGenList(GenList *list);
+
+/**
+ * @date 23/11/2023
+ * @author LUDWIG Corentin
+ * @brief Supprime et libere la memoire de la genList et de tout les pointeur quel contients
+ *
+ * @param[in] la list a supprimer
+ * 
+ * @return <explications>
+*/
+void freeGenList(GenList *list){
+    while(!genListEmpty(list))
+        free(genListPop(list));
+    deleteGenList(&list);
+}
 
 
-
+/**
+ * @date 23/11/2023
+ * @author LUDWIG Corentin
+ * @brief compte le nombre de ligne du fihier passer en parametre
+ *
+ * @param[in] nom/path du fichier
+ * 
+ * @return nombre de ligne du fichier
+*/
 unsigned nbLigne(char *file){
     FILE *pipe;
     char commande[256];
@@ -31,6 +53,17 @@ unsigned nbLigne(char *file){
     return nbLigne;
 }
 
+
+/**
+ * @date 23/11/2023
+ * @author LUDWIG Corentin
+ * @brief remplit la liste label avec les noms des candidat present de le fichier file
+ *
+ * @param[in] nom/path du fichier
+ * @param[out] list des labels remplit apres l'execution de la fonction
+ *
+ * @pre len(label) >= nb lable dans le fichier
+*/
 void readLabel(FILE *file,GenList *label){
     char buffer[256];
     char* token;
@@ -53,6 +86,17 @@ void readLabel(FILE *file,GenList *label){
 }
 
 
+/**
+ * @date 23/11/2023
+ * @author LUDWIG Corentin
+ * @brief remplit la ligne du ballot passer en paramtre avec les information contenu dans le fichier passer en entree
+ *
+ * @param[out] bale ballot a remplir
+ * @param[in] file fichier dans le quelle lire
+ * @param[in] ligne numero de la colone a lire
+ * 
+ * @pre baleNBcandidat(bale) >= NB_CADIDATES
+*/
 void fillLigne(Bale *bale,FILE *file,unsigned ligne){
     char buffer[256];
     char* token;
@@ -77,22 +121,31 @@ void fillLigne(Bale *bale,FILE *file,unsigned ligne){
 }
 
 
-
+/**
+ * @date 23/11/2023
+ * @author LUDWIG Corentin
+ * @brief remplit le ballot passer en parametre avec les information contenu dans le fichier passer en entree
+ *
+ * @param[out] bale ballot a remplir
+ * @param[in] file fichier dans le quelle lire
+ * 
+ * @pre baleNBcandidat(bale) >= NB_CADIDATES && baleNbVotant(bale) >= nbLigne(file)
+*/
 void fillBale(Bale *bale,FILE *file){
     int i = 0;
 
     while(!feof(file)){
         i++;
-        if(baleNbVoter(bale)<i){
-            
-        }
         fillLigne(bale,file,i);
     }
 
 }
 
 
-
+/**
+ * @date 23/11/2023
+ * @author LUDWIG Corentin
+*/
 Bale* csvToBale(char *file){
     FILE *file_pointer;
     file_pointer = fopen(file,"r");
