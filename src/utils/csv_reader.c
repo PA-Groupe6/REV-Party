@@ -4,7 +4,6 @@
 #include <string.h> 
 #include "../structure/bale.h"
 #include "../structure/duel.h"
-#include "../structure/list.h"
 #include "../structure/genericlist.h"
 
 #define USLESS_COLUM 4
@@ -15,10 +14,21 @@ void freeGenList(GenList *list);
 
 
 
-unsigned nbLigne(FILE *file){
+unsigned nbLigne(char *file){
     FILE *pipe;
     char commande[256];
+    int nbLigne;
+    strcat(commande,"wc -l");
+    strcat(commande,file);
 
+    pipe = popen(commande,"r");
+    if (pipe == NULL) {
+    }
+
+    fscanf(pipe,"%d",&nbLigne);
+
+    fclose(pipe);
+    return nbLigne;
 }
 
 void readLabel(FILE *file,GenList *label){
@@ -85,14 +95,14 @@ void fillBale(Bale *bale,FILE *file){
 
 Bale* csvToBale(char *file){
     FILE *file_pointer;
-    file_pointer = fopen(file,'r');
+    file_pointer = fopen(file,"r");
     GenList *label = createGenList(10);
 
+    int nbl = nbLigne(file);
 
-
-    Bale *bale = createBale(10,NB_CADIDATES,label);
+    Bale *bale = createBale(nbl,NB_CADIDATES,label);
     freeListLabel(label);
 
-    fclose(file);
+    fclose(file_pointer);
     return bale;
 }
