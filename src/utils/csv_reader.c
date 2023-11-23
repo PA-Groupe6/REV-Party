@@ -1,16 +1,25 @@
 #include "csv_reader.h"
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h> 
 #include "../structure/bale.h"
 #include "../structure/duel.h"
 #include "../structure/list.h"
 #include "../structure/genericlist.h"
-#include <string.h> 
 
 #define USLESS_COLUM 4
 #define USLESS_CHAR 14
 #define NB_CADIDATES 10
 
 void freeGenList(GenList *list);
+
+
+
+unsigned nbLigne(FILE *file){
+    FILE *pipe;
+    char commande[256];
+
+}
 
 void readLabel(FILE *file,GenList *label){
     char buffer[256];
@@ -31,13 +40,10 @@ void readLabel(FILE *file,GenList *label){
         genListInsert(label,(void*)tab_name[i],i);
         token = strtok(NULL,",");
    }
-
-
-
 }
 
 
-void fillLigne(Bale *bale,FILE *file,int ligne){
+void fillLigne(Bale *bale,FILE *file,unsigned ligne){
     char buffer[256];
     char* token;
     int n;
@@ -51,11 +57,27 @@ void fillLigne(Bale *bale,FILE *file,int ligne){
         token = strtok(NULL,",");
     }
     
-   for (int i = 0; i < NB_CADIDATES; i++)
+   for (unsigned i = 0; i < NB_CADIDATES; i++)
    {
-        
+        sscanf("%d",&n);
+        bale = baleSetValue(bale, ligne, i, n);
         token = strtok(NULL,",");
    }
+
+}
+
+
+
+void fillBale(Bale *bale,FILE *file){
+    int i = 0;
+
+    while(!feof(file)){
+        i++;
+        if(baleNbVoter(bale)<i){
+            
+        }
+        fillLigne(bale,file,i);
+    }
 
 }
 
@@ -69,7 +91,8 @@ Bale* csvToBale(char *file){
 
 
     Bale *bale = createBale(10,NB_CADIDATES,label);
+    freeListLabel(label);
 
-
-
+    fclose(file);
+    return bale;
 }
