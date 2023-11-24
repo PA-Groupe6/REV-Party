@@ -20,7 +20,7 @@
  * 
  * @return <explications>
 */
-void freeGenList(GenList *list){
+void freeListLabel(GenList *list){
     while(!genListEmpty(list))
         free(genListPop(list));
     deleteGenList(&list);
