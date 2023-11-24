@@ -113,7 +113,7 @@ void fillLigne(Bale *bale,FILE *file,unsigned ligne){
     
    for (unsigned i = 0; i < NB_CADIDATES; i++)
    {
-        sscanf("%d",&n);
+        sscanf(token,"%d",&n);
         bale = baleSetValue(bale, ligne, i, n);
         token = strtok(NULL,",");
    }
