@@ -292,7 +292,7 @@ MatrixIte *createMatrixIte(Matrix *m, int l, int c, fun_ite fun, void *buff) {
     ite->shape_ref[0] = m->nbl;
     ite->shape_ref[1] = m->nbc;
     ite->buff = buff;
-
+    
     /* Initialisation de la fonction */
     if (fun != NULL)
         ite->fun = fun;

@@ -74,14 +74,15 @@ TSTDIR=test
 
 # procédure de test générique
 run_test= if [ -f $(TSTDIR)/$(2)test_$(1).c ]; then \
-		$(CC) $(TSTDIR)/$(2)test_$(1).c $(3) -o $(TSTDIR)/$(2)t$(1) $(CFLAGS); \
+		mkdir -p $(BINDIR)/$(2); \
+		$(CC) $(TSTDIR)/$(2)test_$(1).c $(3) -o $(BINDIR)/$(2)t$(1) $(CFLAGS) -g; \
 		echo "$(EXECC)Executing tests on $(TSTC)$(1).c$(RSTC)"; \
-		if $(TSTDIR)/$(2)t$(1); then \
+		if valgrind --leak-check=full $(BINDIR)/$(2)t$(1); then \
 			echo "\n$(BOLD)$(SUCCC)|>-------------------------------= Tests Passed =- $(RSTC)\n"; \
 		else \
 			echo "\n$(BOLD)$(FAILC)|>-------------------------------= Tests Failed =- (xcode: $$?) $(RSTC)\n"; \
 		fi; \
-		rm $(TSTDIR)/$(2)t$(1); \
+		rm $(BINDIR)/$(2)t$(1); \
 	else \
 		echo "$(BOLD)$(ERRC)fatal error$(RSTC): $(TSTDIR)/$(2)test_$(1).c doesn't exist$(RSTC)"; \
 	fi; \
@@ -113,7 +114,7 @@ tgraph: $(OBJDIR)/structure/graph.o $(OBJDIR)/logger.o $(OBJDIR)/test_utils.o
 tlist: $(OBJDIR)/structure/list.o $(OBJDIR)/logger.o $(OBJDIR)/test_utils.o
 	@$(call run_test,list,structure/,$^)
 
-tmatrix: $(OBJDIR)/structure/matrix.o $(OBJDIR)/logger.o $(OBJDIR)/test_utils.o
+tmatrix: $(OBJDIR)/structure/matrix.o $(OBJDIR)/structure/data_struct_utils.o $(OBJDIR)/structure/genericlist.o $(OBJDIR)/structure/list.o $(OBJDIR)/logger.o $(OBJDIR)/test_utils.o
 	@$(call run_test,matrix,structure/,$^)
 
 tsha256: $(OBJDIR)/utils/sha256/sha256.o $(OBJDIR)/test_utils.o

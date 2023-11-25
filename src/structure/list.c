@@ -342,7 +342,7 @@ int listIteGetValue(ListIte *ite) {
  */
 void deleteListIte(ptrListIte *ite) {
     testArgNull(ite, "list.c", "deleteListIte", "ite");
-    free((*ite)->list);
+    deleteList(&((*ite)->list));
     free((*ite));
     *ite = NULL;
 }

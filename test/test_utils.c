@@ -14,13 +14,22 @@ StringBuilder* createStringBuilder() {
 }
 
 void addLineStringBuilder(StringBuilder* string_builder, const char* line) {
-    strcpy(string_builder->output + string_builder->lastLine, line);
+#ifdef DEBUG
+    if(string_builder->lastLine + strlen(line) >= SIZE_OUTOUT) {
+        printf("[ addLineStringBuilder ] String builder rempli.\n   String Builder : \n");
+        printStringBuilder(string_builder);
+        printf("\n  nouvelle ligne : \n%s\n", line);
+        return;
+    }
+#endif
+    strncat(string_builder->output, line, SIZE_OUTOUT);
     string_builder->lastLine += strlen(line);
 }
 
+
 void emptyStringBuilder(StringBuilder* string_builder) {
     string_builder->lastLine = 0;
-    string_builder->output[0] = '\0';
+    strncpy(string_builder->output, "", SIZE_OUTOUT);
 }
 
 void printStringBuilder(const StringBuilder* string_builder) {
@@ -70,3 +79,4 @@ void printFailure(char* test_name) {
     sprintf(message, "(%sKO%s) %s passed ", KOC, RSTC, test_name);
     printStatus(message);
 }
+
