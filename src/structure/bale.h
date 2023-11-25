@@ -83,6 +83,7 @@ void deleteBale(ptrBale *b);
  * @param[in] v valeur à ajouter
  * @pre l < nb_ligne && c < nb_colonnes
  * @pre b != NULL
+ * @pre value at (l,c) == ( @ref DEFAULT_VALUE )
  *
  * @return Adresse du ballot
  */
@@ -146,6 +147,7 @@ int baleLabelToColumn(Bale *b, char *label);
  * @pre c < nb_colonnes
  *
  * @return label
+ * @note label retourné doit être free()
  */
 char *baleColumnToLabel(Bale *b, unsigned int c);
 
