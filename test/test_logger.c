@@ -184,7 +184,7 @@ bool testExitl() {
     const char* fun_name = "testExitl";
 
     char data[BLOCK_SIZE];
-
+    int status;
     printsb("\ntest sur stdout\n");
     switch (fork()) {
         case 0:
@@ -194,7 +194,6 @@ bool testExitl() {
             fread(data, sizeof(char), sizeof(data), expected_log_file);
             exitl(FILE_NAME, fun_name, 1, data);
         default:
-            int status;
             wait(&status);
             if (!contains(FILE_NAME, fun_name) || !containsFile() || WEXITSTATUS(status) != 1) return false;
     }
@@ -207,7 +206,6 @@ bool testExitl() {
             fread(data, sizeof(char), sizeof(data), expected_log_file);
             exitl(FILE_NAME, fun_name, 1, data);
         default:
-            int status;
             wait(&status);
             if (!contains(FILE_NAME, fun_name) || !containsFile() || WEXITSTATUS(status) != 1) return false;
     }
