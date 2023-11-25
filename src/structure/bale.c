@@ -272,7 +272,6 @@ GenList *baleMin(Bale *b, int l, int c) {
  */
 Bale *baleFilter(Bale *b, fun_filter_bale fun, void *buff) {
     testArgNull(b, "bale.c", "baleFilter", "b");
-    testArgNull(fun, "bale.c", "baleMax", "fun");
 
     Bale* new = malloc(sizeof(Bale));
     new->default_value = b->default_value;
@@ -310,16 +309,16 @@ void displayBale(Bale *b) {
     }
 
     /* calcul taille des colonnes */
-    int column_size = 0;
-    int size;
-    for(int i = 0; i < genListSize(b->labels); i++) {
+    unsigned column_size = 0;
+    unsigned size;
+    for(unsigned i = 0; i < genListSize(b->labels); i++) {
         size = strlen((char*)genListGet(b->labels, i));
         if(size > column_size) column_size = size;
     }
 
     /* affichage labels */
     printl("   [ %*s ",DISPLAY_LENGHT_BOX, (char*)genListGet(b->labels, 0));
-    for(unsigned int i = 1; i < genListSize(b->labels); i++)
+    for(unsigned i = 1; i < genListSize(b->labels); i++)
         printl(", %*s ",DISPLAY_LENGHT_BOX, (char*)genListGet(b->labels, i));
     printl("]\n");
 
