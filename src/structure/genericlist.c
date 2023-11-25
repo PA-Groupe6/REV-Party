@@ -352,7 +352,7 @@ void *genListIteGetValue(GenListIte *ite) {
  */
 void deleteGenListIte(ptrGenListIte *ite) {
     testArgNull(ite, "genericlist.c", "genListIteGetValue", "ite");
-    free((*ite)->list);
+    deleteGenList(&((*ite)->list));
     free((*ite));
     *ite = NULL;
 }
