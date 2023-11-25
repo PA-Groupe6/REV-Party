@@ -74,9 +74,10 @@ TSTDIR=test
 
 # procédure de test générique
 run_test= if [ -f $(TSTDIR)/$(2)test_$(1).c ]; then \
-		$(CC) $(TSTDIR)/$(2)test_$(1).c $(3) -o $(BINDIR)/$(2)t$(1) $(CFLAGS); \
+		mkdir -p $(BINDIR)/$(2); \
+		$(CC) $(TSTDIR)/$(2)test_$(1).c $(3) -o $(BINDIR)/$(2)t$(1) $(CFLAGS) -g; \
 		echo "$(EXECC)Executing tests on $(TSTC)$(1).c$(RSTC)"; \
-		if valgrind $(BINDIR)/$(2)t$(1); then \
+		if valgrind --leak-check=full $(BINDIR)/$(2)t$(1); then \
 			echo "\n$(BOLD)$(SUCCC)|>-------------------------------= Tests Passed =- $(RSTC)\n"; \
 		else \
 			echo "\n$(BOLD)$(FAILC)|>-------------------------------= Tests Failed =- (xcode: $$?) $(RSTC)\n"; \

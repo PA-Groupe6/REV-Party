@@ -19,13 +19,15 @@
 /* Couleur de fond d'un échec */
 #define FAILC "\033[48;5;124m"
 
+#define SIZE_OUTOUT 2048
+
 /**
  * @date 26/10/2023
  * @brief Construit une chaine de caractère multiligne par ajout successifs
  * @note Ne pas oublier de vidé avec `emptyStringBuilder`
  */
 typedef struct s_string_builder {
-    char output[2048];
+    char output[SIZE_OUTOUT];
     int lastLine;
 } StringBuilder;
 typedef StringBuilder* ptrStringBuilder;
