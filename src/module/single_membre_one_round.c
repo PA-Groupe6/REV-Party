@@ -1,7 +1,5 @@
 /**
- * @file single_member.h
- * @author IVANOVA ALina 
- * @date 4/11/2023
+ * @author Alina IVANOVA
  *
  * @brief Fichier d'implementation de la méthode Single Member(Uninominal) à un tour
  *
@@ -22,13 +20,17 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <malloc.h>
+#include "../logger.h"
+#include "../structure/list.h"
 
 
-
-
+/**
+ * @author Alina IVANOVA
+ * @date 21/11/2023 
+ */
 int* voteCount(Bale* bale){
-    int nb_votes = baleShape(bale)[0];
-    int nb_candidates = baleShape(bale)[1];
+    int nb_votes = baleNbVoter(bale);
+    int nb_candidates = baleNbCandidat(bale);
     int* votesComplete = malloc(sizeof(int)*nb_candidates);
     memset(votesComplete, 0, sizeof(int)*nb_candidates);
     for (int i = 0; i<nb_votes;i++){
@@ -42,22 +44,56 @@ int* voteCount(Bale* bale){
     return votesComplete;
 }
 
-int maxVotesCandidat(int* votes, int nb_votes){
-    int max = votes[0];
-    int winningCandidate = 0;
-    for (int i = 1; i < nb_votes; i++ ){
+/**
+ * @author Alina IVANOVA, Corentin LUDWIG
+ * @date 21/11/2023 
+ */
+List* maxVotesCandidat(int* votes, int nb_candidat){
+    int max = 0;
+    List *winner = createList(1);
+    for (int i = 1; i < nb_candidat; i++ ){
         if (votes[i] > max) {
             max = votes[i];
-            winningCandidate = i;
+            listSet(winner,i,0);
+            for(int j = 1; j<listSize(winner)-1;i++){
+                listRemove(winner,j);
+            }
+        } else if( votes[i] == max){
+            listAdd(winner,i);
+
         }
     }
-    return winningCandidate;
+
+
+
+    return winner;
 }
 
+/**
+ * @author Alina IVANOVA
+ * @date 21/11/2023 
+ */
+GenList* theWinnerOneRound(Bale* bale){
+    GenList *list = createGenList(1);
+    WinnerSingle winner;
+    unsigned nb_candidat = baleNbCandidat(bale);
 
-char* theWinnerOneRound(Bale* bale){
+    /* décompte des voies de chaque candidat */
     int* summaryOfVotes = voteCount(bale);
-    int winningCandidate = maxVotesCandidat(summaryOfVotes, baleShape(bale)[1]);
-    char* ultimateWinner = baleColumnToLabel(bale, winningCandidate);
-    return ultimateWinner ;
+
+    /* Récupération du nom du gagnant */
+    List* winningCandidates = maxVotesCandidat(summaryOfVotes, nb_candidat);
+
+    for (int i = 0; i < listSize(winningCandidates); i++)
+    {
+        int winningCandidate = listGet(winningCandidates,i);
+        strncpy(winner.name, baleColumnToLabel(bale, winningCandidate), MAX_LENGHT_LABEL);
+        /* calcul du score */
+        winner.score = ((float)summaryOfVotes[winningCandidate]/nb_candidat) * 100;
+        genListAdd(list,(void*)&winner);
+    }
+
+    deleteList(&winningCandidates);
+
+    return list;
 }
