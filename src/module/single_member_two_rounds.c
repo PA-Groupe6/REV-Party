@@ -33,7 +33,7 @@ int* voteCountFirstround(Bale* bale){
     memset(votesComplete, 0, sizeof(int)*nb_candidates);
     for (unsigned i = 0; i<nb_votes;i++){
         //on recoit le liste avec le(les) candidat(s) qui a recu le val max a partir d'electeur i
-        GenList* winner = baleMax(bale, i, -1);
+        GenList* winner = baleMin(bale, i, -1);
         if (genListSize(winner)==1){//si on a qu'un seul candidat avec le note max, on prend en compte le vote
             int cand = ((int*)genListGet(winner, 0))[2];//num de candidat avec le val max
             votesComplete[cand] += 1;//on ajoute le vote
@@ -92,22 +92,22 @@ List* winnersOfFirstRound(int* votes, int nb_candidat){
 }
 
 /**
- * @brief Renvoie l'indice de la valeur max du tableau (-1 si plusieurs)
+ * @brief Renvoie l'indice de la valeur min du tableau (-1 si plusieurs)
  * 
  * @param tab tableau
  * @param size taille du tableau
- * @return indice du max, -1 si plusieurs
+ * @return indice du min, -1 si plusieurs
  */
-int indMaxInTab(int* tab, unsigned size) {
-    int max = tab[0];
+int indMinInTab(int* tab, unsigned size) {
+    int min = tab[0];
     unsigned idmax = 0;
     int nb = 1;
     for(unsigned i = 1; i < size; i++) {
-        if(tab[i] > max) {
-            max = tab[i];
+        if(tab[i] < min) {
+            min = tab[i];
             idmax = i;
             nb = 1;
-        } else if (tab[i] == max) {
+        } else if (tab[i] == min) {
             nb++;
         }
     }
@@ -130,7 +130,7 @@ int* voteCountSecondround(Bale *b, List* ftwinners){
         for(unsigned i = 0; i < nb_winners; i++) {
             tab[i] = baleGetValue(b, l, listGet(ftwinners, i));
         }
-        ind = indMaxInTab(tab, nb_winners);
+        ind = indMinInTab(tab, nb_winners);
         if(ind != -1)
             count[ind]++;
     }
