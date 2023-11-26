@@ -54,12 +54,11 @@ void displayWinnerSingleMember(WinnerSingle *winner) {
     printf("\t<+> %s : %3.2f\n", winner->name, winner->score);
 }
 
-bool testOneRoundOnBale(char* file) {
+bool testOnBale(char* file) {
     GenList* lwinner;
     Bale* bale;
     printsb("\t- chargement ballot\n");
     bale = csvToBale(file);
-    printBaleLog(bale);
     printsb("\t- calcul\n");
     lwinner = theWinnerOneRound(bale);
     if(!lwinner) return echecTest(" X-- pointeur null\n");
@@ -78,15 +77,15 @@ bool testOneRoundOnBale(char* file) {
 bool testTheWinnerOneRound() {
 
     printsb("\ntest sur ballot 1...");
-    testOneRoundOnBale("test/utils/bale_test_1.csv");
+    testOnBale("test/utils/bale_test_1.csv");
     printsb( "\n\t- test passé\n");
 
     printsb("\ntest sur ballot 2...");
-    testOneRoundOnBale("test/utils/bale_test_2.csv");
+    testOnBale("test/utils/bale_test_2.csv");
     printsb( "\n\t- test passé\n");
 
     printsb("\ntest sur ballot 3...");
-    testOneRoundOnBale("test/utils/bale_test_3.csv");
+    testOnBale("test/utils/bale_test_3.csv");
     printsb( "\n\t- test passé\n");
 
 
@@ -94,56 +93,7 @@ bool testTheWinnerOneRound() {
 
 }
 
-void displayWinnerSingleMemberTwo(WinnerSingleTwo *winner) {
-    printf("\t<+> Tour(%d) %s : %3.2f\n", winner->round, winner->name, winner->score);
-}
 
-bool testTwoRoundsOnBale(char* file) {
-    GenList* lwinner;
-    Bale* bale;
-
-    /* chargement du CSV */
-    printsb("\t- chargement ballot\n");
-    bale = csvToBale(file);
-    printBaleLog(bale);
-    
-    /* calcul des cainqueurs */
-    printsb("\t- calcul\n");
-    lwinner = theWinnerTwoRounds(bale);
-    if(!lwinner) return echecTest(" X-- pointeur null\n");
-    if(genListSize(lwinner) == 0) return echecTest(" X-- Aucun gagnant\n");
-
-    /* Affichage des vainqueurs */
-    for(unsigned i = 0; i < genListSize(lwinner); i++) {
-        displayWinnerSingleMemberTwo(genListGet(lwinner, i));
-    }
-
-    /* libération mémoire */
-    deleteBale(&bale);
-    while(!genListEmpty(lwinner))
-        free(genListPop(lwinner));
-    deleteGenList(&lwinner);
-    return true;
-}
-
-bool testTheWinnerTwoRounds() {
-
-    printsb("\ntest sur ballot 1...");
-    testTwoRoundsOnBale("test/utils/bale_test_1.csv");
-    printsb( "\n\t- test passé\n");
-
-    printsb("\ntest sur ballot 2...");
-    testTwoRoundsOnBale("test/utils/bale_test_2.csv");
-    printsb( "\n\t- test passé\n");
-
-    printsb("\ntest sur ballot 3...");
-    testTwoRoundsOnBale("test/utils/bale_test_3.csv");
-    printsb( "\n\t- test passé\n");
-
-
-    return true;
-
-}
 
 
 
@@ -165,10 +115,7 @@ void test_fun(bool(*f)(), int fnb, char* fname) {
 int main() {
     beforeAll();
 
-    // test_fun(testTheWinnerOneRound, 1, "testTheWinnerOneRound");
-    test_fun(testTheWinnerTwoRounds, 1, "testTheWinnerTwoRounds");
-
-    
+    test_fun(testTheWinnerOneRound, 1, "testTheWinnerOneRound");
 
 
     afterAll();

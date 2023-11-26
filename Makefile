@@ -75,7 +75,7 @@ TSTDIR=test
 # procédure de test générique
 run_test= if [ -f $(TSTDIR)/$(2)test_$(1).c ]; then \
 		mkdir -p $(BINDIR)/$(2); \
-		$(CC) $(TSTDIR)/$(2)test_$(1).c $(3) -o $(BINDIR)/$(2)t$(1) $(CFLAGS) -g; \
+		$(CC) $(TSTDIR)/$(2)test_$(1).c $(3) -o $(BINDIR)/$(2)t$(1) $(CFLAGS) -g -rdynamic; \
 		echo "$(EXECC)Executing tests on $(TSTC)$(1).c$(RSTC)"; \
 		if valgrind --leak-check=full $(BINDIR)/$(2)t$(1); then \
 			echo "\n$(BOLD)$(SUCCC)|>-------------------------------= Tests Passed =- $(RSTC)\n"; \
@@ -90,11 +90,17 @@ run_test= if [ -f $(TSTDIR)/$(2)test_$(1).c ]; then \
 
 # TODO règles modules
 
+OBJ_STRUCT = $(OBJDIR)/structure/list.o $(OBJDIR)/structure/genericlist.o $(OBJDIR)/structure/matrix.o \
+	$(OBJDIR)/structure/data_struct_utils.o $(OBJDIR)/structure/bale.o
+
+OBJ_TEST = $(OBJDIR)/logger.o $(OBJDIR)/test_utils.o
+
  $(OBJDIR)/test_utils.o:
 	@$(CC) -c $(TSTDIR)/test_utils.c -o $@ $(CFLAGS)
 
  $(OBJDIR)/structure/label_test_set.o:
 	@$(CC) -c  $(TSTDIR)/structure/label_test_set.c -o $@ $(CFLAGS)
+
 
 tlogger: $(OBJDIR)/logger.o $(OBJDIR)/test_utils.o
 	@$(call run_test,logger,,$^)
@@ -102,7 +108,7 @@ tlogger: $(OBJDIR)/logger.o $(OBJDIR)/test_utils.o
 tinterpreter: $(OBJDIR)/logger.o $(OBJDIR)/test_utils.o
 	@$(call run_test,interpreter,,$^)
 
-tbale: $(OBJDIR)/structure/data_struct_utils.o $(OBJDIR)/structure/list.o  $(OBJDIR)/structure/matrix.o $(OBJDIR)/structure/genericlist.o $(OBJDIR)/structure/bale.o $(OBJDIR)/logger.o $(OBJDIR)/test_utils.o $(OBJDIR)/structure/label_test_set.o
+tbale: $(OBJDIR)/structure/bale.o $(OBJDIR)/structure/data_struct_utils.o $(OBJDIR)/structure/list.o  $(OBJDIR)/structure/matrix.o $(OBJDIR)/structure/genericlist.o $(OBJDIR)/logger.o $(OBJDIR)/test_utils.o $(OBJDIR)/structure/label_test_set.o
 	@$(call run_test,bale,structure/,$^)
 
 tduel: $(OBJDIR)/structure/duel.o $(OBJDIR)/logger.o $(OBJDIR)/test_utils.o $(OBJDIR)/structure/data_struct_utils.o
@@ -128,6 +134,9 @@ tcsv_reader: $(OBJDIR)/utils/csv_reader.o $(OBJDIR)/test_utils.o $(OBJDIR)/struc
 
 tutils_sd: $(OBJDIR)/utils/utils_sd.o $(OBJDIR)/test_utils.o
 	@$(call run_test,utils_sd,utils/,$^)
+
+tsingle_member: $(OBJDIR)/module/single_member_one_round.o $(OBJDIR)/utils/csv_reader.o $(OBJ_TEST) $(OBJ_STRUCT) 
+	@$(call run_test,single_member,module/,$^)
 
 
 
