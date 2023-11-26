@@ -30,12 +30,6 @@
 #include <stdio.h>
 #include "matrix.h"
 
-/**
- * @def DEFAULT_VALUE
- * @brief valeur par défaut d'une case
- * @note ne doit pas faire partie de l'ensemble des valeurs possibles des éléments stockés
- */
-#define DEFAULT_VALUE -2
 
 /*------------------------------------------------------------------*/
 /*                         STRUCTURE DUEL                           */
