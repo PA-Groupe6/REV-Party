@@ -1,7 +1,14 @@
 /**
  * @file test_bale.c
  * @author Ugo VALLAT
- * @brief Test sur le lecteur de CSV
+ * @brief Test sur la structure de données matrice
+ * 
+ * @remarks Les fonction suivantes ne sont pas explicitement testé mais sont
+ * utilisée dans les tests des autres fonctions : 
+ * - deleteBale
+ * - baleGet
+ * - baleNbLines
+ * - baleNbColumn
  */
 
 
@@ -13,6 +20,12 @@
 #include "../../src/logger.h"
 #include "../test_utils.h"
 #include "../../src/utils/csv_reader.h"
+
+/* dimension de la matrice de test */
+#define NB_VOTER 20     /* NB_VOTER > 2 */
+#define NB_CANDIDAT NB_LABELS    /* NB_CANDIDAT > 2 */
+#define OTHER_VALUE 2   /* OTHER_VALUE != DEFAULT_VALUE */
+
 
 
 /*

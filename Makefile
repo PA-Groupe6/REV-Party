@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=-Wextra -Wall -Werror -pedantic -std=c99
+CFLAGS=-Wextra -Wall -Werror -pedantic -std=c99 -pthread
 
 BINDIR=bin
 OBJDIR=obj
@@ -93,13 +93,16 @@ run_test= if [ -f $(TSTDIR)/$(2)test_$(1).c ]; then \
  $(OBJDIR)/test_utils.o:
 	@$(CC) -c $(TSTDIR)/test_utils.c -o $@ $(CFLAGS)
 
+ $(OBJDIR)/structure/label_test_set.o:
+	@$(CC) -c  $(TSTDIR)/structure/label_test_set.c -o $@ $(CFLAGS)
+
 tlogger: $(OBJDIR)/logger.o $(OBJDIR)/test_utils.o
 	@$(call run_test,logger,,$^)
 
 tinterpreter: $(OBJDIR)/logger.o $(OBJDIR)/test_utils.o
 	@$(call run_test,interpreter,,$^)
 
-tbale: $(OBJDIR)/structure/data_struct_utils.o $(OBJDIR)/structure/list.o  $(OBJDIR)/structure/matrix.o $(OBJDIR)/structure/genericlist.o $(OBJDIR)/structure/bale.o $(OBJDIR)/logger.o $(OBJDIR)/test_utils.o $(TSTDIR)/structure/label_test_set.o
+tbale: $(OBJDIR)/structure/data_struct_utils.o $(OBJDIR)/structure/list.o  $(OBJDIR)/structure/matrix.o $(OBJDIR)/structure/genericlist.o $(OBJDIR)/structure/bale.o $(OBJDIR)/logger.o $(OBJDIR)/test_utils.o $(OBJDIR)/structure/label_test_set.o
 	@$(call run_test,bale,structure/,$^)
 
 tduel: $(OBJDIR)/structure/duel.o $(OBJDIR)/logger.o $(OBJDIR)/test_utils.o $(OBJDIR)/structure/data_struct_utils.o
@@ -120,11 +123,13 @@ tmatrix: $(OBJDIR)/structure/matrix.o $(OBJDIR)/structure/data_struct_utils.o $(
 tsha256: $(OBJDIR)/utils/sha256/sha256.o $(OBJDIR)/test_utils.o
 	@$(call run_test,sha256,utils/sha256/,$^)
 
-tcsv_reader: $(OBJDIR)/utils/csv_reader.o $(OBJDIR)/test_utils.o
+tcsv_reader: $(OBJDIR)/utils/csv_reader.o $(OBJDIR)/test_utils.o $(OBJDIR)/structure/genericlist.o $(OBJDIR)/structure/bale.o $(OBJDIR)/logger.o $(OBJDIR)/structure/matrix.o $(OBJDIR)/test_utils.o $(OBJDIR)/structure/data_struct_utils.o $(OBJDIR)/structure/list.o
 	@$(call run_test,csv_reader,utils/,$^)
 
 tutils_sd: $(OBJDIR)/utils/utils_sd.o $(OBJDIR)/test_utils.o
 	@$(call run_test,utils_sd,utils/,$^)
+
+
 
 ################################
 #             MISC             #
