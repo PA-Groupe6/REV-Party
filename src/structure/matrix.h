@@ -360,23 +360,4 @@ Matrix *matrixFilter(Matrix *m, fun_filter_matrix fun, void *buff);
 
 Matrix *matrixCopy(Matrix *m);
 
-
-
-/*------------------------------------------------------------------*/
-/*                              DEBUG                               */
-/*------------------------------------------------------------------*/
-
-#ifdef DEBUG
-
-/**
- * @date 5/11/2023
- * @brief Affiche dans le logger toutes les informations sur la matrice
- *
- * @param[in]  m matrice à logger
- * @pre m != NULL
- */
-void printMatrixLog(Matrix *m);
-
-#endif
-
 #endif
