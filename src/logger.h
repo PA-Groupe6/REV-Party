@@ -11,6 +11,15 @@
 #ifndef __LOGGER__H__
 #define __LOGGER__H__
 
+#include "structure/list.h"
+#include "structure/genericlist.h"
+#include "structure/matrix.h"
+#include "structure/bale.h"
+#include "structure/duel.h"
+#include "structure/graph.h"
+
+#include "module/single_member.h"
+
 /**
  * @date 29/10/2023
  * @brief Initialise le logger en définissant sa sortie sur un chemin
@@ -59,5 +68,92 @@ void exitl(const char* file_name, const char* fun_name, int exit_value, char* fo
  * @remark Ne fais rien si la sortie est stdout
 */
 void close_logger();
+
+/*
+    =======================================
+    === Affichage structures de données ===
+    =======================================
+*/
+
+/**
+ * @date 26/11/2023
+ * @brief Afficher la liste dans le logger
+ *
+ * @param[in] l liste à afficher
+ *
+ */
+void displayListLog(List *l);
+
+/**
+ * @date 26/11/2023
+ * @brief Afficher la valeur des pointeurs dans le logger
+ *
+ * @param[in] l liste à logger
+ * @pre l != NULL
+ *
+ */
+void displayGenListLog(GenList *l);
+
+/**
+ * @date 26/11/2023
+ * @brief Afficher la matrice dans le logger
+ *
+ * @param[in] m Matrice à logger
+ * @pre m != NULL
+ */
+void displayMatrixLog(Matrix *m);
+
+/**
+ * @date 26/11/2023
+ * @brief Affiche le ballot dans le logger
+ *
+ * @param[in]  b ballot à logger
+ * @pre b != NULL
+ */
+void displayBaleLog(Bale *b);
+
+/**
+ * @date 26/11/2023
+ * @brief Afficher la matrice de duels dans la sortie standard stdout
+ *
+ * @param[in] d matrice de duels à afficher
+ * @pre d != NULL
+ */
+void displayDuelLog(Duel *d);
+
+
+/**
+ * @date 26/11/2023
+ * @brief Afficher le graph dans le logger
+ *
+ * @param[in] d graph à afficher
+ */
+void displayGraphLog(Graph *g);
+
+
+
+
+/*
+    ===========================
+    === Affichage Résultats ===
+    ===========================
+*/
+
+/**
+ * @date 26/11/2023
+ * @brief Affiche la liste des résultats pour Uninominale à 1 tours
+ * 
+ * @param[in] l Liste des vainqueurs (WinnerSingle)
+ */
+void displayListWinnerSingleTwo(GenList *l);
+
+/**
+ * @date 26/11/2023
+ * @brief Affiche la liste des résultats pour Uninominale à 2 tours
+ * 
+ * @param[in] l Liste des vainqueurs (WinnerSingleTwo)
+ */
+void displayListWinnerSingle(GenList *l);
+
 
 #endif
