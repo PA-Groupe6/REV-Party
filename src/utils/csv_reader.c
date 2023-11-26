@@ -1,22 +1,69 @@
 #include "csv_reader.h"
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h> 
 #include "../structure/bale.h"
 #include "../structure/duel.h"
-#include "../structure/list.h"
 #include "../structure/genericlist.h"
-#include <string.h> 
+#include "../logger.h"
 
 #define USLESS_COLUM 4
 #define USLESS_CHAR 14
-#define NB_CADIDATES 10
+#define SIZE_BUFF_LINE 512
 
-void freeGenList(GenList *list);
 
+/**
+ * @date 23/11/2023
+ * @author LUDWIG Corentin
+ * @brief Supprime et libere la memoire de la genList et de tout les pointeur quel contients
+ *
+ * @param[in] la list a supprimer
+ * 
+ * @return <explications>
+*/
+void freeListLabel(GenList *list){
+    while(!genListEmpty(list))
+        free(genListPop(list));
+    deleteGenList(&list);
+}
+
+
+/**
+ * @date 23/11/2023
+ * @author LUDWIG Corentin
+ * @brief compte le nombre de ligne du fihier passer en parametre
+ *
+ * @param[in] nom/path du fichier
+ * 
+ * @return nombre de ligne du fichier
+*/
+int nbLigne(FILE *file){
+    int nb_line = 0;
+    char buff[SIZE_BUFF_LINE];
+    rewind(file);
+    while(fgets(buff, SIZE_BUFF_LINE, file)) {
+        if(strlen(buff) > 10) nb_line++;
+    }
+    rewind(file);
+    return nb_line;
+}
+
+
+/**
+ * @date 23/11/2023
+ * @author LUDWIG Corentin
+ * @brief remplit la liste label avec les noms des candidat present de le fichier file
+ *
+ * @param[in] nom/path du fichier
+ * @param[out] list des labels remplit apres l'execution de la fonction
+ *
+ * @pre len(label) >= nb lable dans le fichier
+*/
 void readLabel(FILE *file,GenList *label){
-    char buffer[256];
+    char buffer[SIZE_BUFF_LINE];
     char* token;
-    char* tab_name[NB_CADIDATES];
-    fscanf(file, "%s\n", buffer);
+    char* label_name;
+    fgets(buffer, sizeof(buffer), file);
 
     token = strtok(buffer,",");
 
@@ -24,52 +71,81 @@ void readLabel(FILE *file,GenList *label){
         token = strtok(NULL,",");
     }
     
-   for (int i = 0; i < NB_CADIDATES; i++)
+   for (int i = 0; token; i++)
    {
-        tab_name[i] = malloc(MAX_LENGHT_LABEL);
-        strcpy(tab_name[i],token+USLESS_CHAR);
-        genListInsert(label,(void*)tab_name[i],i);
+        label_name = malloc(MAX_LENGHT_LABEL);
+        strncpy(label_name,token, MAX_LENGHT_LABEL);
+        genListInsert(label,(void*)label_name,i);
         token = strtok(NULL,",");
    }
-
-
-
 }
 
 
-void fillLigne(Bale *bale,FILE *file,int ligne){
-    char buffer[256];
+/**
+ * @date 23/11/2023
+ * @author LUDWIG Corentin
+ * @brief remplit le ballot passer en parametre avec les information contenu dans le fichier passer en entree
+ *
+ * @param[out] bale ballot a remplir
+ * @param[in] file fichier dans le quelle lire
+ * 
+ * @pre baleNBcandidat(bale) >= NB_CADIDATES && baleNbVotant(bale) >= nbLigne(file)
+*/
+void fillBale(FILE *file, Bale *bale, int nbl) {
+    char buffer[SIZE_BUFF_LINE];
     char* token;
     int n;
 
+    /* ignorer première ligne */
+    strncpy(buffer, "", SIZE_BUFF_LINE);
+    fgets(buffer, sizeof(buffer), file);
 
-    fscanf(file, "%s\n", buffer);
-
-    token = strtok(buffer,",");
-
-    for(int i = 0; i<USLESS_COLUM;i++){ //passe les lignes inutiles
-        token = strtok(NULL,",");
-    }
-    
-   for (int i = 0; i < NB_CADIDATES; i++)
-   {
+    for(int l = 0; l < nbl; l++) {
+        /* lecture ligne */
+        if(!fgets(buffer, sizeof(buffer), file))
+            exitl("csv_reader.c", "fillBale", EXIT_FAILURE, "Echec lecture ligne");
         
-        token = strtok(NULL,",");
-   }
+        /* convertion en token */
+        token = strtok(buffer,",");
 
+        for(int i = 0; i<USLESS_COLUM;i++){ //passe les colonnes inutiles
+            token = strtok(NULL,",");
+        }
+
+        /* récupération des tokens */
+        for (unsigned c = 0; token; c++) {
+            sscanf(token,"%d",&n);
+            bale = baleSetValue(bale, l, c, n);
+            token = strtok(NULL,",");
+        }
+    }
 }
 
 
-
+/**
+ * @date 23/11/2023
+ * @author LUDWIG Corentin
+*/
 Bale* csvToBale(char *file){
+    /* ouverture du csv */
     FILE *file_pointer;
-    file_pointer = fopen(file,'r');
+    file_pointer = fopen(file,"r");
+    if(!file_pointer)
+        exitl("test_bale.c", "csvToBale", EXIT_FAILURE, "Echec ouverture fichier");
+
+    /* récupération des labels */
     GenList *label = createGenList(10);
+    readLabel(file_pointer, label);
 
+    /* compte nombre de lignes */
+    int nbl_file = nbLigne(file_pointer);
+    int nbc = genListSize(label);
 
+    /* création ballot */
+    Bale *bale = createBale(nbl_file-1,nbc,label);
+    fillBale(file_pointer, bale, nbl_file-1);
+    freeListLabel(label);
 
-    Bale *bale = createBale(10,NB_CADIDATES,label);
-
-
-
+    fclose(file_pointer);
+    return bale;
 }
