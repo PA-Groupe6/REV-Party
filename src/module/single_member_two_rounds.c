@@ -46,11 +46,7 @@ int* voteCountFirstround(Bale* bale){
 }
 
 
-<<<<<<< Updated upstream
-List* winnersOfFirstRound(int* votes, int nb_candidat){
-=======
 List* winnersOfFirstRound(int* votes, int nb_candidat, int nb_voter){
->>>>>>> Stashed changes
     int max1;
     List* id_max1 = createList(nb_candidat);
     
@@ -67,11 +63,7 @@ List* winnersOfFirstRound(int* votes, int nb_candidat, int nb_voter){
         }
     }
     if(listSize(id_max1) > 1 || nb_candidat == 1 || 
-<<<<<<< Updated upstream
-    ((listSize(id_max1) == 1) && votes[listGet(id_max1, 0)]*2 > nb_candidat))
-=======
     ((listSize(id_max1) == 1) && votes[listGet(id_max1, 0)]*2 > nb_voter))
->>>>>>> Stashed changes
         return id_max1;
     int max2, i = 0;
     List* id_max2 = createList(nb_candidat);
