@@ -45,6 +45,7 @@ int* voteCountFirstround(Bale* bale){
     return votesComplete;
 }
 
+
 List* winnersOfFirstRound(int* votes, int nb_candidat){
     int max1;
     List* id_max1 = createList(nb_candidat);
@@ -90,6 +91,7 @@ List* winnersOfFirstRound(int* votes, int nb_candidat){
 
     return id_max1;
 }
+
 
 /**
  * @brief Renvoie l'indice de la valeur min du tableau (-1 si plusieurs)
@@ -176,12 +178,14 @@ WinnerSingleTwo* createWinnerInfo(Bale* b, List* candidate, int* scores, unsigne
     return winner;
 }
 
+
 void printTabInt(int* tab, int size, char* name) {
     printf(" [tab %s ] : [", name);
     for(int i = 0; i < size; i++)
         printf(" %d ,", tab[i]);
     printf(" ]\n");
 }
+
 
 GenList* theWinnerTwoRounds(Bale* bale){
     GenList *list = createGenList(1);
@@ -239,7 +243,6 @@ unsigned maxLenghtLabelWinnerTwo(GenList *l) {
     for(unsigned i = 0; i < nb_winners; i++) {
         tmp = strlen(((WinnerSingleTwo*)genListGet(l, i))->name);
         if(tmp > max) max = tmp;
-        printf("<%s> : %d\n", ((WinnerSingleTwo*)genListGet(l, i))->name, max);
     }
     return max;
 }
@@ -262,7 +265,6 @@ void displayListWinnerSingleTwo(GenList *l) {
     unsigned nb_winners = genListSize(l);
     unsigned max_lenght_winner = maxLenghtLabelWinnerTwo(l);
     unsigned max_lenght_case = max_lenght_winner + 24;
-    printf("MAX LENGHT : %d\n", max_lenght_winner);
 
     /* bordure haute */
     printf("\t╔");
