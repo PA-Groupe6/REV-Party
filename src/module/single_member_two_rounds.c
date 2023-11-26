@@ -46,7 +46,11 @@ int* voteCountFirstround(Bale* bale){
 }
 
 
+<<<<<<< Updated upstream
 List* winnersOfFirstRound(int* votes, int nb_candidat){
+=======
+List* winnersOfFirstRound(int* votes, int nb_candidat, int nb_voter){
+>>>>>>> Stashed changes
     int max1;
     List* id_max1 = createList(nb_candidat);
     
@@ -63,7 +67,11 @@ List* winnersOfFirstRound(int* votes, int nb_candidat){
         }
     }
     if(listSize(id_max1) > 1 || nb_candidat == 1 || 
+<<<<<<< Updated upstream
     ((listSize(id_max1) == 1) && votes[listGet(id_max1, 0)]*2 > nb_candidat))
+=======
+    ((listSize(id_max1) == 1) && votes[listGet(id_max1, 0)]*2 > nb_voter))
+>>>>>>> Stashed changes
         return id_max1;
     int max2, i = 0;
     List* id_max2 = createList(nb_candidat);
@@ -192,12 +200,13 @@ GenList* theWinnerTwoRounds(Bale* bale){
     GenList *list = createGenList(1);
     
     unsigned nb_candidat = baleNbCandidat(bale);
+    unsigned nb_voters = baleNbVoter(bale);
 
     if(nb_candidat == 0) return list;
 
 
     int* firstroundResults = voteCountFirstround(bale);
-    List* firstroundWinners = winnersOfFirstRound(firstroundResults, nb_candidat);
+    List* firstroundWinners = winnersOfFirstRound(firstroundResults, nb_candidat, nb_voters);
     unsigned nb_winners_first_round = listSize(firstroundWinners);
 
     for(unsigned i = 0; i < nb_winners_first_round; i++) {
