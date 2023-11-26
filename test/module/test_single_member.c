@@ -203,8 +203,6 @@ int main() {
     test_fun(testTheWinnerTwoRounds, 1, "testTheWinnerTwoRounds");
 
     
-
-
     afterAll();
 
     return return_value;
