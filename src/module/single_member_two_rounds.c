@@ -222,3 +222,91 @@ GenList* theWinnerTwoRounds(Bale* bale){
     free(secondroundResult);
     return list;
 }
+
+
+/*
+    ===================
+    ===  AFFICHEUR  ===
+    ===================
+*/
+
+
+
+unsigned maxLenghtLabelWinnerTwo(GenList *l) {
+    unsigned nb_winners = genListSize(l);
+    unsigned max = 0;
+    unsigned tmp;
+    for(unsigned i = 0; i < nb_winners; i++) {
+        tmp = strlen(((WinnerSingleTwo*)genListGet(l, i))->name);
+        if(tmp > max) max = tmp;
+        printf("<%s> : %d\n", ((WinnerSingleTwo*)genListGet(l, i))->name, max);
+    }
+    return max;
+}
+
+
+/**
+ * @brief Affiche nb_fois la chaine de caractère s
+ * 
+ * @param s Chaine de caractères à afficher
+ * @param nb Nombre de fois
+ */
+void printStringNTwo(char* s, unsigned nb) {
+    for(unsigned i = 0; i < nb; i++) {
+        printf("%s",s);
+    }
+}
+
+
+void displayListWinnerSingleTwo(GenList *l) {
+    unsigned nb_winners = genListSize(l);
+    unsigned max_lenght_winner = maxLenghtLabelWinnerTwo(l);
+    unsigned max_lenght_case = max_lenght_winner + 24;
+    printf("MAX LENGHT : %d\n", max_lenght_winner);
+
+    /* bordure haute */
+    printf("\t╔");
+    printStringNTwo("═", max_lenght_case);
+    printf("╗\n");
+    printf("\t║");
+    printStringNTwo(" ", max_lenght_case);
+    printf("║\n");
+
+    /* titre */
+    printf("\t║  RESULTATS UNI 2 :");
+    printStringNTwo(" ", max_lenght_case-19);
+    printf("║\n");
+
+    /* Tour 1 */
+    printf("\t║  Tour 1...");
+    printStringNTwo(" ", max_lenght_case-11);
+    printf("║\n");
+
+    /* vainqueurs tour 1 */
+    WinnerSingleTwo *wtmp;
+    for(unsigned i = 0; i < nb_winners; i++) {
+        wtmp = genListGet(l, i);
+        if(wtmp->round == 1)
+            printf("\t║   │  • %-*s : %3.2f        ║\n", max_lenght_winner, wtmp->name, wtmp->score);
+    }
+
+    /* Tour 2 */
+    printf("\t║  Tour 2...");
+    printStringNTwo(" ", max_lenght_case-11);
+    printf("║\n");
+
+    /* vainqueurs tour 1 */
+    for(unsigned i = 0; i < nb_winners; i++) {
+        wtmp = genListGet(l, i);
+        if(wtmp->round == 2)
+            printf("\t║   │  • %-*s : %3.2f        ║\n", max_lenght_winner, wtmp->name, wtmp->score);
+    }
+
+    /* bordure basse */
+    printf("\t║");
+    printStringNTwo(" ", max_lenght_case);
+    printf("║\n");
+    printf("\t╚");
+    printStringNTwo("═", max_lenght_case);
+    printf("╝\n");
+}
