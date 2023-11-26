@@ -62,20 +62,5 @@ GenList* theWinnerOneRound(Bale* bale);
 */
 GenList* theWinnerTwoRounds(Bale* bale);
 
-/**
- * @date 26/11/2023
- * @brief Affiche la liste des résultats pour Uninominale à 1 tours
- * 
- * @param l Liste des vainqueurs
- */
-void displayListWinnerSingleTwo(GenList *l);
-
-/**
- * @date 26/11/2023
- * @brief Affiche la liste des résultats pour Uninominale à 2 tours
- * 
- * @param l Liste des vainqueurs
- */
-void displayListWinnerSingle(GenList *l);
 
 #endif
