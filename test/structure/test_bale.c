@@ -307,8 +307,8 @@ int main() {
 
     test_fun(testCreateBale, 1, "testCreateBale");
     test_fun(testBaleSet, 2, "testBaleSet");
-    test_fun(testBaleColumnToLabel, 1, "testBaleColumnToLabel");
-    test_fun(testBaleLabelToColumn, 1, "testBaleLabelToColumn");
+    test_fun(testBaleColumnToLabel, 4, "testBaleColumnToLabel");
+    test_fun(testBaleLabelToColumn, 8, "testBaleLabelToColumn");
 
 
     afterAll();
