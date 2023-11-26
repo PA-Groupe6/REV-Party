@@ -27,6 +27,11 @@
 
 
 
+typedef struct s_winner_single {
+    char name[256];
+    float score;
+}WinnerSingle;
+
 /**
  * @author IVANOVA ALina 
  * @date 04/11/2023
@@ -36,7 +41,7 @@
  *
  * @return Le nom du candidat gagnant
 */
-char* theWinnerOneRound(Bale* bale);
+GenList* theWinnerOneRound(Bale* bale);
 
 
 /**
@@ -49,8 +54,6 @@ char* theWinnerOneRound(Bale* bale);
  *
  * @return Le nom du candidat gagnant
 */
-char* theWinnerTwoRounds(Bale* bale, Duel* duel);
+GenList* theWinnerTwoRounds(Bale* bale);
 
 #endif
-
-

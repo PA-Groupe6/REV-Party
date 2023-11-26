@@ -1,5 +1,4 @@
 /**
- * @file single_member.c
  * @author IVANOVA ALina 
  * @date 4/11/2023
  *
@@ -22,12 +21,13 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <malloc.h>
+#include "../structure/list.h"
 
 
 
 int* voteCountFirstTour(Bale* bale){
-    int nb_votes = baleShape(bale)[0];
-    int nb_candidates = baleShape(bale)[1];
+    int nb_votes = baleNbVoter(bale);
+    int nb_candidates = baleNbCandidat(bale);
     int* votesComplete = malloc(sizeof(int)*nb_candidates);
     memset(votesComplete, 0, sizeof(int)*nb_candidates);
     for (int i = 0; i<nb_votes;i++){
@@ -64,21 +64,56 @@ int* twoMaxVotesCandidats(int* votes){
     return twoWinningCandidates;
 }
 
-int voteCountSecondTour(Duel* duel,int* twoCandidates){
-    int* twoCandidatesVotes = malloc(sizeof(int)*2);
-    int firstVotes = duelGetValue(duel, twoCandidates[0], twoCandidates[1]);
-    int secondVotes = duelGetValue(duel, twoCandidates[1], twoCandidates[0]);
-    if(firstVotes>secondVotes){
-        return 0;
-    }
-    return 1;
-}
+// int voteCountSecondTour(Duel* duel,int* twoCandidates){
+//     int* twoCandidatesVotes = malloc(sizeof(int)*2);
+//     int firstVotes = duelGetValue(duel, twoCandidates[0], twoCandidates[1]);
+//     int secondVotes = duelGetValue(duel, twoCandidates[1], twoCandidates[0]);
+//     if(firstVotes>secondVotes){
+//         return 0;
+//     }
+//     return 1;
+// }
 
 
-char* theWinnerTwoRounds(Bale* bale, Duel* duel){
+// int voteCountSecondTour(Bale *bale,List* Candidates){
+//     List *score = createList(listSize(Candidates));
+//     int nb_votant = baleNbVoter(bale);
+//     List *vote = createList(listSize(Candidates));
+//     for(int i = 0; i<nb_votant;i++){
+//         for(int j = 0; j<listSize(Candidates);j++){
+//             listSet(vote,baleGetValue(bale,i , listGet(Candidates,j)),i);
+//         }
+
+        
+//     }
+// }
+
+
+
+GenList* theWinnerTwoRounds(Bale* bale){
+    GenList *list = createGenList(1);
+    WinnerSingle winner;
+    unsigned nb_candidat = baleNbCandidat(bale);
+
+
     int* firstTourResults = voteCountFirstTour(bale);
     int* firstTourWinners = twoMaxVotesCandidats(firstTourResults);
-    int nbOfWinner = voteCountSecondTour(duel,firstTourWinners);
+    int score;
+
+
+    if( (score =((float)firstTourResults[firstTourWinners[0]]/nb_candidat) * 100) > 50){ //on verify si le gagnant du premier tour a plus de 50% des voies
+
+        strncpy(winner.name, baleColumnToLabel(bale, firstTourWinners[0]), MAX_LENGHT_LABEL);
+        /* calcul du score */
+        winner.score = score;
+        genListAdd(list,(void*)&winner);
+        return list;
+    }
+
+    //debut du second tour
+
+    int nbOfWinner = voteCountSecondTour(bale,firstTourWinners);
     char* ultimateWinner = baleColumnToLabel(bale, nbOfWinner);
-    return ultimateWinner ;
+
+    return list;
 }
