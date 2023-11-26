@@ -17,6 +17,7 @@
 #include <asm-generic/errno-base.h>
 #include <malloc.h>
 #include <stdbool.h>
+#include <stdio.h>
 #include <stdlib.h>
 
 #include "../logger.h"
@@ -526,9 +527,10 @@ int fun_max(int v, unsigned int l, unsigned int c, void *buff) {
     GenList* lmax = (GenList*)buff;
     int* cur;
     if(genListEmpty(lmax) || ((int*)genListGet(lmax, 0))[0] <= v) {
-        if(((int*)genListGet(lmax, 0))[0] < v)
+        if(!genListEmpty(lmax) && ((int*)genListGet(lmax, 0))[0] < v) {
             while(!genListEmpty(lmax))
                 free(genListPop(lmax));
+        }
         cur = malloc(sizeof(int)*3);
         cur[0] = v;
         cur[1] = l;
@@ -550,7 +552,6 @@ GenList *matrixMax(Matrix *m, int l, int c) {
 
     /* création buffer max */
     GenList* lmax = createGenList(1);
-
     /* parcours de la matrice */
     matrixMap(m, l, c, fun_max, lmax);
     return lmax;

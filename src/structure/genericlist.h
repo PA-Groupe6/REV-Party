@@ -34,11 +34,12 @@ typedef GenList *ptrGenList;
  * @date  5/11/2023
  * @brief Crée une liste vide
  *
- * @param[in] size Espace mémoire initial (en nombre d'éléments)
+ * @param[in] memory_size Espace mémoire initial (en nombre d'éléments)
  *
  * @return pointeur vers la liste
+ * @note Alloue la mémoire mais n'est pas initialisée (taille liste = 0)
  */
-GenList *createGenList(unsigned int size);
+GenList *createGenList(unsigned memory_size);
 
 /**
  * @date  5/11/2023
@@ -71,7 +72,7 @@ void genListAdd(GenList *l, void *v);
  *
  * @pre i <= listSize
  */
-void genListInsert(GenList *l, void *v, unsigned int i);
+void genListInsert(GenList *l, void *v, unsigned i);
 
 /**
  * @date 5/11/2023
@@ -96,7 +97,7 @@ void* genListPop(GenList *l);
  * @pre i < listSize
  * @return Valeur avant supression
  */
-void* genListRemove(GenList *l, unsigned int i);
+void* genListRemove(GenList *l, unsigned i);
 
 /**
  * @brief Lire la valeur à la position i
@@ -109,7 +110,7 @@ void* genListRemove(GenList *l, unsigned int i);
  *
  * @return Valeur lue
  **/
-void *genListGet(GenList *l, unsigned int i);
+void *genListGet(GenList *l, unsigned i);
 
 /**
  * @author VALLAT Ugo
@@ -121,7 +122,7 @@ void *genListGet(GenList *l, unsigned int i);
  * @param[in] i Position
  * @pre l != NULL
  */
-void genListSet(GenList *l, void *v, unsigned int i);
+void genListSet(GenList *l, void *v, unsigned i);
 
 /**
  * @date 5/11/2023
@@ -146,7 +147,7 @@ bool genListEmpty(GenList *l);
  *
  */
 
-unsigned int genListSize(GenList *l);
+unsigned genListSize(GenList *l);
 
 /**
  * @date 30/10/2023
