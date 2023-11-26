@@ -330,14 +330,6 @@ Graph *graphFilter(Graph *g, fun_filter_graph fun, void *buff);
 Graph *graphCopy(Graph *g);
 
 /**
- * @date 5/11/2023
- * @brief Afficher le graph dans la sortie standard stdout
- *
- * @param[in] d graph à afficher
- */
-void displayGraph(Graph *g);
-
-/**
  * @brief Transforme le graphe en une liste d'arc ( @ref Arc )
  *
  * @param g Graph
