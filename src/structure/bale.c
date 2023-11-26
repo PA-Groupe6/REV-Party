@@ -34,6 +34,11 @@
 #include "../logger.h"
 #include <string.h>
 
+
+#define RSTC "\033[0m"
+#define YELLOW "\033[38;5;184m"
+
+
 /**
  * @date  13/11/2023
  * @brief Définition de la structure Bale
@@ -326,11 +331,6 @@ void displayBale(Bale *b) {
     displayMatrix(b->matrix);
 }
 
-/*------------------------------------------------------------------*/
-/*                              DEBUG                               */
-/*------------------------------------------------------------------*/
-
-#ifdef DEBUG
 
 /**
  * @date 13/11/2023
@@ -338,8 +338,63 @@ void displayBale(Bale *b) {
  * @brief Affiche dans le logger toutes les informations sur le ballot
  */
 void printBaleLog(Bale *b) {
-    displayBale(b);
+    printl("\n ╬════════════════════ BALLOT ════════════════════╬ \n");
+    printl(" ║\n ╬════════════ Liste des candidats :\n");
+
+    /* candidats */
+    unsigned nb_cand = baleNbCandidat(b);
+    unsigned nb_voter = baleNbVoter(b);
+    for(unsigned i = 0; i < nb_cand; i++) {
+        printl(" ╟─%s C%-2d : %s %s\n", YELLOW, i+1, genListGet(b->labels, i), RSTC);
+    }
+    printl(" ║\n ╬════════════ Votes :\n");
+
+    /* bordure haute */
+    printl(" ║ ┌");
+    for(unsigned i = 0; i < nb_cand-1; i++) {
+        printl("─────┬");
+    }
+    printl("─────┐\n");
+
+    /* nom candidats */
+    printl(" ║ │");
+    for(unsigned i = 0; i < nb_cand; i++) {
+        printl("%s C%-2d %s│",YELLOW, i+1, RSTC);
+    }
+    printl("\n");
+
+    /* bordure basse candidats*/
+    printl(" ║ ├");
+    for(unsigned i = 0; i < nb_cand-1; i++) {
+        printl("─────┼");
+    }
+    printl("─────┤\n");
+
+    /* affichage données */
+    for(unsigned l = 0; l < nb_voter-1; l++) {
+        printl(" ║ │");
+        for(unsigned c = 0; c < nb_cand; c++) {
+            printl(" %3d │", matrixGet(b->matrix, l, c));
+        }
+        printl("\n");
+        printl(" ║ ├");
+        for(unsigned c = 0; c < nb_cand-1; c++) {
+            printl("─────┼");
+        }
+        printl("─────┤\n");
+    }
+    printl(" ║ │");
+    for(unsigned c = 0; c < nb_cand && nb_voter > 0; c++) {
+        printl(" %3d │", matrixGet(b->matrix, nb_voter-1, c));
+    }
+    printl("\n");
+
+    /* bordure basse */
+    printl(" ║ └");
+    for(unsigned i = 0; i < nb_cand-1; i++) {
+        printl("─────┴");
+    }
+    printl("─────┘\n");
 }
 
-#endif
 

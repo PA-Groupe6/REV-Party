@@ -334,5 +334,23 @@ Bale *baleFilter(Bale *b, fun_filter_bale fun, void *buff);
 
 Bale *baleCopy(Bale *b);
 
+/**
+ * @date 5/11/2023
+ * @brief Afficher le ballot dans la sortie standard stdout
+ *
+ * @param[in] b Ballot à afficher
+ * @pre b != NULL
+ */
+void displayBale(Bale *b);
+
+/**
+ * @date 5/11/2023
+ * @brief Affiche dans le logger toutes les informations sur le ballot
+ *
+ * @param[in]  b ballot à logger
+ * @pre b != NULL
+ */
+void printBaleLog(Bale *b);
+
 
 #endif
