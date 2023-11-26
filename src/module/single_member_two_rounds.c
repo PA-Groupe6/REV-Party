@@ -232,6 +232,7 @@ WinnerSingleTwo* createWinnerInfo(Bale* b, unsigned id, int score, unsigned roun
 }
 
 
+
 GenList* theWinnerTwoRounds(Bale* bale){
     /* liste des vainqueurs (tour 1 et 2) */
     GenList *winners = createGenList(1);
