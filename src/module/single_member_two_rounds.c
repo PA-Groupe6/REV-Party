@@ -62,7 +62,8 @@ List* winnersOfFirstRound(int* votes, int nb_candidat){
             listAdd(id_max1, i);
         }
     }
-    if(listSize(id_max1) > 1 || nb_candidat == 1)
+    if(listSize(id_max1) > 1 || nb_candidat == 1 || 
+    ((listSize(id_max1) == 1) && votes[listGet(id_max1, 0)]*2 > nb_candidat))
         return id_max1;
     int max2, i = 0;
     List* id_max2 = createList(nb_candidat);
