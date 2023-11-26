@@ -326,14 +326,4 @@ Duel *duelFilter(Duel *d, fun_filter_duel fun, void *buff);
 
 Duel *duelCopy(Duel *d);
 
-/**
- * @date 5/11/2023
- * @brief Afficher la matrice de duels dans la sortie standard stdout
- *
- * @param[in] d matrice de duels à afficher
- * @pre d != NULL
- */
-void displayDuel(Duel *d);
-
-
 #endif
