@@ -70,9 +70,11 @@ void tokenToLabel(char* token, char* label) {
     int size_tok = strlen(token);
     if (size_tok > MAX_LENGHT_LABEL)  
         size_tok = MAX_LENGHT_LABEL;
-    while(token[i] == ' ')
+    while(token[i] == ' ') {
+        size_tok--;
         token++;
-    while(i<size_tok-1 && token[i] != '\n') i++;
+    }
+    while(i<size_tok && token[i] != '\n') i++;
         token[i] = '\0';
     strncpy(label,token, MAX_LENGHT_LABEL);
 }

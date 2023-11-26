@@ -343,12 +343,6 @@ Bale *baleCopy(Bale *b);
  */
 void displayBale(Bale *b);
 
-/*------------------------------------------------------------------*/
-/*                              DEBUG                               */
-/*------------------------------------------------------------------*/
-
-#ifdef DEBUG
-
 /**
  * @date 5/11/2023
  * @brief Affiche dans le logger toutes les informations sur le ballot
@@ -358,6 +352,5 @@ void displayBale(Bale *b);
  */
 void printBaleLog(Bale *b);
 
-#endif
 
 #endif
