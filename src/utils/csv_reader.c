@@ -1,3 +1,11 @@
+/**
+ * @author Ugo VALLAT, Corentin LUDWIG
+ * @brief Chargement du csv
+ * @date 2023-11-26
+ * 
+ */
+
+
 #include "csv_reader.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -50,6 +58,27 @@ int nbLigne(FILE *file){
 
 
 /**
+ * @date 26/11/2023
+ * @author Ugo VALLAT, Corentin LUDWIG
+ * @brief Format les labels
+ * 
+ * @param[in] token Token d'entrée du csv
+ * @param[out] label Pointeur vers le label à remplir
+ */
+void tokenToLabel(char* token, char* label) {
+    int i = 0;
+    int size_tok = strlen(token);
+    if (size_tok > MAX_LENGHT_LABEL)  
+        size_tok = MAX_LENGHT_LABEL;
+    while(token[i] == ' ')
+        token++;
+    while(i<size_tok-1 && token[i] != '\n') i++;
+        token[i] = '\0';
+    strncpy(label,token, MAX_LENGHT_LABEL);
+}
+
+
+/**
  * @date 23/11/2023
  * @author LUDWIG Corentin
  * @brief remplit la liste label avec les noms des candidat present de le fichier file
@@ -74,7 +103,7 @@ void readLabel(FILE *file,GenList *label){
    for (int i = 0; token; i++)
    {
         label_name = malloc(MAX_LENGHT_LABEL);
-        strncpy(label_name,token, MAX_LENGHT_LABEL);
+        tokenToLabel(token, label_name);
         genListInsert(label,(void*)label_name,i);
         token = strtok(NULL,",");
    }
