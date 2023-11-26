@@ -3,6 +3,7 @@
 #include <stdarg.h>
 #include <execinfo.h>
 #include "logger.h"
+#include <errno.h>
 
 FILE* output = NULL;
 
@@ -86,6 +87,7 @@ void exitl(const char* file_name, const char* fun_name, int exit_value, char* fo
 #endif
     va_list args;
     va_start(args, format);
+    if(errno) perror("Exit with errno : ");
     fprintf(output, "[exitl] %s > %s : ", file_name, fun_name);
     vfprintf(output, format, args);
     va_end(args);
