@@ -35,8 +35,8 @@
  * @brief  Définition de la structure list
  */
 struct s_gen_list {
-    unsigned int memory_size; /* Taille du tableau en mémoire */
-    unsigned int size;        /* taille de la liste (nombre éléments) */
+    unsigned memory_size; /* Taille du tableau en mémoire */
+    unsigned size;        /* taille de la liste (nombre éléments) */
     void **tab;               /* tableau des poiteur (générique) */
 };
 
@@ -44,16 +44,16 @@ struct s_gen_list {
  * @date  1/11/2023
  * @author Ugo VALLAT
  */
-GenList *createGenList(unsigned int size) {
+GenList *createGenList(unsigned memory_size) {
     GenList *l = malloc(sizeof(GenList));
     if (l == NULL)
         exitl("genericlist.c", "createGenList", EXIT_FAILURE, "erreur malloc list");
 
-    l->tab = malloc(sizeof(void *) * size);
-    if (l->tab == NULL && size != 0)
+    l->tab = malloc(sizeof(void *) * memory_size);
+    if (l->tab == NULL && memory_size != 0)
         exitl("genericlist.c", "createGenList", EXIT_FAILURE, "erreur malloc tab");
 
-    l->memory_size = size;
+    l->memory_size = memory_size;
     l->size = 0;
     return l;
 }
@@ -82,7 +82,7 @@ void deleteGenList(ptrGenList *l) {
  * @param new_size Nouvelle taille du tableau
  * @pre l != NULL
  */
-void adjustMemorySizeGenList(GenList *l, unsigned int new_size) {
+void adjustMemorySizeGenList(GenList *l, unsigned new_size) {
     testArgNull(l, "genericlist.c", "adjustMemorySizeGenList", "l");
 
     /* nouvelle taille de la liste */
@@ -115,7 +115,7 @@ void genListAdd(GenList *l, void *v) {
  * @date  1/11/2023
  * @author Ugo VALLAT
  */
-void genListInsert(GenList *l, void *v, unsigned int i) {
+void genListInsert(GenList *l, void *v, unsigned i) {
     /* vérification paramêtres */
     testArgNull(l, "genericlist.c", "genListInsert", "l");
     if (i > l->size)
@@ -155,7 +155,7 @@ void* genListPop(GenList *l) {
  * @date  1/11/2023
  * @author Ugo VALLAT
  */
-void* genListRemove(GenList *l, unsigned int i) {
+void* genListRemove(GenList *l, unsigned i) {
     /* vérification paramêtres */
     testArgNull(l, "genericlist.c", "genListRemove", "l");
     if (i >= l->size)
@@ -183,7 +183,7 @@ bool genListEmpty(GenList *l) {
  * @date  1/11/2023
  * @author Ugo VALLAT
  */
-unsigned int genListSize(GenList *l) {
+unsigned genListSize(GenList *l) {
     testArgNull(l, "genericlist.c", "genListSize", "l");
     return l->size;
 }
@@ -200,7 +200,7 @@ GenList *genListCopy(GenList *l) {
     GenList *new = createGenList(l->size);
 
     /* copie des éléments */
-    for (unsigned int i = 0; i < l->size; i++)
+    for (unsigned i = 0; i < l->size; i++)
         genListAdd(new, l->tab[i]);
 
     return new;
@@ -210,7 +210,7 @@ GenList *genListCopy(GenList *l) {
  * @date  1/11/2023
  * @author Ugo VALLAT
  */
-void *genListGet(GenList *l, unsigned int i) {
+void *genListGet(GenList *l, unsigned i) {
     /* vérification paramêtre */
     testArgNull(l, "genericlist.c", "genListGet", "l");
     if (i >= l->size)
@@ -223,7 +223,7 @@ void *genListGet(GenList *l, unsigned int i) {
  * @date  1/11/2023
  * @author Ugo VALLAT
  */
-void genListSet(GenList *l, void *v, unsigned int i) {
+void genListSet(GenList *l, void *v, unsigned i) {
     /* vérification paramêtre */
     testArgNull(l, "genericlist.c", "genListSet", "l");
     if (i >= l->size)
@@ -244,7 +244,7 @@ void displayGenList(GenList *l) {
         printl("[ ]");
     else {
         printl("[ %p,", l->tab[0]);
-        for (unsigned int i = 1; i < l->size; i++) {
+        for (unsigned i = 1; i < l->size; i++) {
             printl(", %p", l->tab[i]);
         }
         printl(" ]");
@@ -263,7 +263,7 @@ void displayGenList(GenList *l) {
 struct s_gen_list_ite {
     GenList *list;              /* liste à parcourir */
     int cur;                    /* position actuelle */
-    unsigned int (*fnext)(int); /* focntion de déplcament */
+    unsigned (*fnext)(int); /* focntion de déplcament */
     bool next;                  /* appel à fonction next */
 };
 
@@ -271,13 +271,13 @@ struct s_gen_list_ite {
  * @date  1/11/2023
  * @author Ugo VALLAT
  */
-unsigned int next_forward_gen(int i) { return i + 1; }
+unsigned next_forward_gen(int i) { return i + 1; }
 
 /**
  * @date  1/11/2023
  * @author Ugo VALLAT
  */
-unsigned int next_backward_gen(int i) { return i - 1; }
+unsigned next_backward_gen(int i) { return i - 1; }
 
 /**
  * @date  1/11/2023
@@ -317,7 +317,7 @@ GenListIte *createGenListIte(GenList *l, int dir) {
  */
 bool genListIteHasNext(GenListIte *ite) {
     testArgNull(ite, "genericlist.c", "genListIteHasNext", "ite");
-    unsigned int next = ite->fnext(ite->cur);
+    unsigned next = ite->fnext(ite->cur);
     return (next < ite->list->size);
 }
 
@@ -377,7 +377,7 @@ void printGenListLog(GenList *l) {
         printl("[list.c] list = [");
     else {
         printl("[list.c] list = [ %f ", l->tab[0]);
-        for (unsigned int i = 1; i < l->size; i++) {
+        for (unsigned i = 1; i < l->size; i++) {
             printl(", %f", l->tab[i]);
         }
     }
