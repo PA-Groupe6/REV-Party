@@ -27,6 +27,17 @@
 
 
 
+typedef struct s_winner_single {
+    char name[256];
+    float score;
+}WinnerSingle;
+
+typedef struct s_winner_single_two {
+    char name[256];
+    float score;
+    unsigned round;
+}WinnerSingleTwo;
+
 /**
  * @author IVANOVA ALina 
  * @date 04/11/2023
@@ -34,9 +45,9 @@
  *
  * @param[in] bale matrice des ballots fournis pour chaque candidat
  *
- * @return Le nom du candidat gagnant
+ * @return Une liste de WinnerSingle
 */
-char* theWinnerOneRound(Bale* bale);
+GenList* theWinnerOneRound(Bale* bale);
 
 
 /**
@@ -47,10 +58,8 @@ char* theWinnerOneRound(Bale* bale);
  * @param[in] bale matrice des ballots fournis pour chaque candidat
  * @param[in] duel matrice des duels entre tous le candidats
  *
- * @return Le nom du candidat gagnant
+ * @return Retourne une liste de WinnerSingleTwo
 */
-char* theWinnerTwoRounds(Bale* bale, Duel* duel);
+GenList* theWinnerTwoRounds(Bale* bale);
 
 #endif
-
-

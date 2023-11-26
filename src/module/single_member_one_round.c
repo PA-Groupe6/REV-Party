@@ -82,6 +82,8 @@ GenList* theWinnerOneRound(Bale* bale){
     char* winner_label;
     unsigned nb_candidat = baleNbCandidat(bale);
 
+    if(nb_candidat == 0) return list;
+
     /* décompte des voies de chaque candidat */
     int* summaryOfVotes = voteCount(bale);
 
