@@ -599,7 +599,7 @@ GenList *matrixMin(Matrix *m, int l, int c) {
     GenList* lmin = createGenList(1);
 
     /* parcours de la matrice */
-    matrixMap(m, l, c, fun_max, lmin);
+    matrixMap(m, l, c, fun_min, lmin);
     return lmin;
 }
 
