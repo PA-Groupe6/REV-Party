@@ -360,14 +360,7 @@ Matrix *matrixFilter(Matrix *m, fun_filter_matrix fun, void *buff);
 
 Matrix *matrixCopy(Matrix *m);
 
-/**
- * @date 5/11/2023
- * @brief Afficher la matrice dans la sortie standard stdout
- *
- * @param[in] m Matrice à afficher
- * @pre m != NULL
- */
-void displayMatrix(Matrix *m);
+
 
 /*------------------------------------------------------------------*/
 /*                              DEBUG                               */
