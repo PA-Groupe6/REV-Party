@@ -166,6 +166,13 @@ List *listCopy(List *l);
  */
 void displayList(List *l);
 
+/**
+ * @brief Remet la liste à 0
+ * 
+ * @param l Liste à vider
+ */
+void listClear(List *l);
+
 /*------------------------------------------------------------------*/
 /*                         ITERATEUR                                */
 /*------------------------------------------------------------------*/

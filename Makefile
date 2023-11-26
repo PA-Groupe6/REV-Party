@@ -135,7 +135,7 @@ tcsv_reader: $(OBJDIR)/utils/csv_reader.o $(OBJDIR)/test_utils.o $(OBJDIR)/struc
 tutils_sd: $(OBJDIR)/utils/utils_sd.o $(OBJDIR)/test_utils.o
 	@$(call run_test,utils_sd,utils/,$^)
 
-tsingle_member: $(OBJDIR)/module/single_member_one_round.o $(OBJDIR)/utils/csv_reader.o $(OBJ_TEST) $(OBJ_STRUCT) 
+tsingle_member: $(OBJDIR)/module/single_member_two_rounds.o $(OBJDIR)/module/single_member_one_round.o $(OBJDIR)/utils/csv_reader.o $(OBJ_TEST) $(OBJ_STRUCT) 
 	@$(call run_test,single_member,module/,$^)
 
 
