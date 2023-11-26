@@ -306,7 +306,7 @@ GenList *matrixMax(Matrix *m, int l, int c);
 
 /**
  * @date5/11/2023
- * @brief Renvoie la/les plus petite valeur de la matrice, d'une ligne ou d'une colonne
+ * @brief Renvoie la/les plus petite valeur positive de la matrice, d'une ligne ou d'une colonne
  *
  * @param[in] m Pointeur vers la matrice
  * @param[in] l Ligne cible (-1 pour toutes les lignes)
