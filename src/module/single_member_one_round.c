@@ -47,6 +47,7 @@ int* voteCount(Bale* bale){
     return votesComplete;
 }
 
+
 /**
  * @author Alina IVANOVA, Corentin LUDWIG
  * @date 21/11/2023 
@@ -68,9 +69,11 @@ List* maxVotesCandidat(int* votes, int nb_candidat){
     return winner;
 }
 
+
 void displayWinnerSingleMemberSingle(WinnerSingle *winner) {
     printf("\t<+> %s : %3.2f\n", winner->name, winner->score);
 }
+
 
 /**
  * @author Alina IVANOVA
@@ -110,64 +113,3 @@ GenList* theWinnerOneRound(Bale* bale){
     return list;
 }
 
-
-/*
-    ===================
-    ===  AFFICHEUR  ===
-    ===================
-*/
-
-
-
-unsigned maxLenghtLabelWinner(GenList *l) {
-    unsigned nb_winners = genListSize(l);
-    unsigned max = 0;
-    unsigned tmp;
-    for(unsigned i = 0; i < nb_winners; i++) {
-        tmp = strlen(((WinnerSingle*)genListGet(l, i))->name);
-        if(tmp > max) max = tmp;
-    }
-    return max;
-}
-
-
-/**
- * @brief Affiche nb_fois la chaine de caractère s
- * 
- * @param s Chaine de caractères à afficher
- * @param nb Nombre de fois
- */
-void printStringN(char* s, unsigned nb) {
-    for(unsigned i = 0; i < nb; i++) {
-        printf("%s",s);
-    }
-}
-
-
-void displayListWinnerSingle(GenList *l) {
-    unsigned nb_winners = genListSize(l);
-    unsigned max_lenght_winner = maxLenghtLabelWinner(l);
-    unsigned max_lenght_case = max_lenght_winner + 20;
-
-    /* bordure haute */
-    printf("\t╔");
-    printStringN("═", max_lenght_case);
-    printf("╗\n");
-
-    /* titre */
-    printf("\t║  RESULTATS UNI 1 :");
-    printStringN(" ", max_lenght_case-19);
-    printf("║\n");
-
-    /* vainqueurs */
-    WinnerSingle *wtmp;
-    for(unsigned i = 0; i < nb_winners; i++) {
-        wtmp = genListGet(l, i);
-        printf("\t║  • %-*s : %3.2f        ║\n", max_lenght_winner, wtmp->name, wtmp->score);
-    }
-
-    /* bordure basse */
-    printf("\t╚");
-    printStringN("═", max_lenght_case);
-    printf("╝\n");
-}
