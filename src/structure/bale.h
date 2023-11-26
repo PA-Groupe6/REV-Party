@@ -151,6 +151,7 @@ int baleLabelToColumn(Bale *b, char *label);
  */
 char *baleColumnToLabel(Bale *b, unsigned int c);
 
+
 /*------------------------------------------------------------------*/
 /*                          ITERATEUR                               */
 /*------------------------------------------------------------------*/

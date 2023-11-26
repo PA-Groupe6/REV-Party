@@ -29,17 +29,20 @@
  * @date 21/11/2023 
  */
 int* voteCount(Bale* bale){
-    int nb_votes = baleNbVoter(bale);
-    int nb_candidates = baleNbCandidat(bale);
+    unsigned nb_votes = baleNbVoter(bale);
+    unsigned nb_candidates = baleNbCandidat(bale);
     int* votesComplete = malloc(sizeof(int)*nb_candidates);
     memset(votesComplete, 0, sizeof(int)*nb_candidates);
-    for (int i = 0; i<nb_votes;i++){
+    for (unsigned i = 0; i<nb_votes;i++){
         //on recoit le liste avec le(les) candidat(s) qui a recu le val max a partir d'electeur i
         GenList* winner = baleMax(bale, i, -1);
         if (genListSize(winner)==1){//si on a qu'un seul candidat avec le note max, on prend en compte le vote
             int cand = ((int*)genListGet(winner, 0))[2];//num de candidat avec le val max
             votesComplete[cand] += 1;//on ajoute le vote
         }
+        while(!genListEmpty(winner))
+            free(genListPop(winner));
+        deleteGenList(&winner);
     }
     return votesComplete;
 }
@@ -49,24 +52,24 @@ int* voteCount(Bale* bale){
  * @date 21/11/2023 
  */
 List* maxVotesCandidat(int* votes, int nb_candidat){
-    int max = 0;
+    int max = votes[0];
     List *winner = createList(1);
+    listAdd(winner, 0);
     for (int i = 1; i < nb_candidat; i++ ){
         if (votes[i] > max) {
             max = votes[i];
-            listSet(winner,i,0);
-            for(int j = 1; j<listSize(winner)-1;i++){
-                listRemove(winner,j);
-            }
+            while(!listEmpty(winner))
+                listPop(winner);
+            listAdd(winner, i);
         } else if( votes[i] == max){
             listAdd(winner,i);
-
         }
     }
-
-
-
     return winner;
+}
+
+void displayWinnerSingleMemberSingle(WinnerSingle *winner) {
+    printf("\t<+> %s : %3.2f\n", winner->name, winner->score);
 }
 
 /**
@@ -75,7 +78,8 @@ List* maxVotesCandidat(int* votes, int nb_candidat){
  */
 GenList* theWinnerOneRound(Bale* bale){
     GenList *list = createGenList(1);
-    WinnerSingle winner;
+    WinnerSingle *winner;
+    char* winner_label;
     unsigned nb_candidat = baleNbCandidat(bale);
 
     /* décompte des voies de chaque candidat */
@@ -84,15 +88,21 @@ GenList* theWinnerOneRound(Bale* bale){
     /* Récupération du nom du gagnant */
     List* winningCandidates = maxVotesCandidat(summaryOfVotes, nb_candidat);
 
-    for (int i = 0; i < listSize(winningCandidates); i++)
+    for (unsigned i = 0; i < listSize(winningCandidates); i++)
     {
+        winner = malloc(sizeof(WinnerSingle));
         int winningCandidate = listGet(winningCandidates,i);
-        strncpy(winner.name, baleColumnToLabel(bale, winningCandidate), MAX_LENGHT_LABEL);
-        /* calcul du score */
-        winner.score = ((float)summaryOfVotes[winningCandidate]/nb_candidat) * 100;
-        genListAdd(list,(void*)&winner);
-    }
 
+        /* récupération du label candidat */
+        winner_label = baleColumnToLabel(bale, winningCandidate);
+        strncpy(winner->name, winner_label, MAX_LENGHT_LABEL);
+        free(winner_label);
+
+        /* calcul du score */
+        winner->score = ((float)summaryOfVotes[winningCandidate]/baleNbVoter(bale)) * 100;
+        genListAdd(list,(void*)winner);
+    }
+    free(summaryOfVotes);
     deleteList(&winningCandidates);
 
     return list;

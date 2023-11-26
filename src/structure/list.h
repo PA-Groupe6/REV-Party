@@ -31,11 +31,12 @@ typedef List *ptrList;
  * @date  5/11/2023
  * @brief Crée une liste vide
  *
- * @param[in] size Espace mémoire initial (en nombre d'éléments)
+ * @param[in] memory_size Espace mémoire initial (en nombre d'éléments)
  *
  * @return pointeur vers la liste
+ * @note Alloue la mémoire mais n'est pas initialisée (taille liste = 0)
  */
-List *createList(unsigned int size);
+List *createList(unsigned memory_size);
 
 /**
  * @date  5/11/2023
@@ -68,7 +69,7 @@ void listAdd(List *l, int v);
  *
  * @pre i <= listSize
  */
-void listInsert(List *l, int v, unsigned int i);
+void listInsert(List *l, int v, unsigned i);
 
 /**
  * @date 5/11/2023
@@ -93,7 +94,7 @@ int listPop(List *l);
  * @pre i < listSize
  * @return valeur avant suppression
  */
-int listRemove(List *l, unsigned int i);
+int listRemove(List *l, unsigned i);
 
 /**
  * @date 5/11/2023
@@ -107,7 +108,7 @@ int listRemove(List *l, unsigned int i);
  *
  * @return Valeur lue
  **/
-int listGet(List *l, unsigned int i);
+int listGet(List *l, unsigned i);
 
 /**
  * @author VALLAT Ugo
@@ -119,7 +120,7 @@ int listGet(List *l, unsigned int i);
  * @param[in] i Position
  * @pre l != NULL
  */
-void listSet(List *l, int v, unsigned int i);
+void listSet(List *l, int v, unsigned i);
 
 /**
  * @date 5/11/2023
@@ -141,7 +142,7 @@ bool listEmpty(List *l);
  *
  */
 
-unsigned int listSize(List *l);
+unsigned listSize(List *l);
 
 /**
  * @date 30/10/2023
