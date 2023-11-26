@@ -70,6 +70,7 @@ List* winnersOfFirstRound(int* votes, int nb_candidat){
 
     listAdd(id_max2, i);
     max2 = votes[i];
+    i++;
     for(;i < nb_candidat; i++) {
         if(votes[i] > max2 && votes[i] < max1) {
             listClear(id_max2);
@@ -82,8 +83,11 @@ List* winnersOfFirstRound(int* votes, int nb_candidat){
 
     while(!listEmpty(id_max2))
         listAdd(id_max1, listPop(id_max2));
+
+    
     
     deleteList(&id_max2);
+
     return id_max1;
 }
 
@@ -134,12 +138,12 @@ int* voteCountSecondround(Bale *b, List* ftwinners){
 }
 
 
-List* winnerOfSecondRound(int* scores, unsigned nb_winnners) {
-    List *list = createList(nb_winnners);
+List* winnerOfSecondRound(int* scores, unsigned nb_winners) {
+    List *list = createList(nb_winners);
     int max = scores[0];
     listAdd(list, 0);
 
-    for(unsigned i = 1; i < nb_winnners; i++) {
+    for(unsigned i = 1; i < nb_winners; i++) {
         if(scores[i] > max) {
             listClear(list);
             listAdd(list, i);
@@ -148,16 +152,23 @@ List* winnerOfSecondRound(int* scores, unsigned nb_winnners) {
             listAdd(list, i);
         }
     }
+
+
     return list;
 }
 
 
-WinnerSingleTwo* createWinnerInfo(Bale* b, List* winners_fst_round, int* scores, unsigned i, unsigned round) {
+WinnerSingleTwo* createWinnerInfo(Bale* b, List* candidate, int* scores, unsigned i, unsigned round) {
     WinnerSingleTwo *winner;
     char* winner_name;
 
+
+
     winner = malloc(sizeof(WinnerSingleTwo));
-    winner_name = baleColumnToLabel(b, i);
+    if(round == 1)  
+        winner_name = baleColumnToLabel(b, i);
+    else
+        winner_name = baleColumnToLabel(b, listGet(candidate,i));
     strncpy(winner->name, winner_name, MAX_LENGHT_LABEL);
     free(winner_name);
     winner->score = ((float)scores[i] / baleNbVoter(b))*100;
@@ -185,7 +196,7 @@ GenList* theWinnerTwoRounds(Bale* bale){
     unsigned nb_winners_first_round = listSize(firstroundWinners);
 
     for(unsigned i = 0; i < nb_winners_first_round; i++) {
-        genListAdd(list, createWinnerInfo(bale, firstroundResults, listGet(firstroundWinners, i), 1));
+        genListAdd(list, createWinnerInfo(bale,firstroundWinners, firstroundResults, listGet(firstroundWinners, i), 1));
     }
 
     if(nb_winners_first_round <= 1) {
@@ -198,11 +209,11 @@ GenList* theWinnerTwoRounds(Bale* bale){
 
     //debut du second round
     int* secondroundResult = voteCountSecondround(bale,firstroundWinners);
-    List* secondroundWinners = winnerOfSecondRound(secondroundResult, nb_winners_first_round);
+    List* secondroundWinners = winnerOfSecondRound(secondroundResult , nb_winners_first_round);
 
-    printTabInt(secondroundResult, nb_winners_first_round, "secondroundResult");
+
     while(!listEmpty(secondroundWinners)) {
-        genListAdd(list, createWinnerInfo(bale, firstroundWinners, secondroundResult, listPop(secondroundWinners), 2));
+        genListAdd(list, createWinnerInfo(bale,firstroundWinners, secondroundResult, listPop(secondroundWinners), 2));
     }
 
     deleteList(&firstroundWinners);
