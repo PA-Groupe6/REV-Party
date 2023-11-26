@@ -112,7 +112,6 @@ int duelGetValue(Duel *d, unsigned int l, unsigned int c);
  */
 unsigned int duelNbCandidat(Duel *d);
 
-
 /**
  * @date 5/11/2023
  * @brief Renvoie le numéro de la colonne associée au label
@@ -237,6 +236,7 @@ int duelIteGetValue(DuelIte *ite);
  */
 void* deleteDuelIte(ptrDuelIte *ite);
 
+
 /*------------------------------------------------------------------*/
 /*                            UTILS                                 */
 /*------------------------------------------------------------------*/
@@ -335,14 +335,5 @@ Duel *duelCopy(Duel *d);
  */
 void displayDuel(Duel *d);
 
-/*------------------------------------------------------------------*/
-/*                              DEBUG                               */
-/*------------------------------------------------------------------*/
-
-#ifdef DEBUG
-
-void printDuelLog(Duel *d);
-
-#endif
 
 #endif
