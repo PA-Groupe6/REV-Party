@@ -346,7 +346,7 @@ void displayListWinnerSingleTwo(GenList *l) {
     for(unsigned i = 0; i < nb_winners; i++) {
         wtmp = genListGet(l, i);
         if(wtmp->round == 1)
-            printf("\t║   │  • %-*s : %6.2f       ║\n", max_lenght_winner, wtmp->name, wtmp->score);
+            printf("\t║   │  • %-*s : %6.2f %%     ║\n", max_lenght_winner, wtmp->name, wtmp->score);
     }
 
     /* Tour 2 */
@@ -358,7 +358,7 @@ void displayListWinnerSingleTwo(GenList *l) {
     for(unsigned i = 0; i < nb_winners; i++) {
         wtmp = genListGet(l, i);
         if(wtmp->round == 2)
-            printf("\t║   │  • %-*s : %6.2f       ║\n", max_lenght_winner, wtmp->name, wtmp->score);
+            printf("\t║   │  • %-*s : %6.2f %%     ║\n", max_lenght_winner, wtmp->name, wtmp->score);
     }
 
     /* bordure basse */
@@ -391,7 +391,7 @@ void displayListWinnerSingle(GenList *l) {
     WinnerSingle *wtmp;
     for(unsigned i = 0; i < nb_winners; i++) {
         wtmp = genListGet(l, i);
-        printf("\t║  • %-*s : %6.2f       ║\n", max_lenght_winner, wtmp->name, wtmp->score);
+        printf("\t║  • %-*s : %6.2f %%     ║\n", max_lenght_winner, wtmp->name, wtmp->score);
     }
 
     /* bordure basse */
