@@ -97,6 +97,16 @@ bool testTheWinnerOneRound() {
     testOneRoundOnBale("test/ressource/unit/bale_5.csv");
     printsb( "\n\t- test passé\n");
 
+    printsb("\ntest sur ballot 6...");
+    testOneRoundOnBale("test/ressource/unit/bale_6.csv");
+    printsb( "\n\t- test passé\n");
+
+
+    printsb("\ntest sur ballot 7...");
+    testOneRoundOnBale("test/ressource/unit/bale_7.csv");
+    printsb( "\n\t- test passé\n");
+
+
 
     return true;
 
@@ -155,6 +165,11 @@ bool testTheWinnerTwoRounds() {
     printsb("\ntest sur ballot 5...");
     testTwoRoundsOnBale("test/ressource/unit/bale_5.csv");
     printsb( "\n\t- test passé\n");
+
+    printsb("\ntest sur ballot 6...");
+    testTwoRoundsOnBale("test/ressource/unit/bale_6.csv");
+    printsb( "\n\t- test passé\n");
+
 
     printsb("\ntest sur ballot 7...");
     testTwoRoundsOnBale("test/ressource/unit/bale_7.csv");
