@@ -47,7 +47,10 @@ void beforeAll() {
 
 void afterAll() {
     deleteStringBuilder(&string_builder);
+<<<<<<< HEAD
     close_logger();
+=======
+>>>>>>> 6b70ce2 (test matrix)
 }
 
 void beforeEach() {
@@ -95,6 +98,49 @@ bool testUniqueMatrixWithIte(Matrix* m,int l, int c, unsigned nbl, unsigned nbc)
     int i,j, imax, jmax;
     (l==-1 || l+1 > (int)nbl) ? (imax = nbl) : (imax = l+1);
     (c==-1 || c+1 > (int)nbc) ? (jmax = nbc) : (jmax = c+1);
+<<<<<<< HEAD
+=======
+
+    /* parcours */
+    (l==-1) ? (i = 0) : (i = l);
+    for(; i < imax; i++) {
+        for(((c == -1)?(j = 0):(j = c)); j < jmax; j++) {
+            if(!matrixIteHasNext(ite)){
+                printsb(" <+>--- echec has next\n");
+                return false;
+            }
+            if(matrixIteNext(ite) != (int)(i*line_size+j)) {
+                printsb(" <+>--- echec next\n");
+                return false;
+            }
+            if(matrixIteGetValue(ite) != (int)(i*line_size+j)) {
+                printsb(" <+>--- echec get value\n");
+                return false;
+            }
+        }
+    }
+
+    /* Fin du parcours */
+    if(matrixIteHasNext(ite)) {
+        printsb(" <+>--- echec next fin\n");
+        return false;
+    }
+    deleteMatrixIte(&ite);
+    return true;
+}
+
+
+
+/*
+    =============
+    === TESTS ===
+    =============
+*/
+
+bool testCreateMatrix() {
+    emptyStringBuilder(string_builder);
+    printsb("\n <+>--- Test Matrix Create ---<+>");
+>>>>>>> 6b70ce2 (test matrix)
 
     /* parcours */
     (l==-1) ? (i = 0) : (i = l);
@@ -134,7 +180,11 @@ bool testUniqueMatrixWithIte(Matrix* m,int l, int c, unsigned nbl, unsigned nbc)
 
 bool testCreateMatrix() {
     /* test matrice taille (0,0) */
+<<<<<<< HEAD
     printsb( "\ntest sur matrice taille (0,0)...");
+=======
+    printsb( "\ntest sur liste taille (0,0)...");
+>>>>>>> 6b70ce2 (test matrix)
     Matrix* m1 = createMatrix(0, 0, DEFAULT_VALUE);
     if(!m1) return false;
     if((int)matrixNbLines(m1) != 0) return false;
@@ -143,7 +193,11 @@ bool testCreateMatrix() {
     deleteMatrix(&m1);
 
     /* test matrice taille (NB_COLUMN,0) */
+<<<<<<< HEAD
     printsb( "\ntest sur matrice taille (NB_COLUMN,0)...");
+=======
+    printsb( "\ntest sur liste taille (NB_COLUMN,0)...");
+>>>>>>> 6b70ce2 (test matrix)
     Matrix* m2 = createMatrix(NB_COLUMN, 0, DEFAULT_VALUE);
     if(!m2) return false;
     if((int)matrixNbLines(m2) != NB_COLUMN) return false;
@@ -152,7 +206,11 @@ bool testCreateMatrix() {
     deleteMatrix(&m2);
 
     /* test matrice taille (0,NB_COLUMN) */
+<<<<<<< HEAD
     printsb( "\ntest sur matrice taille (0,NB_COLUMN)...");
+=======
+    printsb( "\ntest sur liste taille (0,NB_COLUMN)...");
+>>>>>>> 6b70ce2 (test matrix)
     Matrix* m3 = createMatrix(0, NB_COLUMN, DEFAULT_VALUE);
     if(!m3) return false;
     if((int)matrixNbLines(m3) != 0) return false;
@@ -161,7 +219,11 @@ bool testCreateMatrix() {
     deleteMatrix(&m3);
 
     /* test matrice taille (NB_COLUMN,NB_COLUMN) */
+<<<<<<< HEAD
     printsb( "\ntest sur matrice taille (NB_COLUMN,NB_COLUMN)...");
+=======
+    printsb( "\ntest sur liste taille (NB_COLUMN,NB_COLUMN)...");
+>>>>>>> 6b70ce2 (test matrix)
     Matrix* m4 = createMatrix(NB_COLUMN, NB_COLUMN, DEFAULT_VALUE);
     if(!m4) return false;
     if((int)matrixNbLines(m4) != NB_COLUMN) return false;
@@ -178,6 +240,12 @@ bool testCreateMatrix() {
 }
 
 bool testMatrixSet() {
+<<<<<<< HEAD
+=======
+    emptyStringBuilder(string_builder);
+    printsb( "\n <+>--- Test Matrix Set ---<+>");
+
+>>>>>>> 6b70ce2 (test matrix)
     /* Créer matrice */
     Matrix* m = createMatrix(NB_LINE, NB_COLUMN, DEFAULT_VALUE);
 
@@ -218,6 +286,12 @@ bool testMatrixSet() {
 }
 
 bool testMatrixErase() {
+<<<<<<< HEAD
+=======
+    emptyStringBuilder(string_builder);
+    printsb( "\n <+>--- Test Matrix Erase ---<+>");
+
+>>>>>>> 6b70ce2 (test matrix)
     /* Créer matrice */
     Matrix* m = createMatrix(NB_LINE, NB_COLUMN, DEFAULT_VALUE);
 
@@ -250,6 +324,12 @@ bool testMatrixErase() {
 
 
 bool testMatrixInsertRemoveLine() {
+<<<<<<< HEAD
+=======
+    emptyStringBuilder(string_builder);
+    printsb( "\n <+>--- Test Matrix Insert/Remove Line ---<+>");
+
+>>>>>>> 6b70ce2 (test matrix)
     Matrix* m = createMatrix(0,0,DEFAULT_VALUE);
 
     /* Insert dans matrice (0,0)*/
@@ -322,6 +402,12 @@ bool testMatrixInsertRemoveLine() {
 }
 
 bool testMatrixInsertRemoveColumn() {
+<<<<<<< HEAD
+=======
+    emptyStringBuilder(string_builder);
+    printsb( "\n <+>--- Test Matrix Insert/Remove Column ---<+>");
+
+>>>>>>> 6b70ce2 (test matrix)
     Matrix* m = createMatrix(0,0,DEFAULT_VALUE);
 
     /* Insert dans matrice (0,0)*/

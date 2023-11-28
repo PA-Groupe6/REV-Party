@@ -75,7 +75,11 @@ TSTDIR=test
 # procédure de test générique
 run_test= if [ -f $(TSTDIR)/$(2)test_$(1).c ]; then \
 		mkdir -p $(BINDIR)/$(2); \
+<<<<<<< HEAD
 		$(CC) $(TSTDIR)/$(2)test_$(1).c $(3) -o $(BINDIR)/$(2)t$(1) $(CFLAGS) -g -rdynamic; \
+=======
+		$(CC) $(TSTDIR)/$(2)test_$(1).c $(3) -o $(BINDIR)/$(2)t$(1) $(CFLAGS) -g; \
+>>>>>>> 6b70ce2 (test matrix)
 		echo "$(EXECC)Executing tests on $(TSTC)$(1).c$(RSTC)"; \
 		if valgrind --leak-check=full $(BINDIR)/$(2)t$(1); then \
 			echo "\n$(BOLD)$(SUCCC)|>-------------------------------= Tests Passed =- $(RSTC)\n"; \
