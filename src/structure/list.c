@@ -40,9 +40,10 @@ List *createList(unsigned memory_size) {
     List *l = malloc(sizeof(List));
     if (l == NULL)
         exitl("list.c", "createList", EXIT_FAILURE, "erreur malloc list");
-
+    
+    if(memory_size == 0) memory_size = 1;
     l->tab = malloc(sizeof(int) * memory_size);
-    if (l->tab == NULL && memory_size != 0)
+    if (l->tab == NULL)
         exitl("list.c", "createList", EXIT_FAILURE, "erreur malloc tab");
 
     l->memory_size = memory_size;
