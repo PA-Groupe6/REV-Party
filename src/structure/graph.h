@@ -6,14 +6,16 @@
  * @brief Un graph est une structure de données contenant tous les arcs (flèches) entres les
  * candidats pondérés par un poids (positif).
  *
- * @note les sommets du graph sont représentés par un indentifiant (unsigned int) et un label
+ * @note les sommets du graph sont représentés par un indentifiant ( unsigned int in [0, nb_vertex[ ) et un label
  *
  * @note Taille maximum des labels = @ref MAX_LENGHT_LABEL
  *
- * @remark Les lignes et les colonnes son étiquetée avec le nom du candidat.
+ * @remark Les sommets son étiquetés avec les labels.
  *
  * @remark En cas d'erreur, toutes les fonctions du graph exit le progamme avec un
  * message d'erreur
+ *
+ * @remark Un arc (src,dest) est unique
  */
 
 #ifndef __GRAPH_H__
@@ -26,16 +28,23 @@
 #include <stdio.h>
 
 /**
+ * @brief Valeur par défaut du poids dans la structure graph,
+ * ne doit pas correspondre à un poids valide
+ * 
+ */
+#define DEFAULT_WEIGHT -2
+
+
+/**
  * @brief Structure de données contenant les informations relatives à un arc
  *
  */
 typedef struct s_arc {
-    char label_src[MAX_LENGHT_LABEL];  /* etiquette du sommet origine */
-    char label_dest[MAX_LENGHT_LABEL]; /* etiquette du sommet destination */
     unsigned int id_src;               /* numéro sommet origine */
     unsigned int id_dest;              /* numéro sommet destination */
-    unsigned int weight;               /* poids de l'arc */
+    int weight;                        /* poids de l'arc */
 } Arc;
+
 
 /*------------------------------------------------------------------*/
 /*                         STRUCTURE GRAPH                           */
@@ -50,16 +59,16 @@ typedef Graph *ptrGraph;
 
 /**
  * @date 5/11/2023
- * @brief Crée un graph
+ * @brief Crée un graph dont les sommets sont appartiennent à [0, nb_vertex[
  *
  * @param[in] nb_vertex Nombre de sommets
  * @param[in] labels Liste des noms des sommets (taille maximale des etiquette : @ref
  * MAX_LENGHT_LABEL)
  *
- * @pre genericListSize(labels) == nbc && Forall x in labels, typeof(x) == char*
+ * @pre genericListSize(labels) == nb_vertex
+ * @pre Forall x in labels, typeof(x) == char*
  *
  * @return pointeur vers le graph
- * @note labels vaut NULL si non définis
  */
 Graph *createGraph(unsigned int nb_vertex, GenList *labels);
 
@@ -84,7 +93,23 @@ void deleteGraph(ptrGraph *g);
  * @pre g != NULL
  *
  */
-void graphAdd(Graph *g, unsigned int id_src, unsigned int id_dest, unsigned int weight);
+void graphAdd(Graph *g, unsigned int id_src, unsigned int id_dest, int weight);
+
+
+/**
+ * @date 30/11/2023
+ * @brief Change la valeur du poids d'un arc
+ *
+ * @param[in] g graph
+ * @param[in] id_src identifiant origine arc
+ * @param[in] id_dest identifiant destination de l'arc
+ * @param[in] weight nouveau poids de l'arc
+ * @pre id_src < nb_sommets && id_dest < nb_sommets
+ * @pre g != NULL
+ * @pre Exist (origine, destination)
+ *
+ */
+void graphSetWeight(Graph *g, unsigned int id_src, unsigned int id_dest, int weight);
 
 /**
  * @date 5/11/2023
@@ -111,7 +136,7 @@ void graphRemove(Graph *g, unsigned int id_src, unsigned int id_dest);
  *
  * @return poids de l'arc, 0 si n'existe pas
  */
-unsigned int graphGetWeight(Graph *g, unsigned int id_src, unsigned int id_dest);
+int graphGetWeight(Graph *g, unsigned int id_src, unsigned int id_dest);
 
 /**
  * @date 5/11/2023
@@ -147,18 +172,6 @@ unsigned int graphNbArc(Graph *g);
  */
 char *graphGetLabel(Graph *g, unsigned int id);
 
-/**
- * @date 5/11/2023
- * @brief Renvoie l'identifiant du sommet associé à l'étiquette
- *
- * @param[in] g graph
- * @param[in] label  Etiquette du sommet
- * @pre g != NULL
- * @pre exist label
- *
- * @return identifiant du sommet
- */
-unsigned int graphGetId(Graph *g, char *label);
 
 /**
  * @date 5/11/2023
@@ -171,9 +184,11 @@ unsigned int graphGetId(Graph *g, char *label);
  * @pre id_src < nb_sommets && id_dest < nb_sommets
  * @pre g != NULL
  *
- * @return pointeur vers l'arc ( @ref Arc), NULL si l'arc n'existe pas
+ * @return pointeur vers copie de l'arc, NULL si l'arc n'existe pas
  */
-Arc *graphGetArc(Graph *g, unsigned int id_src, char *id_dest);
+Arc *graphGetArc(Graph *g, unsigned id_src, unsigned id_dest);
+
+
 
 /*------------------------------------------------------------------*/
 /*                          ITERATEUR                               */

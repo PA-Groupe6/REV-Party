@@ -1,33 +1,12 @@
 /**
  * @author VALLAT Ugo
- * @brief Structure Duel header
- *
- * @brief Une matrice de duels correspond à une matrice où chaque ligne correspond au
- * score d'un candidat en duel face à un autre candidat de la colonne
- *
- * Les lignes et les colonnes son étiquetée avec le nom du candidat.
- *
- * Il y a autant de lignes que de colonnes et le label d'une ligne et d'une colonne de même
- * indice est similaire
- *
- * La matrice de duels est de taille fixe et ses éléments ne sont pas modifiables après avoir été
- * chargés dans la matrice.
- *
- * @note Taille maximum des étiquetées = @ref MAX_LENGHT_LABEL
- *
- * @remark Les dimensions d'une matrice de duels sont fixes
- *
- * @remark En cas d'erreur, toutes les fonctions de la matrice de duels exit le progamme avec un
- * message d'erreur
+ * @brief Structure Duel implémentation
  */
 
 #include "bale.h"
 #include "data_struct_utils.h"
 #include "genericlist.h"
-#include <errno.h>
-#include <stdbool.h>
 #include <stdlib.h>
-#include <stdio.h>
 #include "duel.h"
 #include "matrix.h"
 #include <malloc.h>
@@ -36,6 +15,9 @@
 
 
 
+/*------------------------------------------------------------------*/
+/*                         STRUCTURE DUEL                           */
+/*------------------------------------------------------------------*/
 
 /**
  * @date  13/11/2023
