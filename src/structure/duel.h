@@ -3,7 +3,7 @@
  * @author VALLAT Ugo, LUDWIG Corentin
  * @brief Structure Duel header
  *
- * @brief Une matrice de duels correspond à une matric où chaque ligne correspond au
+ * @brief Une matrice de duels correspond à une matrice où chaque ligne correspond au
  * score d'un candidat en duel face à un autre candidat de la colonne
  *
  * Les lignes et les colonnes son étiquetée avec le nom du candidat.
@@ -54,7 +54,7 @@ typedef Duel *ptrDuel;
  * @return pointeur vers la matrice de duels
  * @post Les labels sont ajoutés au colonne dans le même ordre que la liste
  */
-Duel *createDuel(unsigned int nbl, unsigned int nbc, GenList *labels);
+Duel *createDuel(unsigned nb_candidats, GenList *labels);
 
 /**
  * @date 5/11/2023
@@ -106,17 +106,6 @@ int duelGetValue(Duel *d, unsigned int l, unsigned int c);
  */
 unsigned int duelNbCandidat(Duel *d);
 
-/**
- * @date 5/11/2023
- * @brief Renvoie le numéro de la colonne associée au label
- *
- * @param[in] d matrice de duels à utiliser
- * @param[in] label  label de la colonne recherchée
- * @pre d != NULL
- *
- * @return numéro de la colonne
- */
-int duelLabelToColumn(Duel *d, char *label);
 
 /**
  * @date 5/11/2023
@@ -127,7 +116,7 @@ int duelLabelToColumn(Duel *d, char *label);
  * @pre d != NULL
  * @pre Exist label
  *
- * @return Indice associé
+ * @return Indice associé,-1 si introuvable
  */
 int duelLabelToIndex(Duel *d, char *label);
 
