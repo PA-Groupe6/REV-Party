@@ -4,6 +4,7 @@
 #include <execinfo.h>
 #include "logger.h"
 #include "structure/bale.h"
+#include "structure/duel.h"
 #include "structure/list.h"
 #include "structure/matrix.h"
 #include <errno.h>
@@ -297,6 +298,69 @@ void displayBaleLog(Bale *b) {
     printl("─────┘\n");
 }
 
+
+void displayDuelLog(Duel *d) {
+    unsigned nb_cand = duelNbCandidat(d);
+
+    printl("\n %s┌────────────────────────────── BALLOT (%d,%d)... \n", c_yellow, nb_cand, nb_cand);
+    printl(" │\n ├────────────── Liste des candidats :%s\n", c_rstc);
+
+    /* candidats */
+    char* label;
+    for(unsigned i = 0; i < nb_cand; i++) {
+        label = duelIndexToLabel(d, i);
+        printl(" %s├─%s C%-2d : %s %s\n", c_yellow, c_orange, i+1, label, c_rstc);
+        free(label);
+    }
+    printl(" %s│\n ├────────────── Votes :%s\n", c_yellow, c_rstc);
+
+    /* bordure haute */
+    printl(" %s│%s ┌─────┬", c_yellow, c_rstc);
+    for(unsigned i = 0; i < nb_cand-1; i++) {
+        printl("─────┬");
+    }
+    printl("─────┐\n");
+
+    /* nom candidats */
+    printl(" %s│%s │     │", c_yellow, c_rstc);
+    for(unsigned i = 0; i < nb_cand; i++) {
+        printl("%s C%-2d %s│",c_orange, i+1, c_rstc);
+    }
+    printl("\n");
+
+    /* bordure basse candidats*/
+    printl(" %s│%s ├─────┼", c_yellow, c_rstc);
+    for(unsigned i = 0; i < nb_cand-1; i++) {
+        printl("─────┼");
+    }
+    printl("─────┤\n");
+
+    /* affichage données */
+    for(unsigned l = 0; l < nb_cand-1; l++) {
+        printl(" %s│%s │%s C%-2d %s│", c_yellow, c_rstc,c_yellow,l+1,c_rstc);
+        for(unsigned c = 0; c < nb_cand; c++) {
+            printl(" %3d │", duelGetValue(d, l, c));
+        }
+        printl("\n");
+        printl(" %s│%s ├────┼", c_yellow, c_rstc);
+        for(unsigned c = 0; c < nb_cand-1; c++) {
+            printl("─────┼");
+        }
+        printl("─────┤\n");
+    }
+    printl(" %s│%s │%s C%-2d %s│", c_yellow, c_rstc,nb_cand,c_yellow,c_rstc);
+    for(unsigned c = 0; c < nb_cand; c++) {
+        printl(" %3d │", duelGetValue(d, nb_cand-1, c));
+    }
+    printl("\n");
+
+    /* bordure basse */
+    printl(" %s│%s └─────┴", c_yellow, c_rstc);
+    for(unsigned i = 0; i < nb_cand-1; i++) {
+        printl("─────┴");
+    }
+    printl("─────┘\n");
+}
 
 
 /*
