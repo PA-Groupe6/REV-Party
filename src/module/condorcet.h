@@ -26,9 +26,13 @@
 
 
 /*------------------------------------------------------------------*/
-/*                        MODULE CONDORCET                       */
+/*                        MODULE CONDORCET                          */
 /*------------------------------------------------------------------*/
 
+
+typedef struct s_winner_condorcet {
+    char name[256];
+}WinnerCondorcet;
 
 /**
  * @author IVANOVA ALina 

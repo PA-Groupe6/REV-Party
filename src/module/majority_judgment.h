@@ -25,7 +25,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <errno.h>
-#include <bale.h>
+#include "../structure/bale.h"
 
 
 /*------------------------------------------------------------------*/
