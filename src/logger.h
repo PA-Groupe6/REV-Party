@@ -156,4 +156,13 @@ void displayListWinnerSingleTwo(GenList *l);
 void displayListWinnerSingle(GenList *l);
 
 
+/**
+ * @date 1/12/2023
+ * @brief Affiche la liste des résultats pour Condoret
+ * 
+ * @param[in] l Liste des vainqueurs (WinnerCondorcet)
+ */
+void displayListWinnerCondorcet(GenList *l, char* name_algo);
+
+
 #endif
