@@ -3,6 +3,7 @@
 #include <stdarg.h>
 #include <execinfo.h>
 #include "logger.h"
+#include "module/condorcet.h"
 #include "structure/bale.h"
 #include "structure/duel.h"
 #include "structure/list.h"
@@ -381,10 +382,62 @@ unsigned maxLenghtLabelWinner(GenList *l) {
     return max;
 }
 
+unsigned maxLenghtLabelWinnerTwo(GenList *l) {
+    unsigned nb_winners = genListSize(l);
+    unsigned max = 0;
+    unsigned tmp;
+    for(unsigned i = 0; i < nb_winners; i++) {
+        tmp = strlen(((WinnerSingleTwo*)genListGet(l, i))->name);
+        if(tmp > max) max = tmp;
+    }
+    return max;
+}
+
+
+unsigned maxLenghtLabelCondorcet(GenList *l) {
+    unsigned nb_winners = genListSize(l);
+    unsigned max = 0;
+    unsigned tmp;
+    for(unsigned i = 0; i < nb_winners; i++) {
+        tmp = strlen(((WinnerCondorcet*)genListGet(l, i))->name);
+        if(tmp > max) max = tmp;
+    }
+    return max;
+}
+
+
+void displayListWinnerSingle(GenList *l) {
+    unsigned nb_winners = genListSize(l);
+    unsigned max_lenght_winner = maxLenghtLabelWinner(l);
+    unsigned max_lenght_case = max_lenght_winner + 20;
+
+    /* bordure haute */
+    printf("\t╔");
+    printStringN("═", max_lenght_case);
+    printf("╗\n");
+
+    /* titre */
+    printf("\t║  RESULTATS UNI 1 :");
+    printStringN(" ", max_lenght_case-19);
+    printf("║\n");
+
+    /* vainqueurs */
+    WinnerSingle *wtmp;
+    for(unsigned i = 0; i < nb_winners; i++) {
+        wtmp = genListGet(l, i);
+        printf("\t║  • %-*s : %6.2f %%     ║\n", max_lenght_winner, wtmp->name, wtmp->score);
+    }
+
+    /* bordure basse */
+    printf("\t╚");
+    printStringN("═", max_lenght_case);
+    printf("╝\n");
+}
+
 
 void displayListWinnerSingleTwo(GenList *l) {
     unsigned nb_winners = genListSize(l);
-    unsigned max_lenght_winner = maxLenghtLabelWinner(l);
+    unsigned max_lenght_winner = maxLenghtLabelWinnerTwo(l);
     unsigned max_lenght_case = max_lenght_winner + 24;
 
     /* bordure haute */
@@ -435,10 +488,9 @@ void displayListWinnerSingleTwo(GenList *l) {
 }
 
 
-
-void displayListWinnerSingle(GenList *l) {
+void displayListWinnerCondorcet(GenList *l, char* name_algo) {
     unsigned nb_winners = genListSize(l);
-    unsigned max_lenght_winner = maxLenghtLabelWinner(l);
+    unsigned max_lenght_winner = maxLenghtLabelCondorcet(l);
     unsigned max_lenght_case = max_lenght_winner + 20;
 
     /* bordure haute */
@@ -447,15 +499,15 @@ void displayListWinnerSingle(GenList *l) {
     printf("╗\n");
 
     /* titre */
-    printf("\t║  RESULTATS UNI 1 :");
+    printf("\t║  RESULTATS %s :", name_algo);
     printStringN(" ", max_lenght_case-19);
     printf("║\n");
 
     /* vainqueurs */
-    WinnerSingle *wtmp;
+    WinnerCondorcet *wtmp;
     for(unsigned i = 0; i < nb_winners; i++) {
         wtmp = genListGet(l, i);
-        printf("\t║  • %-*s : %6.2f %%     ║\n", max_lenght_winner, wtmp->name, wtmp->score);
+        printf("\t║  • %-*s        ║\n", max_lenght_winner, wtmp->name);
     }
 
     /* bordure basse */
