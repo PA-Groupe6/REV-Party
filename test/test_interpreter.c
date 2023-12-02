@@ -29,7 +29,7 @@ void testInterprete() {
     argc = 3;
     char* argv_d[argc];
 
-    Command cmd = intreprete(3, argv_d);
+    Command cmd = interprete(3, argv_d);
 }
 
 void test_fun(bool(*f)(), int fnb, char* fname) {
