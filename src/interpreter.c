@@ -48,10 +48,11 @@ Command interprete(int argc, char *argv[])
     command.log_file = malloc(MAX_FILE_NAME);
     while ((c = getopt(argc, argv, "-i:-d:-j:-o:-m:")) != -1)
     {
+        printf("%c\n",c);
         switch (c)
         {
         case 'i':
-            if (command.module == 0)
+            if (command.file_type == 0)
             {
                 command.file_type = BALE;
                 strcpy(command.file_name,optarg);
@@ -63,7 +64,7 @@ Command interprete(int argc, char *argv[])
             break;
 
         case 'd':
-            if (command.module == 0)
+            if (command.file_type == 0)
             {
                 command.file_type = DUEL;
                 strcpy(command.file_name,optarg);
@@ -75,7 +76,7 @@ Command interprete(int argc, char *argv[])
             break;
 
         case 'j':
-            if(command.module == 0)
+            if(command.file_type == 0)
             {
                 command.file_type = JUDGMENT;
                 strcpy(command.file_name,optarg);
@@ -97,6 +98,7 @@ Command interprete(int argc, char *argv[])
         case 'm':
         if (command.module == 0){
             command.module = stringToModule(optarg);
+            printf("%d\n",command.module);
         } else {
             exitl("interpreter", "intrepreter", EINCMPTB, "il ne peut avoir qu'une seul balise de module\n");
         }
@@ -107,7 +109,6 @@ Command interprete(int argc, char *argv[])
             break;
         }
     }
-
 
 
 
