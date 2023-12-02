@@ -59,7 +59,8 @@ void deleteDuel(ptrDuel *d) {
         free(genListPop((*d)->labels));
     }
     deleteGenList(&((*d)->labels));
-    free(d);
+    free(*d);
+    *d = NULL;
 }
 
 /**
