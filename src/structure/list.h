@@ -157,14 +157,6 @@ unsigned listSize(List *l);
 
 List *listCopy(List *l);
 
-/**
- * @date 5/11/2023
- * @brief Afficher la liste dans la sortie par standard
- *
- * @param[in] l liste à afficher
- *
- */
-void displayList(List *l);
 
 /**
  * @brief Remet la liste à 0

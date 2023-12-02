@@ -161,15 +161,6 @@ unsigned genListSize(GenList *l);
  */
 GenList *genListCopy(GenList *l);
 
-/**
- * @date 5/11/2023
- * @brief Afficher la valeur des pointeurs dans la sortie par standard
- *
- * @param[in] l liste à afficher
- * @pre l != NULL
- *
- */
-void displayGenList(GenList *l);
 
 /*------------------------------------------------------------------*/
 /*                         ITERATEUR                                */

@@ -226,24 +226,6 @@ void listSet(List *l, int v, unsigned i) {
     l->tab[i] = v;
 }
 
-/**
- * @date  1/11/2023
- * @author Ugo VALLAT
- */
-void displayList(List *l) {
-    /* vérification paramêtre */
-    testArgNull(l, "list.c", "displayList", "l");
-
-    if (l->size == 0)
-        printl("[ ]");
-    else {
-        printl("[ %*d", DISPLAY_LENGHT_BOX, l->tab[0]);
-        for (unsigned i = 1; i < l->size; i++) {
-            printl(" , %*d",DISPLAY_LENGHT_BOX, l->tab[i]);
-        }
-        printl(" ]");
-    }
-}
 
 void listClear(List *l) {
     testArgNull(l, "list.c", "listClear", "l");
