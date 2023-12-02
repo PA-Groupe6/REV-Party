@@ -303,7 +303,7 @@ void displayBaleLog(Bale *b) {
 void displayDuelLog(Duel *d) {
     unsigned nb_cand = duelNbCandidat(d);
 
-    printl("\n %s┌────────────────────────────── BALLOT (%d,%d)... \n", c_yellow, nb_cand, nb_cand);
+    printl("\n %s┌────────────────────────────── DUEL (%d,%d)... \n", c_yellow, nb_cand, nb_cand);
     printl(" │\n ├────────────── Liste des candidats :%s\n", c_rstc);
 
     /* candidats */
