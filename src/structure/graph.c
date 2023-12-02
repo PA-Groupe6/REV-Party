@@ -197,6 +197,11 @@ Arc *graphGetArc(Graph *g, unsigned id_src, unsigned id_dest) {
 /*                            UTILS                                 */
 /*------------------------------------------------------------------*/
 
+
+/**
+ * @author Corentin LUDWIG
+ * @date  02/12/2023
+ */
 GenList *graphToListArcFromArcDest(Graph *g, Arc *arc){
     GenList *l = createGenList(5);
     int src = arc->id_dest;
@@ -212,7 +217,10 @@ GenList *graphToListArcFromArcDest(Graph *g, Arc *arc){
 }
 
 
-
+/**
+ * @author Corentin LUDWIG
+ * @date  02/12/2023
+ */
 bool graphIsMakingCycle(Graph *g, Arc *arc){
     testArgNull(g, "graph.c", "graphAddCycle", "g");
     testArgNull(g, "graph.c", "graphAddCycle", "arc");
