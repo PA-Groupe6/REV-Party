@@ -8,6 +8,12 @@
 
 #include <stdbool.h>
 
+#define EUNKWMTH 1 /* méthode non reconnue */
+#define EUNKWARG 2 /* argument non reconnu */
+#define EINVLARG 3 /* argument invalide */
+#define EMISSARG 4 /* argument manquant */
+#define EINCMPTB 5 /* arguments incompatibles */
+
 /**
  * @date 27/10/2023
  * @brief Modules de calcul du vaiqueur
@@ -49,6 +55,6 @@ typedef struct command_t {
  * 
  * @return Informations extraites dans une structure @ref Command
 */
-Command intreprete(int argc,char* argv[]);
+Command interprete(int argc,char* argv[]);
 
 #endif
