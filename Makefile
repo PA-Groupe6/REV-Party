@@ -111,16 +111,16 @@ tinterpreter: $(OBJDIR)/logger.o $(OBJDIR)/test_utils.o
 tbale: $(OBJDIR)/structure/bale.o $(OBJDIR)/structure/data_struct_utils.o $(OBJDIR)/structure/list.o  $(OBJDIR)/structure/matrix.o $(OBJDIR)/structure/genericlist.o $(OBJDIR)/logger.o $(OBJDIR)/test_utils.o $(OBJDIR)/structure/label_test_set.o
 	@$(call run_test,bale,structure/,$^)
 
-tduel: $(OBJDIR)/structure/duel.o $(OBJDIR)/logger.o $(OBJDIR)/test_utils.o $(OBJDIR)/structure/data_struct_utils.o
+tduel: $(OBJDIR)/structure/duel.o $(OBJDIR)/logger.o $(OBJDIR)/test_utils.o
 	@$(call run_test,duel,structure/,$^)
 
-tgenericlist: $(OBJDIR)/structure/genericlist.o $(OBJDIR)/logger.o $(OBJDIR)/test_utils.o $(OBJDIR)/structure/data_struct_utils.o
-	@$(call run_test,genericlist,structure/,$^)
+tgenericlinkedlist: $(OBJDIR)/structure/genericlinkedlist.o $(OBJDIR)/logger.o $(OBJDIR)/test_utils.o
+	@$(call run_test,genericlinkedlist,structure/,$^)
 
-tgraph: $(OBJDIR)/structure/graph.o $(OBJDIR)/logger.o $(OBJDIR)/test_utils.o $(OBJDIR)/structure/data_struct_utils.o
+tgraph: $(OBJDIR)/structure/graph.o $(OBJDIR)/logger.o $(OBJDIR)/test_utils.o
 	@$(call run_test,graph,structure/,$^)
 
-tlist: $(OBJDIR)/structure/list.o $(OBJDIR)/logger.o $(OBJDIR)/test_utils.o $(OBJDIR)/structure/data_struct_utils.o $(OBJDIR)/structure/genericlist.o
+tlist: $(OBJDIR)/structure/list.o $(OBJDIR)/logger.o $(OBJDIR)/test_utils.o
 	@$(call run_test,list,structure/,$^)
 
 tmatrix: $(OBJDIR)/structure/matrix.o $(OBJDIR)/structure/data_struct_utils.o $(OBJDIR)/structure/genericlist.o $(OBJDIR)/structure/list.o $(OBJDIR)/logger.o $(OBJDIR)/test_utils.o

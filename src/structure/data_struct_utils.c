@@ -24,7 +24,7 @@ GenList* copyLabels(GenList* labels) {
     char *label;
     GenList* list = createGenList(genListSize(labels));
 
-    for(int i = 0; i < (int)genListSize(labels); i++) {
+    for(int i = 0; i < genListSize(labels); i++) {
         label = malloc(sizeof(char)*MAX_LENGHT_LABEL);
         if(strncpy(label, genListGet(labels, i), MAX_LENGHT_LABEL) == NULL)
             exitl("data_struct_utils.c", "copyLabels", EXIT_FAILURE, "Echec copie label %s", genListGet(labels, i));
@@ -44,12 +44,12 @@ int searchLabel(GenList* labels, char* label) {
     if(strlen(label) > MAX_LENGHT_LABEL)
         exitl("bale.c", "baleLabelToColumn", EXIT_FAILURE, "taille label %s > MAX_LENGHT_LABEL", label);
     
-    unsigned int i;
+    int i;
     for(i = 0; i < genListSize(labels); i++) {
         if(strncmp(label, (char*)genListGet(labels, i), MAX_LENGHT_LABEL) == 0)
             return i;
     }
     if(i == genListSize(labels))
-        return -1;
-    return (int)i;
+        i = -1;
+    return i;
  }

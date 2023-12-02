@@ -274,10 +274,7 @@ struct s_matrixIte {
  * @param buff Buffer (non utilisé)
  * @return valeur de v en entrée
  */
-int default_fun(int v, unsigned int l, unsigned int c, void *buff) { 
-    (void)l; (void)c; (void)buff;
-    return v; 
-}
+int default_fun(int v, unsigned int l, unsigned int c, void *buff) { return v; }
 
 /**
  * @date  1/11/2023
@@ -349,9 +346,6 @@ bool matrixIteHasNext(MatrixIte *ite) {
     int nbl = (int)ite->matrix->nbl;
     int nbc = (int)ite->matrix->nbc;
 
-    /* matrice vide */
-    if(ite->matrix->nbl == 0 || ite->matrix->nbc == 0)
-        return false;
     /* Parcours une case */
     if (ite->line > -1 && ite->column > -1)
         return ite->cur_l != ite->line && ite->cur_c != ite->column;
@@ -478,7 +472,6 @@ void matrixMap(Matrix *m, int l, int c, fun_ite fun, void *buff) {
  * @return élément courant
  */
 int fun_som(int v, unsigned int l, unsigned int c, void *buff) {
-    (void)l; (void)c;
     long int *som = (long int *)buff;
     if (v > 0)
         (*som) += v;
@@ -552,6 +545,12 @@ GenList *matrixMax(Matrix *m, int l, int c) {
 
     /* création buffer max */
     GenList* lmax = createGenList(1);
+<<<<<<< HEAD
+
+    int col = ((int*)genListGet(lmax, 0))[2];
+
+=======
+>>>>>>> 5027a4c (tests)
     /* parcours de la matrice */
     matrixMap(m, l, c, fun_max, lmax);
     return lmax;
@@ -572,8 +571,8 @@ int fun_min(int v, unsigned int l, unsigned int c, void *buff) {
     GenList* lmin = (GenList*)buff;
     int* cur;
     if(v < 1) return v;
-    if(genListEmpty(lmin) || ((int*)genListGet(lmin, 0))[0] >= v) {
-        if(!genListEmpty(lmin) && ((int*)genListGet(lmin, 0))[0] > v)
+    if(genListEmpty(lmin) || ((int*)genListGet(lmin, 0))[0] <= v) {
+        if(((int*)genListGet(lmin, 0))[0] < v)
             while(!genListEmpty(lmin))
                 free(genListPop(lmin));
         cur = malloc(sizeof(int)*3);
@@ -599,7 +598,7 @@ GenList *matrixMin(Matrix *m, int l, int c) {
     GenList* lmin = createGenList(1);
 
     /* parcours de la matrice */
-    matrixMap(m, l, c, fun_min, lmin);
+    matrixMap(m, l, c, fun_max, lmin);
     return lmin;
 }
 
@@ -637,6 +636,7 @@ int applyFunFilter(int v, unsigned int l, unsigned int c, void *buff) {
  */
 Matrix *matrixFilter(Matrix *m, fun_filter_matrix fun, void *buff) {
     testArgNull(m, "matrix.c", "matrixFilter", "m");
+    testArgNull(fun, "matrix.c", "matrixFilter", "fun");
 
     /* Création nouvelle matrice et buffer */
     Filter *filter = malloc(sizeof(Filter));

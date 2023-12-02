@@ -78,16 +78,34 @@ bool testOneRoundOnBale(char* file) {
 bool testTheWinnerOneRound() {
 
     printsb("\ntest sur ballot 1...");
-    testOneRoundOnBale("test/utils/bale_test_1.csv");
+    testOneRoundOnBale("test/ressource/unit/bale_1.csv");
     printsb( "\n\t- test passé\n");
 
     printsb("\ntest sur ballot 2...");
-    testOneRoundOnBale("test/utils/bale_test_2.csv");
+    testOneRoundOnBale("test/ressource/unit/bale_2.csv");
     printsb( "\n\t- test passé\n");
 
     printsb("\ntest sur ballot 3...");
-    testOneRoundOnBale("test/utils/bale_test_3.csv");
+    testOneRoundOnBale("test/ressource/unit/bale_3.csv");
     printsb( "\n\t- test passé\n");
+
+    printsb("\ntest sur ballot 4...");
+    testOneRoundOnBale("test/ressource/unit/bale_4.csv");
+    printsb( "\n\t- test passé\n");
+
+    printsb("\ntest sur ballot 5...");
+    testOneRoundOnBale("test/ressource/unit/bale_5.csv");
+    printsb( "\n\t- test passé\n");
+
+    printsb("\ntest sur ballot 6...");
+    testOneRoundOnBale("test/ressource/unit/bale_6.csv");
+    printsb( "\n\t- test passé\n");
+
+
+    printsb("\ntest sur ballot 7...");
+    testOneRoundOnBale("test/ressource/unit/bale_7.csv");
+    printsb( "\n\t- test passé\n");
+
 
 
     return true;
@@ -129,17 +147,33 @@ bool testTwoRoundsOnBale(char* file) {
 bool testTheWinnerTwoRounds() {
 
     printsb("\ntest sur ballot 1...");
-    testTwoRoundsOnBale("test/utils/bale_test_1.csv");
+    testTwoRoundsOnBale("test/ressource/unit/bale_1.csv");
     printsb( "\n\t- test passé\n");
 
     printsb("\ntest sur ballot 2...");
-    testTwoRoundsOnBale("test/utils/bale_test_2.csv");
+    testTwoRoundsOnBale("test/ressource/unit/bale_2.csv");
     printsb( "\n\t- test passé\n");
 
     printsb("\ntest sur ballot 3...");
-    testTwoRoundsOnBale("test/utils/bale_test_3.csv");
+    testTwoRoundsOnBale("test/ressource/unit/bale_3.csv");
     printsb( "\n\t- test passé\n");
 
+    printsb("\ntest sur ballot 4...");
+    testTwoRoundsOnBale("test/ressource/unit/bale_4.csv");
+    printsb( "\n\t- test passé\n");
+
+    printsb("\ntest sur ballot 5...");
+    testTwoRoundsOnBale("test/ressource/unit/bale_5.csv");
+    printsb( "\n\t- test passé\n");
+
+    printsb("\ntest sur ballot 6...");
+    testTwoRoundsOnBale("test/ressource/unit/bale_6.csv");
+    printsb( "\n\t- test passé\n");
+
+
+    printsb("\ntest sur ballot 7...");
+    testTwoRoundsOnBale("test/ressource/unit/bale_7.csv");
+    printsb( "\n\t- test passé\n");
 
     return true;
 
@@ -165,12 +199,10 @@ void test_fun(bool(*f)(), int fnb, char* fname) {
 int main() {
     beforeAll();
 
-    // test_fun(testTheWinnerOneRound, 1, "testTheWinnerOneRound");
+    test_fun(testTheWinnerOneRound, 1, "testTheWinnerOneRound");
     test_fun(testTheWinnerTwoRounds, 1, "testTheWinnerTwoRounds");
 
     
-
-
     afterAll();
 
     return return_value;

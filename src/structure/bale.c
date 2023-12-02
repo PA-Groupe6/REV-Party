@@ -299,3 +299,102 @@ Bale *baleCopy(Bale *b) {
     cp->matrix = matrixCopy(b->matrix);
     return cp;
 }
+
+/**
+ * @date 13/11/2023
+ * @author Ugo VALLAT
+ * @brief Afficher le ballot dans la sortie standard stdout
+ */
+void displayBale(Bale *b) {
+    testArgNull(b, "bale.c", "displayBale", "b");
+
+    if(baleNbCandidat(b) < 1 || baleNbVoter(b) < 1) {
+        printl("[]");
+        return;
+    }
+
+    /* calcul taille des colonnes */
+    unsigned column_size = 0;
+    unsigned size;
+    for(unsigned i = 0; i < genListSize(b->labels); i++) {
+        size = strlen((char*)genListGet(b->labels, i));
+        if(size > column_size) column_size = size;
+    }
+
+    /* affichage labels */
+    printl("   [ %*s ",DISPLAY_LENGHT_BOX, (char*)genListGet(b->labels, 0));
+    for(unsigned i = 1; i < genListSize(b->labels); i++)
+        printl(", %*s ",DISPLAY_LENGHT_BOX, (char*)genListGet(b->labels, i));
+    printl("]\n");
+
+    /* affichage matrice */
+    displayMatrix(b->matrix);
+}
+
+
+/**
+ * @date 13/11/2023
+ * @author Ugo VALLAT
+ * @brief Affiche dans le logger toutes les informations sur le ballot
+ */
+void printBaleLog(Bale *b) {
+    printl("\n ╬════════════════════ BALLOT ════════════════════╬ \n");
+    printl(" ║\n ╬════════════ Liste des candidats :\n");
+
+    /* candidats */
+    unsigned nb_cand = baleNbCandidat(b);
+    unsigned nb_voter = baleNbVoter(b);
+    for(unsigned i = 0; i < nb_cand; i++) {
+        printl(" ╟─%s C%-2d : %s %s\n", YELLOW, i+1, genListGet(b->labels, i), RSTC);
+    }
+    printl(" ║\n ╬════════════ Votes :\n");
+
+    /* bordure haute */
+    printl(" ║ ┌");
+    for(unsigned i = 0; i < nb_cand-1; i++) {
+        printl("─────┬");
+    }
+    printl("─────┐\n");
+
+    /* nom candidats */
+    printl(" ║ │");
+    for(unsigned i = 0; i < nb_cand; i++) {
+        printl("%s C%-2d %s│",YELLOW, i+1, RSTC);
+    }
+    printl("\n");
+
+    /* bordure basse candidats*/
+    printl(" ║ ├");
+    for(unsigned i = 0; i < nb_cand-1; i++) {
+        printl("─────┼");
+    }
+    printl("─────┤\n");
+
+    /* affichage données */
+    for(unsigned l = 0; l < nb_voter-1; l++) {
+        printl(" ║ │");
+        for(unsigned c = 0; c < nb_cand; c++) {
+            printl(" %3d │", matrixGet(b->matrix, l, c));
+        }
+        printl("\n");
+        printl(" ║ ├");
+        for(unsigned c = 0; c < nb_cand-1; c++) {
+            printl("─────┼");
+        }
+        printl("─────┤\n");
+    }
+    printl(" ║ │");
+    for(unsigned c = 0; c < nb_cand && nb_voter > 0; c++) {
+        printl(" %3d │", matrixGet(b->matrix, nb_voter-1, c));
+    }
+    printl("\n");
+
+    /* bordure basse */
+    printl(" ║ └");
+    for(unsigned i = 0; i < nb_cand-1; i++) {
+        printl("─────┴");
+    }
+    printl("─────┘\n");
+}
+
+

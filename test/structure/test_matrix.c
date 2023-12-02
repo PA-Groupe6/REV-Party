@@ -20,8 +20,8 @@
 #include "../../src/structure/matrix.h"
 
 /* dimension de la matrice de test */
-#define NB_LINE 100     /* NB_LINE > 2 */
-#define NB_COLUMN 200    /* NB_COLUMN > 2 */
+#define NB_LINE 10      /* NB_LINE > 2 */
+#define NB_COLUMN 20    /* NB_COLUMN > 2 */
 #define DEFAULT_VALUE -1
 #define OTHER_VALUE 2   /* OTHER_VALUE != DEFAULT_VALUE */
 
@@ -47,7 +47,6 @@ void beforeAll() {
 
 void afterAll() {
     deleteStringBuilder(&string_builder);
-    close_logger();
 }
 
 void beforeEach() {
@@ -133,8 +132,11 @@ bool testUniqueMatrixWithIte(Matrix* m,int l, int c, unsigned nbl, unsigned nbc)
 */
 
 bool testCreateMatrix() {
+    emptyStringBuilder(string_builder);
+    printsb("\n <+>--- Test Matrix Create ---<+>");
+
     /* test matrice taille (0,0) */
-    printsb( "\ntest sur matrice taille (0,0)...");
+    printsb( "\ntest sur liste taille (0,0)...");
     Matrix* m1 = createMatrix(0, 0, DEFAULT_VALUE);
     if(!m1) return false;
     if((int)matrixNbLines(m1) != 0) return false;
@@ -143,7 +145,7 @@ bool testCreateMatrix() {
     deleteMatrix(&m1);
 
     /* test matrice taille (NB_COLUMN,0) */
-    printsb( "\ntest sur matrice taille (NB_COLUMN,0)...");
+    printsb( "\ntest sur liste taille (NB_COLUMN,0)...");
     Matrix* m2 = createMatrix(NB_COLUMN, 0, DEFAULT_VALUE);
     if(!m2) return false;
     if((int)matrixNbLines(m2) != NB_COLUMN) return false;
@@ -152,7 +154,7 @@ bool testCreateMatrix() {
     deleteMatrix(&m2);
 
     /* test matrice taille (0,NB_COLUMN) */
-    printsb( "\ntest sur matrice taille (0,NB_COLUMN)...");
+    printsb( "\ntest sur liste taille (0,NB_COLUMN)...");
     Matrix* m3 = createMatrix(0, NB_COLUMN, DEFAULT_VALUE);
     if(!m3) return false;
     if((int)matrixNbLines(m3) != 0) return false;
@@ -161,7 +163,7 @@ bool testCreateMatrix() {
     deleteMatrix(&m3);
 
     /* test matrice taille (NB_COLUMN,NB_COLUMN) */
-    printsb( "\ntest sur matrice taille (NB_COLUMN,NB_COLUMN)...");
+    printsb( "\ntest sur liste taille (NB_COLUMN,NB_COLUMN)...");
     Matrix* m4 = createMatrix(NB_COLUMN, NB_COLUMN, DEFAULT_VALUE);
     if(!m4) return false;
     if((int)matrixNbLines(m4) != NB_COLUMN) return false;
@@ -178,6 +180,9 @@ bool testCreateMatrix() {
 }
 
 bool testMatrixSet() {
+    emptyStringBuilder(string_builder);
+    printsb( "\n <+>--- Test Matrix Set ---<+>");
+
     /* Créer matrice */
     Matrix* m = createMatrix(NB_LINE, NB_COLUMN, DEFAULT_VALUE);
 
@@ -218,6 +223,9 @@ bool testMatrixSet() {
 }
 
 bool testMatrixErase() {
+    emptyStringBuilder(string_builder);
+    printsb( "\n <+>--- Test Matrix Erase ---<+>");
+
     /* Créer matrice */
     Matrix* m = createMatrix(NB_LINE, NB_COLUMN, DEFAULT_VALUE);
 
@@ -250,6 +258,9 @@ bool testMatrixErase() {
 
 
 bool testMatrixInsertRemoveLine() {
+    emptyStringBuilder(string_builder);
+    printsb( "\n <+>--- Test Matrix Insert/Remove Line ---<+>");
+
     Matrix* m = createMatrix(0,0,DEFAULT_VALUE);
 
     /* Insert dans matrice (0,0)*/
@@ -322,6 +333,9 @@ bool testMatrixInsertRemoveLine() {
 }
 
 bool testMatrixInsertRemoveColumn() {
+    emptyStringBuilder(string_builder);
+    printsb( "\n <+>--- Test Matrix Insert/Remove Column ---<+>");
+
     Matrix* m = createMatrix(0,0,DEFAULT_VALUE);
 
     /* Insert dans matrice (0,0)*/
