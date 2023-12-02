@@ -66,7 +66,7 @@ bool testRankedPairsOnDuel(char* file) {
 
     printf("\nListe de vainqueurs : \n");
     for(unsigned i = 0; i < genListSize(lwinner); i++) {
-        displayWinnerCondorcet(genListGet(lwinner, i));
+        displayListWinnerCondorcet(lwinner, "RANKED PAIRS");
     }
     deleteDuel(&duel);
     while(!genListEmpty(lwinner))
@@ -126,9 +126,7 @@ bool testMinimaxOnDuel(char* file) {
     if(!lwinner) return echecTest(" X-- pointeur null\n");
 
     printf("\nListe de vainqueurs : \n");
-    for(unsigned i = 0; i < genListSize(lwinner); i++) {
-        displayWinnerCondorcet(genListGet(lwinner, i));
-    }
+    displayListWinnerCondorcet(lwinner, "MINIMAX");
     deleteDuel(&duel);
     while(!genListEmpty(lwinner))
         free(genListPop(lwinner));
@@ -185,9 +183,7 @@ bool testSchulzeOnDuel(char* file) {
     if(!lwinner) return echecTest(" X-- pointeur null\n");
 
     printf("\nListe de vainqueurs : \n");
-    for(unsigned i = 0; i < genListSize(lwinner); i++) {
-        displayWinnerCondorcet(genListGet(lwinner, i));
-    }
+    displayListWinnerCondorcet(lwinner, "SCHULZE");
     deleteDuel(&duel);
     while(!genListEmpty(lwinner))
         free(genListPop(lwinner));
