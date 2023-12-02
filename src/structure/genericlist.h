@@ -1,8 +1,7 @@
 
 /**
  * @file genericlist.h
- * @author VALLAT Ugo 
- * @date 29/10/2023
+ * @author VALLAT Ugo
  *
  * @brief Cette librairie implémente une liste générique pseudo statique d'entiers
  *
@@ -13,277 +12,225 @@
  *
  * @note haute performance en lecture( O(1) ) mais faible en écriture ( O(n))
  *
- * @remark En cas d'erreur, la variable errno est positionnée à la valeur appropriée, il est 
- * fortement recomandé de la vérifier surtout pour les fonctions ne renvoyant pas de pointeur
+ * @remark En cas d'erreur, toutes les fonctions de liste générique exit le progamme avec un
+ * message d'erreur
  */
-
 
 #ifndef __GENLIST_H__
 #define __GENLIST_H__
-#include <stdio.h>
-#include <stdbool.h>
 #include <errno.h>
-
+#include <stdbool.h>
+#include <stdio.h>
 
 /*------------------------------------------------------------------*/
 /*                     STRUCTURE LIST GENERIC                       */
 /*------------------------------------------------------------------*/
 
-
 /* Définition opaque de la structure list */
 typedef struct s_gen_list GenList;
-typedef GenList * ptrGenList;
+typedef GenList *ptrGenList;
 
-
-
-/** 
- * @author VALLAT ugo
- * @date  29/10/2023
+/**
+ * @date  5/11/2023
  * @brief Crée une liste vide
  *
- * @param[in] size Espace mémoire initial (en nombre d'éléments)
+ * @param[in] memory_size Espace mémoire initial (en nombre d'éléments)
  *
- * @return pointeur vers la liste, NULL si erreur
-*/
-GenList* createList(unsigned int size);
+ * @return pointeur vers la liste
+ * @note Alloue la mémoire mais n'est pas initialisée (taille liste = 0)
+ */
+GenList *createGenList(unsigned memory_size);
 
-
-/** 
- * @author VALLAT ugo
- * @date  29/10/2023
+/**
+ * @date  5/11/2023
  * @brief Supprime la liste mais ne supprime pas la donées pointée
+ * @pre l != NULL
+ * @pre *l != NULL
  *
  * @param[in] l liste à supprimer
-*/
-void deleteList(ptrGenList* l);
+ */
+void deleteGenList(ptrGenList *l);
 
-
-/** 
- * @author VALLAT ugo
- * @date  29/10/2023
+/**
+ * @date  5/11/2023
  * @brief Ajoute l'élément à la fin de la liste
  *
  * @param[in] l Pointeur vers la liste
  * @param[in] v Valeur à ajouter
- *
- * @return nouvelle adresse de la liste, NULL si erreur
-*/
-GenList* listAdd(GenList* l, void* v);
+ * @pre l != NULL
+ */
+void genListAdd(GenList *l, void *v);
 
-
-/** 
- * @author VALLAT ugo
- * @date  29/10/2023
+/**
+ * @date  5/11/2023
  * @brief Insert une valeur à la position i
  *
  * @param[in] l Pointeur vers la liste
  * @param[in] v Valeur à ajouter
  * @param[in] i position
+ * @pre l != NULL
  *
  * @pre i <= listSize
- *
- * @return nouvelle adresse de la liste, NULL si erreur
-*/
-GenList* listInsert(GenList* l, void* v, unsigned int i);
-
+ */
+void genListInsert(GenList *l, void *v, unsigned i);
 
 /**
- * @author VALLAT ugo
- * @date 29/10/2023
+ * @date 5/11/2023
  * @brief Supprime le dernier élément de la liste
  *
  * @param[in] l list
+ * @pre l != NULL
  *
  * @pre taille liste > 0
- *
- * @return -1 si erreur, 0 sinon
-**/
-int listPop(GenList* l);
+ * @return Valeur avant supression
+ **/
+void* genListPop(GenList *l);
 
-
-/** 
- * @author VALLAT ugo
- * @date  29/10/2023
+/**
+ * @date  5/11/2023
  * @brief Supprime l'élément à la position i
  *
  * @param[in] l Pointeur vers la liste
  * @param[in] i position
+ * @pre l != NULL
  *
  * @pre i < listSize
- *
- * @return -1 si erreur, 0 sinon
-*/
-int listRemove(GenList* l, unsigned int i);
-
+ * @return Valeur avant supression
+ */
+void* genListRemove(GenList *l, unsigned i);
 
 /**
- * @author VALLAT ugo
- * @date 29/10/2023
  * @brief Lire la valeur à la position i
- * 
+ *
  * @param[in] l Pointeur vers la liste
  * @param[in] i Position de l'élément
  *
+ * @pre l != NULL
  * @pre i < list size
  *
- * @return Valeur lue, NULL si erreur
+ * @return Valeur lue
  **/
-void* listGet(GenList* l, unsigned int i);
-
+void *genListGet(GenList *l, unsigned i);
 
 /**
- * @author VALLAT ugo
- * @date 29/10/2023
+ * @author VALLAT Ugo
+ * @date 5/11/2023
+ * @brief Change la valeur à la position i par une nouvelle valeur
+ *
+ * @param[in] l Pointeur vers la liste
+ * @param[in] v Nouvelle valeur
+ * @param[in] i Position
+ * @pre l != NULL
+ */
+void genListSet(GenList *l, void *v, unsigned i);
+
+/**
+ * @date 5/11/2023
  *
  * @brief Renvoie si la liste est vide
  *
  * @param[in] l Pointeur vers la liste
+ * @pre l != NULL
+ *
  * @return true si vide, false sinon
  */
-bool listEmpty(GenList* l);
+bool genListEmpty(GenList *l);
 
 /**
- * @author VALLAT ugo
- * @date  29/10/2023
+ * @date  5/11/2023
  * @brief Renvoie la taille de la liste (position + 1 du dernier élément)
  *
  * @param[in] l Pointeur vers la liste
- * @return taille de la liste, -1 si erreur
+ * @pre l != NULL
+ *
+ * @return taille de la liste
  *
  */
 
-unsigned int listSize(GenList* l);
+unsigned genListSize(GenList *l);
 
 /**
- * @author VALLAT ugo
- * @date 25/10/2023
- * @brief Copie une liste source dans la liste destination de taille égale ou supérieure
- * 
- * @param[in] list_src liste source à copier
- * @param[in] list_dest liste destination
- * 
- * @pre size_src <= size_dest
+ * @date 30/10/2023
+ * @brief Copie la liste en entrée
  *
- * @return  -1 si erreur, 0 sinon
+ * @param[in] l Pointeur de la liste à copier
+ * @pre l != NULL
+ *
+ * @return  Pointeur vers la copie
  *
  */
-
-int listCopy(GenList* list_src, GenList* list_dest);
-
-
-
-/**
- * @author VALLAT ugo
- * @date 29/10/2023
- * @brief Afficher la liste dans la sortie par standard
- * 
- * @param[in] l liste à afficher
- *
- */
-void displayList(GenList* l);
-
-
-
-
+GenList *genListCopy(GenList *l);
 
 /*------------------------------------------------------------------*/
 /*                         ITERATEUR                                */
 /*------------------------------------------------------------------*/
 
 typedef struct s_gen_list_ite GenListIte;
-typedef struct s_gen_list_ite* ptrGenListIte;
+typedef struct s_gen_list_ite *ptrGenListIte;
 
 /* l'itérateur commence au début de la liste */
 #define FROM_BEGIN 1
 /* l'itérateur commence à la fin de la liste */
 #define FROM_END 0
 
-
 /**
- * @author VALLAT ugo
- * @date 22/10/2023
+ * @date 5/11/2023
  * @brief Crée un itérateur sur la liste passée en entrée qui la parcours
  * depuis le début ( @ref FROM_BEGIN) ou la fin ( @ref FROM_END)
- * 
+ *
  * @param[in] l liste à parcourrir
  * @param[in] dir sens de parcours de l'itérateur ( @ref FROM_BEGIN ou @ref FROM_END)
+ * @pre l != NULL
  *
- * @return pointeur vers l'itérateur, NULL si erreur
+ * @return pointeur vers l'itérateur
+ * @note Une copie de la liste est faite au moment de la création, toute modification
+ * de la liste ne sera pas visible par l'itérateur
  **/
-GenListIte* createListIte(GenList* l, int dir);
-
-
+GenListIte *createGenListIte(GenList *l, int dir);
 
 /**
- * @author VALLAT ugo
- * @date 22/10/2023
+ * @date 5/11/2023
  * @brief Renvoie si il reste des éléments à parcourir dans la liste
- * 
+ *
  * @param[in] ite pointeur vers l'itérateur
+ * @pre ite != NULL
  *
  * @return true si il reste des éléments, sinon false
  **/
-bool listIteHasNext(GenListIte* ite);
-
+bool genListIteHasNext(GenListIte *ite);
 
 /**
- * @author VALLAT ugo
- * @date 22/10/2023
+ * @date 5/11/2023
  * @brief Décale l'itérateur sur le prochain élément et renvoie sa valeur
- * 
+ *
  * @param[in] ite pointeur vers l'itérateur
- *
- * @pre doit avoir un prochain élément 
- *
- * @return -1 si erreur, 0 sinon
+ * @pre ite != NULL
+ * @pre genListIteHasNext(ite) == true
  */
-int listIteNext(GenListIte* ite);
-
+void genListIteNext(GenListIte *ite);
 
 /**
- * @author VALLAT ugo
- * @date 22/10/2023
+ * @date 5/11/2023
  * @brief Renvoie la valeur courrante
- * 
+ *
  * @param[in] ite pointeur vers l'itérateur
- * 
+ * @pre ite != NULL
+ *
  * @pre doit être sur un élément
- * 
- * @return élément courant, NULL si erreur
+ *
+ * @return élément courant
  */
-void* listIteGetValue(GenListIte* ite);
-
+void *genListIteGetValue(GenListIte *ite);
 
 /**
- * @author VALLAT ugo
- * @date 22/10/2023
+ * @date 5/11/2023
  * @brief Supprime l'itérateur et libère la mémoire
  *
  * @param[in] ite pointeur vers l'itérateur
+ * @pre ite != NULL
+ * @pre *ite != NULL
  **/
-void deleteListIte(ptrGenListIte* ite);
+void deleteGenListIte(ptrGenListIte *ite);
 
-
-
-
-
-
-
-/*------------------------------------------------------------------*/
-/*                              DEBUG                               */
-/*------------------------------------------------------------------*/
-
-#ifdef DEBUG
-
-/**
- * @brief display in the logger all the information about the list and the elements
- * 
- * @param[in] l list to print in logger
- * @author VALLAT ugo
- * @date 29/10/2023
- */
-void printListLog(GenList* l);
-
-#endif
 
 #endif

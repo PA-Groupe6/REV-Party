@@ -6,8 +6,8 @@
 #ifndef __CSV_READER__H__
 #define __CSV_READER__H__
 
-#include "duel.h"
-#include "bale.h"
+#include "../structure/duel.h"
+#include "../structure/bale.h"
 
 
 /**

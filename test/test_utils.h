@@ -19,19 +19,23 @@
 /* Couleur de fond d'un échec */
 #define FAILC "\033[48;5;124m"
 
+#define SIZE_OUTOUT 2048
+
 /**
  * @date 26/10/2023
  * @brief Construit une chaine de caractère multiligne par ajout successifs
  * @note Ne pas oublier de vidé avec `emptyStringBuilder`
  */
 typedef struct s_string_builder {
-    char output[2048];
+    char output[SIZE_OUTOUT];
     int lastLine;
 } StringBuilder;
+typedef StringBuilder* ptrStringBuilder;
 
 /**
  * @date 26/10/2023
  * @brief Créer un StringBuilder
+ * 
  * @return Un pointer vers le StringBuilder créé
  */
 StringBuilder* createStringBuilder();
@@ -39,6 +43,7 @@ StringBuilder* createStringBuilder();
 /**
  * @date 26/10/2023
  * @brief vide la chaîne construite jusqu'ici par un StringBuilder
+ * 
  * @param[in] string_builder Le StringBuilder à vider
  */
 void emptyStringBuilder(StringBuilder* string_builder);
@@ -50,14 +55,23 @@ void emptyStringBuilder(StringBuilder* string_builder);
  * @param[in] string_builder Le StringBuilder sur lequel faire l'ajout
  * @param[in] line La ligne à ajouter
  */
-void addLineStringBuilder(StringBuilder* string_builder, char* line);
+void addLineStringBuilder(StringBuilder* string_builder, const char* line);
 
 /**
  * @date 26/10/2023
  * @brief Affiche un StringBuilder dans la sortie standard
- * @param string_builder Le StringBuilder à afficher
+ * 
+ * @param[in] string_builder Le StringBuilder à afficher
  */
-void printStringBuilder(StringBuilder* string_builder);
+void printStringBuilder(const StringBuilder* string_builder);
+
+/**
+ * @date 30/10/2023
+ * @brief Supprime un StringBuilder et libère sa mémoire
+ * 
+ * @param[in] string_builder L'adresse vers le StringBuilder à supprimer
+ */
+void deleteStringBuilder(ptrStringBuilder* string_builder);
 
 /**
  * @date 26/10/2023
