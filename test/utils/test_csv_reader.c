@@ -54,18 +54,33 @@ bool echecTest(char* msg) {
 
 bool testCsvToBale() {
 
-    Bale* b1 = csvToBale("test/utils/bale_test_1.csv");
-    displayBale(b1);
+    Bale* b1 = csvToBale("test/ressource/unit/bale_1.csv");
+    displayBaleLog(b1);
     deleteBale(&b1);
 
-    Bale* b2 = csvToBale("test/utils/bale_test_2.csv");
-    displayBale(b2);
+    Bale* b2 = csvToBale("test/ressource/unit/bale_2.csv");
+    displayBaleLog(b2);
     deleteBale(&b2);
 
-    Bale* b3 = csvToBale("test/utils/bale_test_3.csv");
-    displayBale(b3);
+    Bale* b3 = csvToBale("test/ressource/unit/bale_3.csv");
+    displayBaleLog(b3);
     deleteBale(&b3);
 
+    Bale* b4 = csvToBale("test/ressource/unit/bale_4.csv");
+    displayBaleLog(b4);
+    deleteBale(&b4);
+
+    Bale* b5 = csvToBale("test/ressource/unit/bale_5.csv");
+    displayBaleLog(b5);
+    deleteBale(&b5);
+
+    Bale* b6 = csvToBale("test/ressource/unit/bale_6.csv");
+    displayBaleLog(b6);
+    deleteBale(&b6);
+
+    Bale* b7 = csvToBale("test/ressource/unit/bale_7.csv");
+    displayBaleLog(b7);
+    deleteBale(&b7);
 
     return true;
 

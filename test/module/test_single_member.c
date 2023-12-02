@@ -59,7 +59,7 @@ bool testOneRoundOnBale(char* file) {
     Bale* bale;
     printsb("\t- chargement ballot\n");
     bale = csvToBale(file);
-    printBaleLog(bale);
+    displayBaleLog(bale);
     printsb("\t- calcul\n");
     lwinner = theWinnerOneRound(bale);
     if(!lwinner) return echecTest(" X-- pointeur null\n");
@@ -123,7 +123,7 @@ bool testTwoRoundsOnBale(char* file) {
     /* chargement du CSV */
     printsb("\t- chargement ballot\n");
     bale = csvToBale(file);
-    printBaleLog(bale);
+    displayBaleLog(bale);
     
     /* calcul des cainqueurs */
     printsb("\t- calcul\n");
