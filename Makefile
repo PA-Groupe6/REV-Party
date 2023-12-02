@@ -128,16 +128,11 @@ tmatrix: $(OBJ_STRUCT) $(OBJ_TEST) $(OBJDIR)/structure/label_test_set.o
 tsha256: $(OBJDIR)/utils/sha256/sha256.o $(OBJDIR)/test_utils.o
 	@$(call run_test,sha256,utils/sha256/,$^)
 
-tcsv_reader: $(OBJDIR)/utils/csv_reader.o $(OBJDIR)/test_utils.o $(OBJDIR)/structure/genericlist.o $(OBJDIR)/structure/bale.o $(OBJDIR)/logger.o $(OBJDIR)/structure/matrix.o $(OBJDIR)/test_utils.o $(OBJDIR)/structure/data_struct_utils.o $(OBJDIR)/structure/list.o
+tcsv_reader: $(OBJ_STRUCT) $(OBJ_TEST) $(OBJDIR)/utils/csv_reader.o
 	@$(call run_test,csv_reader,utils/,$^)
 
-tutils_sd: $(OBJDIR)/utils/utils_sd.o $(OBJDIR)/test_utils.o
-	@$(call run_test,utils_sd,utils/,$^)
-
-tsingle_member: $(OBJDIR)/module/single_member_two_rounds.o $(OBJDIR)/module/single_member_one_round.o $(OBJDIR)/utils/csv_reader.o $(OBJ_TEST) $(OBJ_STRUCT) 
+tsingle_member:  $(OBJ_STRUCT) $(OBJ_TEST) $(OBJDIR)/module/single_member_two_rounds.o $(OBJDIR)/module/single_member_one_round.o $(OBJDIR)/utils/csv_reader.o
 	@$(call run_test,single_member,module/,$^)
-
-
 
 ################################
 #             MISC             #
