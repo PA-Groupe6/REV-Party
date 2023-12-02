@@ -91,7 +91,7 @@ run_test= if [ -f $(TSTDIR)/$(2)test_$(1).c ]; then \
 # TODO règles modules
 
 OBJ_STRUCT = $(OBJDIR)/structure/list.o $(OBJDIR)/structure/genericlist.o $(OBJDIR)/structure/matrix.o \
-	$(OBJDIR)/structure/data_struct_utils.o $(OBJDIR)/structure/bale.o
+	$(OBJDIR)/structure/data_struct_utils.o $(OBJDIR)/structure/bale.o $(OBJDIR)/structure/duel.o
 
 OBJ_TEST = $(OBJDIR)/logger.o $(OBJDIR)/test_utils.o
 
@@ -101,29 +101,28 @@ OBJ_TEST = $(OBJDIR)/logger.o $(OBJDIR)/test_utils.o
  $(OBJDIR)/structure/label_test_set.o:
 	@$(CC) -c  $(TSTDIR)/structure/label_test_set.c -o $@ $(CFLAGS)
 
-
-tlogger: $(OBJDIR)/logger.o $(OBJDIR)/test_utils.o
+tlogger: $(OBJ_STRUCT) $(OBJ_TEST)
 	@$(call run_test,logger,,$^)
 
-tinterpreter: $(OBJDIR)/logger.o $(OBJDIR)/test_utils.o
+tinterpreter: $(OBJ_STRUCT) $(OBJ_TEST) $(OBJDIR)/interpreter.o
 	@$(call run_test,interpreter,,$^)
 
-tbale: $(OBJDIR)/structure/bale.o $(OBJDIR)/structure/data_struct_utils.o $(OBJDIR)/structure/list.o  $(OBJDIR)/structure/matrix.o $(OBJDIR)/structure/genericlist.o $(OBJDIR)/logger.o $(OBJDIR)/test_utils.o $(OBJDIR)/structure/label_test_set.o
+tbale: $(OBJ_STRUCT) $(OBJ_TEST) $(OBJDIR)/structure/label_test_set.o
 	@$(call run_test,bale,structure/,$^)
 
-tduel: $(OBJDIR)/structure/duel.o $(OBJDIR)/logger.o $(OBJDIR)/test_utils.o
+tduel: $(OBJ_STRUCT) $(OBJ_TEST) $(OBJDIR)/structure/label_test_set.o
 	@$(call run_test,duel,structure/,$^)
 
-tgenericlinkedlist: $(OBJDIR)/structure/genericlinkedlist.o $(OBJDIR)/logger.o $(OBJDIR)/test_utils.o
-	@$(call run_test,genericlinkedlist,structure/,$^)
+tgenericlist: $(OBJ_STRUCT) $(OBJ_TEST) $(OBJDIR)/structure/label_test_set.o
+	@$(call run_test,genericlist,structure/,$^)
 
-tgraph: $(OBJDIR)/structure/graph.o $(OBJDIR)/logger.o $(OBJDIR)/test_utils.o
+tgraph: $(OBJ_STRUCT) $(OBJ_TEST) $(OBJDIR)/structure/label_test_set.o
 	@$(call run_test,graph,structure/,$^)
 
-tlist: $(OBJDIR)/structure/list.o $(OBJDIR)/logger.o $(OBJDIR)/test_utils.o
+tlist: $(OBJ_STRUCT) $(OBJ_TEST) $(OBJDIR)/structure/label_test_set.o
 	@$(call run_test,list,structure/,$^)
 
-tmatrix: $(OBJDIR)/structure/matrix.o $(OBJDIR)/structure/data_struct_utils.o $(OBJDIR)/structure/genericlist.o $(OBJDIR)/structure/list.o $(OBJDIR)/logger.o $(OBJDIR)/test_utils.o
+tmatrix: $(OBJ_STRUCT) $(OBJ_TEST) $(OBJDIR)/structure/label_test_set.o
 	@$(call run_test,matrix,structure/,$^)
 
 tsha256: $(OBJDIR)/utils/sha256/sha256.o $(OBJDIR)/test_utils.o
