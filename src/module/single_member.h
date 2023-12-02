@@ -62,5 +62,4 @@ GenList* theWinnerOneRound(Bale* bale);
 */
 GenList* theWinnerTwoRounds(Bale* bale);
 
-
 #endif

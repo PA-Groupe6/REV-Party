@@ -19,7 +19,6 @@
  * @return une matrice @ref Duel
 */
 Duel* csvToDuel(char *file);
-Duel* csvToDuel(char *file);
 
 
 /**
@@ -30,7 +29,6 @@ Duel* csvToDuel(char *file);
  * 
  * @return une matrice @ref Bale
 */
-Bale* csvToBale(char *file);
 Bale* csvToBale(char *file);
 
 
