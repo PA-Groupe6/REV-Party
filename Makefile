@@ -134,6 +134,9 @@ tcsv_reader: $(OBJ_STRUCT) $(OBJ_TEST) $(OBJDIR)/utils/csv_reader.o
 tsingle_member:  $(OBJ_STRUCT) $(OBJ_TEST) $(OBJDIR)/module/single_member_two_rounds.o $(OBJDIR)/module/single_member_one_round.o $(OBJDIR)/utils/csv_reader.o
 	@$(call run_test,single_member,module/,$^)
 
+tcondorcet:  $(OBJ_STRUCT) $(OBJ_TEST) $(OBJDIR)/module/condorcet_minimax.o $(OBJDIR)/utils/csv_reader.o
+	@$(call run_test,condorcet,module/,$^)
+
 ################################
 #             MISC             #
 ################################
