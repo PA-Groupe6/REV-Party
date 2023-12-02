@@ -356,32 +356,3 @@ void deleteGenListIte(ptrGenListIte *ite) {
     free((*ite));
     *ite = NULL;
 }
-
-/*------------------------------------------------------------------*/
-/*                              DEBUG                               */
-/*------------------------------------------------------------------*/
-
-#ifdef DEBUG
-
-/**
- * @date  1/11/2023
- * @author Ugo VALLAT
- */
-void printGenListLog(GenList *l) {
-    testArgNull(l, "genericlist.c", "printGenListLog", "l");
-
-    printl("\n<+>------------[ genericlist.c ]-----------<+>\n\n");
-    printl("[list.c] size = %d\n", l->size);
-    printl("[list.c] memory size = %d\n", l->memory_size);
-    if (l->size <= 0)
-        printl("[list.c] list = [");
-    else {
-        printl("[list.c] list = [ %f ", l->tab[0]);
-        for (unsigned i = 1; i < l->size; i++) {
-            printl(", %f", l->tab[i]);
-        }
-    }
-    printl(" ]\n\n<->---------------------------------<->\n");
-}
-
-#endif

@@ -123,4 +123,3 @@ char *duelIndexToLabel(Duel *d, unsigned int index) {
     strncpy(label, genListGet(d->labels, index), MAX_LENGHT_LABEL);
     return label;
 }
-
