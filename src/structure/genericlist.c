@@ -232,6 +232,24 @@ void genListSet(GenList *l, void *v, unsigned i) {
     l->tab[i] = v;
 }
 
+/**
+ * @date  1/11/2023
+ * @author Ugo VALLAT
+ */
+void displayGenList(GenList *l) {
+    /* vérification paramêtre */
+    testArgNull(l, "genericlist.c", "displayGenList", "l");
+
+    if (l->size == 0)
+        printl("[ ]");
+    else {
+        printl("[ %p,", l->tab[0]);
+        for (unsigned i = 1; i < l->size; i++) {
+            printl(", %p", l->tab[i]);
+        }
+        printl(" ]");
+    }
+}
 
 /*------------------------------------------------------------------*/
 /*                         ITERATEUR                                */

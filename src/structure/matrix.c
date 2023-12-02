@@ -692,3 +692,42 @@ Matrix *matrixCopy(Matrix *m) {
 
     return new;
 }
+
+/**
+ * @date  1/11/2023
+ * @author Ugo VALLAT
+ */
+void displayMatrix(Matrix *m) {
+    testArgNull(m, "matrix.c", "displayMatrix", "m");
+
+    GenListIte *ite = createGenListIte(m->tab, FROM_BEGIN);
+    printl(" [ \n");
+    while (genListIteHasNext(ite)) {
+        genListIteNext(ite);
+        printf("   ");
+        displayList((List *)genListIteGetValue(ite));
+        printf("\n");
+    }
+    printl(" ] \n");
+    deleteGenListIte(&ite);
+}
+
+/*------------------------------------------------------------------*/
+/*                              DEBUG                               */
+/*------------------------------------------------------------------*/
+
+#ifdef DEBUG
+
+void printMatrixLog(Matrix *m) {
+    testArgNull(m, "matrix.c", "displayMatrix", "m");
+
+    printl("\n<+>------------[ matrix ]-----------<+>\n\n");
+    printl("[matrix] nbl = %d\n", m->nbl);
+    printl("[matrix] nbc = %d\n", m->nbc);
+    printl("[matrix] default_value = %d\n", m->default_value);
+    printl("[matrix] matrice :\n");
+    displayMatrix(m);
+    printl("\n\n<->---------------------------------<->\n");
+}
+
+#endif

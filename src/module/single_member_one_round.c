@@ -35,7 +35,7 @@ int* voteCount(Bale* bale){
     memset(votesComplete, 0, sizeof(int)*nb_candidates);
     for (unsigned i = 0; i<nb_votes;i++){
         //on recoit le liste avec le(les) candidat(s) qui a recu le val max a partir d'electeur i
-        GenList* winner = baleMax(bale, i, -1);
+        GenList* winner = baleMin(bale, i, -1);
         if (genListSize(winner)==1){//si on a qu'un seul candidat avec le note max, on prend en compte le vote
             int cand = ((int*)genListGet(winner, 0))[2];//num de candidat avec le val max
             votesComplete[cand] += 1;//on ajoute le vote
@@ -46,6 +46,7 @@ int* voteCount(Bale* bale){
     }
     return votesComplete;
 }
+
 
 /**
  * @author Alina IVANOVA, Corentin LUDWIG
@@ -68,9 +69,11 @@ List* maxVotesCandidat(int* votes, int nb_candidat){
     return winner;
 }
 
+
 void displayWinnerSingleMemberSingle(WinnerSingle *winner) {
     printf("\t<+> %s : %3.2f\n", winner->name, winner->score);
 }
+
 
 /**
  * @author Alina IVANOVA
@@ -109,3 +112,4 @@ GenList* theWinnerOneRound(Bale* bale){
 
     return list;
 }
+
