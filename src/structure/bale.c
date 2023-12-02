@@ -35,9 +35,6 @@
 #include <string.h>
 
 
-#define RSTC "\033[0m"
-#define YELLOW "\033[38;5;184m"
-
 
 /**
  * @date  13/11/2023
