@@ -246,21 +246,4 @@ int listIteGetValue(ListIte *ite);
  **/
 void deleteListIte(ptrListIte *ite);
 
-/*------------------------------------------------------------------*/
-/*                              DEBUG                               */
-/*------------------------------------------------------------------*/
-
-#ifdef DEBUG
-
-/**
- * @date 5/11/2023
- * @brief display in the logger all the information about the list and the elements
- *
- * @param[in] l list to print in logger
- * @pre l != NULL
- */
-void printListLog(List *l);
-
-#endif
-
 #endif

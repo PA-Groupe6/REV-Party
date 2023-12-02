@@ -545,12 +545,6 @@ GenList *matrixMax(Matrix *m, int l, int c) {
 
     /* création buffer max */
     GenList* lmax = createGenList(1);
-<<<<<<< HEAD
-
-    int col = ((int*)genListGet(lmax, 0))[2];
-
-=======
->>>>>>> 5027a4c (tests)
     /* parcours de la matrice */
     matrixMap(m, l, c, fun_max, lmax);
     return lmax;
@@ -692,42 +686,3 @@ Matrix *matrixCopy(Matrix *m) {
 
     return new;
 }
-
-/**
- * @date  1/11/2023
- * @author Ugo VALLAT
- */
-void displayMatrix(Matrix *m) {
-    testArgNull(m, "matrix.c", "displayMatrix", "m");
-
-    GenListIte *ite = createGenListIte(m->tab, FROM_BEGIN);
-    printl(" [ \n");
-    while (genListIteHasNext(ite)) {
-        genListIteNext(ite);
-        printf("   ");
-        displayList((List *)genListIteGetValue(ite));
-        printf("\n");
-    }
-    printl(" ] \n");
-    deleteGenListIte(&ite);
-}
-
-/*------------------------------------------------------------------*/
-/*                              DEBUG                               */
-/*------------------------------------------------------------------*/
-
-#ifdef DEBUG
-
-void printMatrixLog(Matrix *m) {
-    testArgNull(m, "matrix.c", "displayMatrix", "m");
-
-    printl("\n<+>------------[ matrix ]-----------<+>\n\n");
-    printl("[matrix] nbl = %d\n", m->nbl);
-    printl("[matrix] nbc = %d\n", m->nbc);
-    printl("[matrix] default_value = %d\n", m->default_value);
-    printl("[matrix] matrice :\n");
-    displayMatrix(m);
-    printl("\n\n<->---------------------------------<->\n");
-}
-
-#endif

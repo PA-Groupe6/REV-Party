@@ -242,21 +242,4 @@ void *genListIteGetValue(GenListIte *ite);
  **/
 void deleteGenListIte(ptrGenListIte *ite);
 
-/*------------------------------------------------------------------*/
-/*                              DEBUG                               */
-/*------------------------------------------------------------------*/
-
-#ifdef DEBUG
-
-/**
- * @date 5/11/2023
- * @brief display in the logger all the information about the list and the elements
- *
- * @param[in] l list to print in logger
- * @pre l != NULL
- */
-void printGenListLog(GenList *l);
-
-#endif
-
 #endif
