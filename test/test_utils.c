@@ -9,6 +9,7 @@
 
 StringBuilder* createStringBuilder() {
     StringBuilder* string_builder = malloc(sizeof(struct s_string_builder));
+    string_builder->output[0] = '\0';
     string_builder->lastLine = 0;
     return string_builder;
 }
