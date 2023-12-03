@@ -62,10 +62,10 @@ Command* try(int argc, char* argv[]) {
                 printl("%s ", argv[i]);
             }
             printl(":\n");
-            Command *result = interprete(argc, argv);
-            write(tube[1], result, sizeof(Command));
+            Command result = interprete(argc, argv);
+            write(tube[1], &result, sizeof(Command));
             close(tube[1]);
-            free(result);
+            free(result.file_name);
             exit(EXIT_SUCCESS);
         default: /* père */
             close(tube[1]);
@@ -103,69 +103,69 @@ bool testInterprete() {
 
     // sans arguments
     
-    // printsb("\ntest sur \"interprete\"");
-    // Command* cmd1 = try(0, NULL);
-    // if (cmd1 != NULL) {
-    //     printsb("Command extracted:\n");
-    //     printCommand(cmd1);
-    //     free(cmd1);
-    //     return false;
-    // }
+    printsb("\ntest sur \"interprete\"");
+    Command* cmd1 = try(0, NULL);
+    if (cmd1 != NULL) {
+        printsb("Command extracted:\n");
+        printCommand(cmd1);
+        free(cmd1);
+        return false;
+    }
 
-    // // sans corps pour méthode
-    // printsb("\ntest sur \"interprete -m\"");
-    // char* argv2[] = {mflag};
-    // Command* cmd2 = try(1, argv2);
-    // if (cmd2 != NULL) {
-    //     printsb("Command extracted:\n");
-    //     printCommand(cmd2);
-    //     return false;
-    // }
+    // sans corps pour méthode
+    printsb("\ntest sur \"interprete -m\"");
+    char* argv2[] = {mflag};
+    Command* cmd2 = try(1, argv2);
+    if (cmd2 != NULL) {
+        printsb("Command extracted:\n");
+        printCommand(cmd2);
+        return false;
+    }
 
-    // // méthode valide sans source
-    // printsb("\ntest sur \"interprete -m uni1\"");
-    // char* argv3[] = {mflag, "uni1"};
-    // Command* cmd3 = try(2, argv3);
-    // if (cmd3 != NULL) {
-    //     printsb("Command extracted:\n");
-    //     printCommand(cmd3);
-    //     return false;
-    // }
+    // méthode valide sans source
+    printsb("\ntest sur \"interprete -m uni1\"");
+    char* argv3[] = {mflag, "uni1"};
+    Command* cmd3 = try(2, argv3);
+    if (cmd3 != NULL) {
+        printsb("Command extracted:\n");
+        printCommand(cmd3);
+        return false;
+    }
 
-    // // méthode non valide
-    // printsb("\ntest sur \"interprete -m unknown\"");
-    // char* argv4[] = {mflag, "unknown"};
-    // Command* cmd4 = try(2, argv4);
-    // if (cmd4 != NULL) {
-    //     printsb("Command extracted:\n");
-    //     printCommand(cmd4);
-    //     return false;
-    // }
+    // méthode non valide
+    printsb("\ntest sur \"interprete -m unknown\"");
+    char* argv4[] = {mflag, "unknown"};
+    Command* cmd4 = try(2, argv4);
+    if (cmd4 != NULL) {
+        printsb("Command extracted:\n");
+        printCommand(cmd4);
+        return false;
+    }
 
-    // // sans méthode
-    // printsb("\ntest sur \"interprete -d test/ressource/unit/duel_1.csv\"");
-    // char* argv5[] = {dflag, duel_src_file};
-    // Command* cmd5 = try(2, argv5);
-    // if (cmd5 != NULL) {
-    //     printsb("Command extracted:\n");
-    //     printCommand(cmd5);
-    //     return false;
-    // }
+    // sans méthode
+    printsb("\ntest sur \"interprete -d test/ressource/unit/duel_1.csv\"");
+    char* argv5[] = {dflag, duel_src_file};
+    Command* cmd5 = try(2, argv5);
+    if (cmd5 != NULL) {
+        printsb("Command extracted:\n");
+        printCommand(cmd5);
+        return false;
+    }
 
-    // // sans source spécifiée
-    // printsb("\ntest sur \"interprete -m uni1 -i\"");
-    // char* argv6[] = {mflag, "uni1", iflag};
-    // Command* cmd6 = try(3, argv6);
-    // if (cmd6 != NULL) {
-    //     printsb("Command extracted:\n");
-    //     printCommand(cmd6);
-    //     return false;
-    // }
+    // sans source spécifiée
+    printsb("\ntest sur \"interprete -m uni1 -i\"");
+    char* argv6[] = {mflag, "uni1", iflag};
+    Command* cmd6 = try(3, argv6);
+    if (cmd6 != NULL) {
+        printsb("Command extracted:\n");
+        printCommand(cmd6);
+        return false;
+    }
 
     // méthode all reconnue
     printsb("\ntest sur \"interprete -m jm -j test/ressource/unit/bale_1.csv\"");
-    char* argv7[] = {"interpreter", mflag, "jm", jflag, bale_src_file};
-    Command* cmd7 = try(5, argv7);
+    char* argv7[] = {mflag, "jm", jflag, bale_src_file};
+    Command* cmd7 = try(4, argv7);
     if (cmd7 == NULL
         || cmd7->module != JUGEMENT_MAJORITAIRE
         || cmd7->has_log_file
@@ -181,64 +181,64 @@ bool testInterprete() {
         return false;
     }
 
-    // // sans ordre
-    // printsb("\ntest sur \"interprete -j test/ressource/unit/bale_1.csv -m jm\"");
-    // char* argv8[] = {jflag, bale_src_file, mflag, "jm"};
-    // Command* cmd8 = try(4, argv8);
-    // if (cmd8 == NULL
-    //     || cmd8->module != JUGEMENT_MAJORITAIRE
-    //     || cmd8->has_log_file
-    //     || cmd8->file_type != JUDGMENT
-    //     || strcmp(cmd8->file_name, bale_src_file) != 0
-    // ) {
-    //     if (cmd8 != NULL) {
-    //         printsb("\n\tCommand extracted:\n");
-    //         printCommand(cmd8);
-    //     } else {
-    //         printsb("\n\tInterpreter gave NULL pointer\ntry looking in the log file in test/ressource/unit/");
-    //     }
-    //     return false;
-    // }
+    // sans ordre
+    printsb("\ntest sur \"interprete -j test/ressource/unit/bale_1.csv -m jm\"");
+    char* argv8[] = {jflag, bale_src_file, mflag, "jm"};
+    Command* cmd8 = try(4, argv8);
+    if (cmd8 == NULL
+        || cmd8->module != JUGEMENT_MAJORITAIRE
+        || cmd8->has_log_file
+        || cmd8->file_type != JUDGMENT
+        || strcmp(cmd8->file_name, bale_src_file) != 0
+    ) {
+        if (cmd8 != NULL) {
+            printsb("\n\tCommand extracted:\n");
+            printCommand(cmd8);
+        } else {
+            printsb("\n\tInterpreter gave NULL pointer\ntry looking in the log file in test/ressource/unit/");
+        }
+        return false;
+    }
 
-    // // mauvais type de source pour méthode
-    // printsb("\ntest sur \"interprete -d test/ressource/unit/duel_1.csv -m jm\"");
-    // char* argv9[] = {dflag, duel_src_file, mflag, "jm"};
-    // Command* cmd9 = try(4, argv9);
-    // if (cmd9 != NULL) {
-    //     printsb("Command extracted:\n");
-    //     printCommand(cmd9);
-    //     return false;
-    // }
+    // mauvais type de source pour méthode
+    printsb("\ntest sur \"interprete -d test/ressource/unit/duel_1.csv -m jm\"");
+    char* argv9[] = {dflag, duel_src_file, mflag, "jm"};
+    Command* cmd9 = try(4, argv9);
+    if (cmd9 != NULL) {
+        printsb("Command extracted:\n");
+        printCommand(cmd9);
+        return false;
+    }
 
-    // // sortie optionnelle non spécifié
-    // printsb("\ntest sur \"interprete -m jm -j test/ressource/unit/bale_1.csv -o\"");
-    // char* argv10[] = {mflag, "jm", jflag, bale_src_file, oflag};
-    // Command* cmd10 = try(5, argv10);
-    // if (cmd10 != NULL) {
-    //     printsb("Command extracted:\n");
-    //     printCommand(cmd10);
-    //     return false;
-    // }
+    // sortie optionnelle non spécifié
+    printsb("\ntest sur \"interprete -m jm -j test/ressource/unit/bale_1.csv -o\"");
+    char* argv10[] = {mflag, "jm", jflag, bale_src_file, oflag};
+    Command* cmd10 = try(5, argv10);
+    if (cmd10 != NULL) {
+        printsb("Command extracted:\n");
+        printCommand(cmd10);
+        return false;
+    }
 
-    // // sortie optionnelle valide
-    // printsb("\ntest sur \"interprete -m jm -j test/ressource/unit/bale_1.csv -o any\"");
-    // char* argv11[] = {mflag, "jm", jflag, bale_src_file, oflag, dest_file};
-    // Command* cmd11 = try(4, argv11);
-    // if (cmd11 == NULL
-    //     || cmd11->module != JUGEMENT_MAJORITAIRE
-    //     || !cmd11->has_log_file
-    //     || strcmp(cmd11->log_file, dest_file) != 0
-    //     || cmd11->file_type != JUDGMENT
-    //     || strcmp(cmd11->file_name, bale_src_file) != 0
-    // ) {
-    //     if (cmd11 != NULL) {
-    //         printsb("\n\tCommand extracted:\n");
-    //         printCommand(cmd11);
-    //     } else {
-    //         printsb("\n\tInterpreter gave NULL pointer\ntry looking in the log file in test/ressource/unit/");
-    //     }
-    //     return false;
-    // }
+    // sortie optionnelle valide
+    printsb("\ntest sur \"interprete -m jm -j test/ressource/unit/bale_1.csv -o any\"");
+    char* argv11[] = {mflag, "jm", jflag, bale_src_file, oflag, dest_file};
+    Command* cmd11 = try(4, argv11);
+    if (cmd11 == NULL
+        || cmd11->module != JUGEMENT_MAJORITAIRE
+        || !cmd11->has_log_file
+        || strcmp(cmd11->log_file, dest_file) != 0
+        || cmd11->file_type != JUDGMENT
+        || strcmp(cmd11->file_name, bale_src_file) != 0
+    ) {
+        if (cmd11 != NULL) {
+            printsb("\n\tCommand extracted:\n");
+            printCommand(cmd11);
+        } else {
+            printsb("\n\tInterpreter gave NULL pointer\ntry looking in the log file in test/ressource/unit/");
+        }
+        return false;
+    }
     
     return true;
 }
