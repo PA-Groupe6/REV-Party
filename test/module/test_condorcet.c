@@ -55,7 +55,7 @@ bool echecTest(char* msg) {
 bool testRankedPairsOnDuel(char* file) {
     GenList* lwinner;
     Duel* duel;
-    printsb("\t- chargement ballot\n");
+    printsb("\t- chargement duel\n");
     duel = csvToDuel(file);
     displayDuelLog(duel);
     
@@ -65,9 +65,7 @@ bool testRankedPairsOnDuel(char* file) {
     if(!lwinner) return echecTest(" X-- pointeur null\n");
 
     printf("\nListe de vainqueurs : \n");
-    for(unsigned i = 0; i < genListSize(lwinner); i++) {
-        displayListWinnerCondorcet(lwinner, "RANKED PAIRS");
-    }
+    displayListWinnerCondorcet(lwinner, "RANKED PAIRS");
     deleteDuel(&duel);
     while(!genListEmpty(lwinner))
         free(genListPop(lwinner));
@@ -116,7 +114,7 @@ bool testRankedPairs() {
 bool testMinimaxOnDuel(char* file) {
     GenList* lwinner;
     Duel* duel;
-    printsb("\t- chargement ballot\n");
+    printsb("\t- chargement duel\n");
     duel = csvToDuel(file);
     displayDuelLog(duel);
     
@@ -173,7 +171,7 @@ bool testMinimax() {
 bool testSchulzeOnDuel(char* file) {
     GenList* lwinner;
     Duel* duel;
-    printsb("\t- chargement ballot\n");
+    printsb("\t- chargement duel\n");
     duel = csvToDuel(file);
     displayDuelLog(duel);
     
