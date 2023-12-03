@@ -14,6 +14,8 @@
 #define EMISSARG 4 /* argument manquant */
 #define EINCMPTB 5 /* arguments incompatibles */
 
+#define MAX_FILE_NAME 256
+
 /**
  * @date 27/10/2023
  * @brief Modules de calcul du vaiqueur
