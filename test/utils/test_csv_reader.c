@@ -128,6 +128,24 @@ bool testCsvToDuel() {
     deleteDuel(&d);
     printsb("\t - test passé");
 
+    printsb("test sur duel 5...");
+    d = csvToDuel("test/ressource/unit/duel_5.csv");
+    displayDuelLog(d);
+    deleteDuel(&d);
+    printsb("\t - test passé");
+
+    printsb("test sur duel 6...");
+    d = csvToDuel("test/ressource/unit/duel_6.csv");
+    displayDuelLog(d);
+    deleteDuel(&d);
+    printsb("\t - test passé");
+
+    printsb("test sur duel 7...");
+    d = csvToDuel("test/ressource/unit/duel_7.csv");
+    displayDuelLog(d);
+    deleteDuel(&d);
+    printsb("\t - test passé");
+
 
     return true;
 }
