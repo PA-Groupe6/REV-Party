@@ -7,8 +7,6 @@
 #include <unistd.h>
 #include "interpreter.h"
 
-#define MAX_FILE_NAME 256
-
 /**
  * @author LUDWIG Corentin
  * @date 02/12/2023
