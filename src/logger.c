@@ -30,7 +30,7 @@ FILE* output = NULL;
  */
 void init_logger(const char* file_path) {
     if (file_path) {
-        output = fopen(file_path, "w+");
+        output = fopen(file_path, "a");
         c_yellow = "";
         c_orange = "";
         c_rstc = "";
