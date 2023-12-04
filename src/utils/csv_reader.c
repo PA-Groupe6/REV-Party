@@ -98,7 +98,7 @@ void readLabel(FILE *file,GenList *label, unsigned skipped_column){
 
     token = strtok(buffer,",");
 
-    for(int i = 0; i<skipped_column; i++){ //passe les lignes inutiles
+    for(unsigned int i = 0; i<skipped_column; i++){ //passe les lignes inutiles
         token = strtok(NULL,",");
     }
     
