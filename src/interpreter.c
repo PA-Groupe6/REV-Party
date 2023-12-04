@@ -28,6 +28,7 @@ Module stringToModule(char *nom)
     if (strcmp(nom, "all") == 0)
         return ALL;
     exitl("interpreter", "StringToModule", EUNKWMTH, "methode inconnue");
+    return -1;
 }
 
 /**
