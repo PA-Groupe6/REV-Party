@@ -52,7 +52,6 @@ void deleteGraph(ptrGraph *g) {
     testArgNull(*g, "graph.c", "deleteGraph", "*g");
 
     deleteMatrix(&(*g)->matrix);
-    char* label;
     while(!genListEmpty((*g)->labels))
             free(genListPop((*g)->labels));
     free(*g);
@@ -164,7 +163,7 @@ char *graphGetLabel(Graph *g, unsigned int id) {
     if(id >= size)
         exitl("graph.c", "graphGetLabel", EXIT_FAILURE, "Invalide sommet %d", id);
 
-    char* label;
+    char* label = malloc(sizeof(char) * MAX_LENGHT_LABEL);
     strncpy(label, genListGet(g->labels, id), MAX_LENGHT_LABEL);
     return label;
 }
@@ -227,7 +226,7 @@ bool graphIsMakingCycle(Graph *g, Arc *arc){
 
     GenList *l_arc = createGenList(10);
     GenList *l_to_add = createGenList(10);
-    int obj = arc->id_src;
+    unsigned int obj = arc->id_src;
 
     bool test = false;
 
