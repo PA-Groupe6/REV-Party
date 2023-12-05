@@ -14,6 +14,8 @@
 #define EMISSARG 4 /* argument manquant */
 #define EINCMPTB 5 /* arguments incompatibles */
 
+#define MAX_FILE_NAME 256
+
 /**
  * @date 27/10/2023
  * @brief Modules de calcul du vaiqueur
@@ -38,9 +40,9 @@ typedef enum e_file_type {
 typedef struct command_t {
     Module module;        /* Module appelé, cf enum Module */
     FileType file_type;   /* Type du fichier de vote, cf enum FileType */
-    char *file_name;      /* Nom du fichier de vote */
+    char file_name[MAX_FILE_NAME];      /* Nom du fichier de vote */
     bool has_log_file;    
-    char *log_file;       /* Potentiel nom du fichier de log */
+    char log_file[MAX_FILE_NAME];       /* Potentiel nom du fichier de log */
 } Command;
 
 /************
@@ -55,6 +57,6 @@ typedef struct command_t {
  * 
  * @return Informations extraites dans une structure @ref Command
 */
-Command interprete(int argc,char* argv[]);
+Command* interprete(int argc,char* argv[]);
 
 #endif
