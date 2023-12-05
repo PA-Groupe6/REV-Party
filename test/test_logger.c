@@ -53,8 +53,13 @@ void beforeEach() {
 void afterEach() {
 }
 
+void resetLogFileContent() {
+    FILE* file = fopen(LOGGER_LOG_FILE, "w");
+    fclose(file);
+}
+
 void redirectStandardOutput() {
-    log_file = fopen(LOGGER_LOG_FILE, "w+");
+    log_file = fopen(LOGGER_LOG_FILE, "w");
     if (log_file == NULL) {
         exitTest(LOGGER_LOG_FILE);
     }
@@ -84,6 +89,7 @@ bool testPrintl() {
     redirectStandardOutput();
     // affichage par printl du fichier LOGGER_EXPECTED_LOG_FILE
     printsb("\ntest sur stdout\n");
+    resetLogFileContent();
     init_logger(NULL);
     rewind(expected_log_file);
     while (fread(data, sizeof(char), BLOCK_SIZE, expected_log_file) > 0) {
@@ -97,6 +103,7 @@ bool testPrintl() {
 
     // ### test sur sortie explicite
     printsb("\ntest sur sortie explicite\n");
+    resetLogFileContent();
     init_logger(LOGGER_LOG_FILE);
     rewind(expected_log_file);
     while (fread(data, sizeof(char), BLOCK_SIZE, expected_log_file) > 0) {
@@ -161,6 +168,7 @@ bool testWarnl() {
     // ### test sur stdout (codes couleur)
     redirectStandardOutput();
     printsb("\ntest sur stdout\n");
+    resetLogFileContent();
     init_logger(NULL);
     rewind(expected_log_file);
     while (fread(data, sizeof(char), sizeof(data), expected_log_file) > 0) {
@@ -171,6 +179,7 @@ bool testWarnl() {
     if (!contains(FILE_NAME, fun_name) || !containsFile()) return false;
 
     printsb("\ntest sur sortie explicite\n");
+    resetLogFileContent();
     init_logger(LOGGER_LOG_FILE);
     rewind(expected_log_file);
     while (fread(data, sizeof(char), sizeof(data), expected_log_file) > 0) {
@@ -193,6 +202,7 @@ bool testExitl() {
     int status;
 
     printsb("\ntest sur stdout\n");
+    resetLogFileContent();
     switch (fork()) {
         case 0:
             deleteStringBuilder(&string_builder);
@@ -208,6 +218,7 @@ bool testExitl() {
     }
 
     printsb("\ntest sur sortie explicite\n");
+    resetLogFileContent();
     switch (fork()) {
         case 0:
             deleteStringBuilder(&string_builder);
