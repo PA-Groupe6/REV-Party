@@ -15,7 +15,7 @@
 #include "../structure/genericlist.h"
 #include "../logger.h"
 
-#define USLESS_COLUM 4
+#define USLESS_COLUMN_BALE 4
 #define USLESS_CHAR 14
 #define SIZE_BUFF_LINE 512
 
@@ -90,7 +90,7 @@ void tokenToLabel(char* token, char* label) {
  *
  * @pre len(label) >= nb lable dans le fichier
 */
-void readLabel(FILE *file,GenList *label){
+void readLabel(FILE *file,GenList *label, unsigned skipped_column){
     char buffer[SIZE_BUFF_LINE];
     char* token;
     char* label_name;
@@ -98,7 +98,7 @@ void readLabel(FILE *file,GenList *label){
 
     token = strtok(buffer,",");
 
-    for(int i = 0; i<USLESS_COLUM;i++){ //passe les lignes inutiles
+    for(unsigned int i = 0; i<skipped_column; i++){ //passe les lignes inutiles
         token = strtok(NULL,",");
     }
     
@@ -139,7 +139,7 @@ void fillBale(FILE *file, Bale *bale, int nbl) {
         /* convertion en token */
         token = strtok(buffer,",");
 
-        for(int i = 0; i<USLESS_COLUM;i++){ //passe les colonnes inutiles
+        for(int i = 0; i<USLESS_COLUMN_BALE;i++){ //passe les colonnes inutiles
             token = strtok(NULL,",");
         }
 
@@ -162,21 +162,92 @@ Bale* csvToBale(char *file){
     FILE *file_pointer;
     file_pointer = fopen(file,"r");
     if(!file_pointer)
-        exitl("test_bale.c", "csvToBale", EXIT_FAILURE, "Echec ouverture fichier");
+        exitl("csv_reader.c", "csvToBale", EXIT_FAILURE, "Echec ouverture fichier");
 
     /* récupération des labels */
     GenList *label = createGenList(10);
-    readLabel(file_pointer, label);
+    readLabel(file_pointer, label,USLESS_COLUMN_BALE);
 
-    /* compte nombre de lignes */
+    /* compte nombre de lignes/colonnes */
     int nbl_file = nbLigne(file_pointer);
     int nbc = genListSize(label);
 
+
     /* création ballot */
+    rewind(file_pointer);
     Bale *bale = createBale(nbl_file-1,nbc,label);
     fillBale(file_pointer, bale, nbl_file-1);
     freeListLabel(label);
 
     fclose(file_pointer);
     return bale;
+}
+
+
+
+
+/**
+ * @date 23/11/2023
+ * @author LUDWIG Corentin
+ * @brief remplit le ballot passer en parametre avec les information contenu dans le fichier passer en entree
+ *
+ * @param[out] bale ballot a remplir
+ * @param[in] file fichier dans le quelle lire
+ * 
+ * @pre baleNBcandidat(bale) >= NB_CADIDATES && baleNbVotant(bale) >= nbLigne(file)
+*/
+void fillDuel(FILE *file, Duel *duel, int nb_candidats) {
+    char buffer[SIZE_BUFF_LINE];
+    char* token;
+    int n;
+
+    /* ignorer première ligne */
+    strncpy(buffer, "", SIZE_BUFF_LINE);
+    fgets(buffer, sizeof(buffer), file);
+
+    for(int l = 0; l < nb_candidats; l++) {
+        /* lecture ligne */
+        if(!fgets(buffer, sizeof(buffer), file))
+            exitl("csv_reader.c", "fillDuel", EXIT_FAILURE, "Echec lecture ligne");
+        /* convertion en token */
+        token = strtok(buffer,",");
+
+        /* récupération des tokens */
+        for (unsigned c = 0; token; c++) {
+            sscanf(token,"%d",&n);
+            duel = duelSetValue(duel, l, c, n);
+            token = strtok(NULL,",");
+        }
+    }
+}
+
+
+
+
+
+
+/**
+ * @date 2/12/2023
+ * @author Ugo VALLAT
+*/
+Duel* csvToDuel(char *file){
+    /* ouverture du csv */
+    FILE *file_pointer;
+    file_pointer = fopen(file,"r");
+    if(!file_pointer)
+        exitl("csv_reader.c", "csvToDuel", EXIT_FAILURE, "Echec ouverture fichier");
+
+    /* récupération des labels */
+    GenList *label = createGenList(10);
+    readLabel(file_pointer, label,0);
+
+    /* création duel */
+    rewind(file_pointer);
+    unsigned nb_candidat = genListSize(label);
+    Duel *duel = createDuel(nb_candidat, label);
+    fillDuel(file_pointer,duel, nb_candidat);
+    freeListLabel(label);
+
+    fclose(file_pointer);
+    return duel;
 }

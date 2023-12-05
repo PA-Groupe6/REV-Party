@@ -30,7 +30,7 @@ FILE* output = NULL;
  */
 void init_logger(const char* file_path) {
     if (file_path) {
-        output = fopen(file_path, "w+");
+        output = fopen(file_path, "a");
         c_yellow = "";
         c_orange = "";
         c_rstc = "";
@@ -303,7 +303,7 @@ void displayBaleLog(Bale *b) {
 void displayDuelLog(Duel *d) {
     unsigned nb_cand = duelNbCandidat(d);
 
-    printl("\n %s┌────────────────────────────── BALLOT (%d,%d)... \n", c_yellow, nb_cand, nb_cand);
+    printl("\n %s┌────────────────────────────── DUEL (%d,%d)... \n", c_yellow, nb_cand, nb_cand);
     printl(" │\n ├────────────── Liste des candidats :%s\n", c_rstc);
 
     /* candidats */
@@ -338,18 +338,18 @@ void displayDuelLog(Duel *d) {
 
     /* affichage données */
     for(unsigned l = 0; l < nb_cand-1; l++) {
-        printl(" %s│%s │%s C%-2d %s│", c_yellow, c_rstc,c_yellow,l+1,c_rstc);
+        printl(" %s│%s │%s C%-2d %s│", c_yellow, c_rstc,c_orange,l+1,c_rstc);
         for(unsigned c = 0; c < nb_cand; c++) {
             printl(" %3d │", duelGetValue(d, l, c));
         }
         printl("\n");
-        printl(" %s│%s ├────┼", c_yellow, c_rstc);
+        printl(" %s│%s ├─────┼", c_yellow, c_rstc);
         for(unsigned c = 0; c < nb_cand-1; c++) {
             printl("─────┼");
         }
         printl("─────┤\n");
     }
-    printl(" %s│%s │%s C%-2d %s│", c_yellow, c_rstc,nb_cand,c_yellow,c_rstc);
+    printl(" %s│%s │%s C%-2d %s│", c_yellow, c_rstc,c_orange,nb_cand,c_rstc);
     for(unsigned c = 0; c < nb_cand; c++) {
         printl(" %3d │", duelGetValue(d, nb_cand-1, c));
     }
