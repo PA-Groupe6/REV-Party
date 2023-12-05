@@ -95,10 +95,10 @@ OBJ_STRUCT = $(OBJDIR)/structure/list.o $(OBJDIR)/structure/genericlist.o $(OBJD
 
 OBJ_TEST = $(OBJDIR)/logger.o $(OBJDIR)/test_utils.o
 
- $(OBJDIR)/test_utils.o:
+ $(OBJDIR)/test_utils.o: dirs
 	@$(CC) -c $(TSTDIR)/test_utils.c -o $@ $(CFLAGS)
 
- $(OBJDIR)/structure/label_test_set.o:
+ $(OBJDIR)/structure/label_test_set.o: dirs
 	@$(CC) -c  $(TSTDIR)/structure/label_test_set.c -o $@ $(CFLAGS)
 
 tlogger: $(OBJ_STRUCT) $(OBJ_TEST)
@@ -143,7 +143,10 @@ trankedpairs: $(OBJ_STRUCT) $(OBJ_TEST) $(OBJDIR)/module/condorcet_ranked_pairs.
 tschulze: $(OBJ_STRUCT) $(OBJ_TEST) $(OBJDIR)/module/condorcet_schulze.o $(OBJDIR)/utils/csv_reader.o
 	@$(call run_test,condorcet_schulze,module/,$^)
 
-
+# test use case (test_produtct.c)
+test: $(OBJDIR)/test_utils.o $(EXEC)
+	@echo "Compilation of the test program:"
+	@$(call run_test,product,,$<);
 
 ################################
 #             MISC             #
