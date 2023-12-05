@@ -41,8 +41,9 @@ void beforeAll() {
 
 void afterAll() {
     deleteStringBuilder(&string_builder);
-    remove(LOGGER_LOG_FILE);
     fclose(expected_log_file);
+    if (return_value == 0)
+        remove(LOGGER_LOG_FILE);
 }
 
 void beforeEach() {
