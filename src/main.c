@@ -36,10 +36,11 @@ void schulze(char* source_file) {
     displayListWinnerCondorcet(winners, "schulze");
 }
 
-void majorityJudgement(char* source_file) {
+void majorityJudgment(char* source_file) {
     Bale* bale = csvToBale(source_file);
-    GenList* winners = theWinnerMajorityJudgement(bale);
-    //displayListWinnerMajorityJudgement(winners);
+    GenList* winners = theWinnerMajorityJudgment(bale);
+    (void) winners;
+    //displayListWinnerMajorityJudgment(winners);
 }
 
 void all(char* source_file) {
@@ -54,7 +55,7 @@ void all(char* source_file) {
     printl("\n### schulze:\n\n");
     schulze(source_file);
     printl("\n### majority judgement:\n\n");
-    majorityJudgement(source_file);
+    majorityJudgment(source_file);
 }
 
 int main(int argc, char* argv[]) {
@@ -85,7 +86,7 @@ int main(int argc, char* argv[]) {
             schulze(cmd->file_name);
             break;
         case JUGEMENT_MAJORITAIRE:
-            majorityJudgement(cmd->file_name);
+            majorityJudgment(cmd->file_name);
             break;
         case ALL:
             all(cmd->file_name);
