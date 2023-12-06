@@ -7,8 +7,8 @@
  *
  * Ce module implémente la méthode de Condorcet pour la structure de données duel.h
  *
- * La méthode de Condorcet est utilisée pour déterminer les préférences collectives d'un ensemble de choix en se basant sur les préférences individuelles des votants. 
- * Cette méthode est particulièrement utile dans les processus de vote et de décision.
+ * Les méthodes de Condorcet sont utilisées pour déterminer les préférences collectives d'un ensemble de choix en se basant sur les préférences individuelles des votants. 
+ * Ces méthodes sont particulièrement utiles dans les processus de vote et de décision.
  *
  * Ce fichier d'en-tête fournit les fonctions et les structures nécessaires pour calculer les résultats selon la méthode de Condorcet pour les données contenues dans duel.h.
  *
@@ -32,18 +32,20 @@
 
 typedef struct s_winner_condorcet {
     char name[256];
+    float score;
 }WinnerCondorcet;
+
 
 /**
  * @author IVANOVA ALina 
  * @date 04/11/2023
- * @brief on utilise la méthode vainqueur de Condorcet pour savoir qu'il existe le candidat gagnant
+ * @brief on utilise la méthode vainqueur de Condorcet pour le trouver ou savoir si on doit implementer un autre méthode
  * 
  * @param[in] duel matrice des duels entre tous le candidats
  *
- * @return Le nom du candidat gagnant
+ * @return Le gagnant en utilisant la structure WinnerCondorcet ou NULL s'il n'y a pas de vaiqueur
 */
-bool CondorcetWinnerCriterion(Duel* duel);
+WinnerCondorcet* CondorcetWinnerCriterion(Duel* duel);
 
 
 /**
@@ -53,9 +55,9 @@ bool CondorcetWinnerCriterion(Duel* duel);
  * 
  * @param[in] duel matrice des duels entre tous le candidats
  *
- * @return Le nom du candidat gagnant
+ * @return Le gagnant en utilisant la structure WinnerCondorcet.
 */
-char theWinnerMinimax(Duel* duel);
+GenList* theWinnerMinimax(Duel* duel);
 
 
 /**
@@ -65,9 +67,9 @@ char theWinnerMinimax(Duel* duel);
  *
  * @param[in] duel matrice des duels entre tous le candidats
  *
- * @return Le nom du candidat gagnant
+ * @return Le gagnant en utilisant la structure WinnerCondorcet.
 */
-char theWinnerRankedPairs(Duel* duel);
+GenList* theWinnerRankedPairs(Duel* duel);
 
 /**
  * @author IVANOVA ALina 
@@ -76,9 +78,9 @@ char theWinnerRankedPairs(Duel* duel);
  *
  * @param[in] duel matrice des duels entre tous le candidats
  *
- * @return Le nom du candidat gagnant
+ * @return Le gagnant en utilisant la structure WinnerCondorcet.
 */
-char theWinnerSchulze(Duel* duel);
+GenList* theWinnerSchulze(Duel* duel);
 
 
 #endif
