@@ -91,54 +91,62 @@ run_test= if [ -f $(TSTDIR)/$(2)test_$(1).c ]; then \
 # TODO règles modules
 
 OBJ_STRUCT = $(OBJDIR)/structure/list.o $(OBJDIR)/structure/genericlist.o $(OBJDIR)/structure/matrix.o \
-	$(OBJDIR)/structure/data_struct_utils.o $(OBJDIR)/structure/bale.o
+	$(OBJDIR)/structure/data_struct_utils.o $(OBJDIR)/structure/bale.o $(OBJDIR)/structure/duel.o
 
 OBJ_TEST = $(OBJDIR)/logger.o $(OBJDIR)/test_utils.o
 
- $(OBJDIR)/test_utils.o:
+ $(OBJDIR)/test_utils.o: dirs
 	@$(CC) -c $(TSTDIR)/test_utils.c -o $@ $(CFLAGS)
 
- $(OBJDIR)/structure/label_test_set.o:
+ $(OBJDIR)/structure/label_test_set.o: dirs
 	@$(CC) -c  $(TSTDIR)/structure/label_test_set.c -o $@ $(CFLAGS)
 
-
-tlogger: $(OBJDIR)/logger.o $(OBJDIR)/test_utils.o
+tlogger: $(OBJ_STRUCT) $(OBJ_TEST)
 	@$(call run_test,logger,,$^)
 
-tinterpreter: $(OBJDIR)/logger.o $(OBJDIR)/test_utils.o
+tinterpreter: $(OBJ_STRUCT) $(OBJ_TEST) $(OBJDIR)/interpreter.o
 	@$(call run_test,interpreter,,$^)
 
-tbale: $(OBJDIR)/structure/bale.o $(OBJDIR)/structure/data_struct_utils.o $(OBJDIR)/structure/list.o  $(OBJDIR)/structure/matrix.o $(OBJDIR)/structure/genericlist.o $(OBJDIR)/logger.o $(OBJDIR)/test_utils.o $(OBJDIR)/structure/label_test_set.o
+tbale: $(OBJ_STRUCT) $(OBJ_TEST) $(OBJDIR)/structure/label_test_set.o
 	@$(call run_test,bale,structure/,$^)
 
-tduel: $(OBJDIR)/structure/duel.o $(OBJDIR)/logger.o $(OBJDIR)/test_utils.o
+tduel: $(OBJ_STRUCT) $(OBJ_TEST) $(OBJDIR)/structure/label_test_set.o
 	@$(call run_test,duel,structure/,$^)
 
-tgenericlinkedlist: $(OBJDIR)/structure/genericlinkedlist.o $(OBJDIR)/logger.o $(OBJDIR)/test_utils.o
-	@$(call run_test,genericlinkedlist,structure/,$^)
+tgenericlist: $(OBJ_STRUCT) $(OBJ_TEST) $(OBJDIR)/structure/label_test_set.o
+	@$(call run_test,genericlist,structure/,$^)
 
-tgraph: $(OBJDIR)/structure/graph.o $(OBJDIR)/logger.o $(OBJDIR)/test_utils.o
+tgraph: $(OBJ_STRUCT) $(OBJ_TEST) $(OBJDIR)/structure/label_test_set.o
 	@$(call run_test,graph,structure/,$^)
 
-tlist: $(OBJDIR)/structure/list.o $(OBJDIR)/logger.o $(OBJDIR)/test_utils.o
+tlist: $(OBJ_STRUCT) $(OBJ_TEST) $(OBJDIR)/structure/label_test_set.o
 	@$(call run_test,list,structure/,$^)
 
-tmatrix: $(OBJDIR)/structure/matrix.o $(OBJDIR)/structure/data_struct_utils.o $(OBJDIR)/structure/genericlist.o $(OBJDIR)/structure/list.o $(OBJDIR)/logger.o $(OBJDIR)/test_utils.o
+tmatrix: $(OBJ_STRUCT) $(OBJ_TEST) $(OBJDIR)/structure/label_test_set.o
 	@$(call run_test,matrix,structure/,$^)
 
 tsha256: $(OBJDIR)/utils/sha256/sha256.o $(OBJDIR)/test_utils.o
 	@$(call run_test,sha256,utils/sha256/,$^)
 
-tcsv_reader: $(OBJDIR)/utils/csv_reader.o $(OBJDIR)/test_utils.o $(OBJDIR)/structure/genericlist.o $(OBJDIR)/structure/bale.o $(OBJDIR)/logger.o $(OBJDIR)/structure/matrix.o $(OBJDIR)/test_utils.o $(OBJDIR)/structure/data_struct_utils.o $(OBJDIR)/structure/list.o
+tcsv_reader: $(OBJ_STRUCT) $(OBJ_TEST) $(OBJDIR)/utils/csv_reader.o
 	@$(call run_test,csv_reader,utils/,$^)
 
-tutils_sd: $(OBJDIR)/utils/utils_sd.o $(OBJDIR)/test_utils.o
-	@$(call run_test,utils_sd,utils/,$^)
-
-tsingle_member: $(OBJDIR)/module/single_member_two_rounds.o $(OBJDIR)/module/single_member_one_round.o $(OBJDIR)/utils/csv_reader.o $(OBJ_TEST) $(OBJ_STRUCT) 
+tsingle_member:  $(OBJ_STRUCT) $(OBJ_TEST) $(OBJDIR)/module/single_member_two_rounds.o $(OBJDIR)/module/single_member_one_round.o $(OBJDIR)/utils/csv_reader.o
 	@$(call run_test,single_member,module/,$^)
 
+tminimax: $(OBJ_STRUCT) $(OBJ_TEST) $(OBJDIR)/module/condorcet_minimax.o $(OBJDIR)/utils/csv_reader.o
+	@$(call run_test,condorcet_minimax,module/,$^)
 
+trankedpairs: $(OBJ_STRUCT) $(OBJ_TEST) $(OBJDIR)/module/condorcet_ranked_pairs.o $(OBJDIR)/utils/csv_reader.o
+	@$(call run_test,condorcet_ranked_pairs,module/,$^)
+
+tschulze: $(OBJ_STRUCT) $(OBJ_TEST) $(OBJDIR)/module/condorcet_schulze.o $(OBJDIR)/utils/csv_reader.o
+	@$(call run_test,condorcet_schulze,module/,$^)
+
+# test use case (test_produtct.c)
+test: $(OBJDIR)/test_utils.o $(EXEC)
+	@echo "Compilation of the test program:"
+	@$(call run_test,product,,$<);
 
 ################################
 #             MISC             #

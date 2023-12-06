@@ -9,6 +9,7 @@
 
 StringBuilder* createStringBuilder() {
     StringBuilder* string_builder = malloc(sizeof(struct s_string_builder));
+    string_builder->output[0] = '\0';
     string_builder->lastLine = 0;
     return string_builder;
 }
@@ -34,11 +35,6 @@ void emptyStringBuilder(StringBuilder* string_builder) {
 
 void printStringBuilder(const StringBuilder* string_builder) {
     printf("%s\n%s[>>>]: here%s\n", string_builder->output, KOC, RSTC);
-}
-
-void deleteStringBuilder(ptrStringBuilder* string_builder) {
-    free((*string_builder)->output);
-    string_builder = NULL;
 }
 
 void deleteStringBuilder(ptrStringBuilder* string_builder) {

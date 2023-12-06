@@ -157,14 +157,6 @@ unsigned listSize(List *l);
 
 List *listCopy(List *l);
 
-/**
- * @date 5/11/2023
- * @brief Afficher la liste dans la sortie par standard
- *
- * @param[in] l liste à afficher
- *
- */
-void displayList(List *l);
 
 /**
  * @brief Remet la liste à 0
@@ -245,22 +237,5 @@ int listIteGetValue(ListIte *ite);
  * @pre *ite != NULL
  **/
 void deleteListIte(ptrListIte *ite);
-
-/*------------------------------------------------------------------*/
-/*                              DEBUG                               */
-/*------------------------------------------------------------------*/
-
-#ifdef DEBUG
-
-/**
- * @date 5/11/2023
- * @brief display in the logger all the information about the list and the elements
- *
- * @param[in] l list to print in logger
- * @pre l != NULL
- */
-void printListLog(List *l);
-
-#endif
 
 #endif

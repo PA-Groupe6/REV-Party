@@ -226,34 +226,12 @@ void listSet(List *l, int v, unsigned i) {
     l->tab[i] = v;
 }
 
-/**
- * @date  1/11/2023
- * @author Ugo VALLAT
- */
-void displayList(List *l) {
-    /* vérification paramêtre */
-    testArgNull(l, "list.c", "displayList", "l");
-
-    if (l->size == 0)
-        printl("[ ]");
-    else {
-        printl("[ %*d", DISPLAY_LENGHT_BOX, l->tab[0]);
-        for (unsigned i = 1; i < l->size; i++) {
-            printl(" , %*d",DISPLAY_LENGHT_BOX, l->tab[i]);
-        }
-        printl(" ]");
-    }
-}
 
 void listClear(List *l) {
     testArgNull(l, "list.c", "listClear", "l");
     l->size = 0;
 }
 
-void listClear(List *l) {
-    testArgNull(l, "list.c", "listClear", "l");
-    l->size = 0;
-}
 
 /*------------------------------------------------------------------*/
 /*                         ITERATEUR                                */
@@ -356,32 +334,3 @@ void deleteListIte(ptrListIte *ite) {
     free((*ite));
     *ite = NULL;
 }
-
-/*------------------------------------------------------------------*/
-/*                              DEBUG                               */
-/*------------------------------------------------------------------*/
-
-#ifdef DEBUG
-
-/**
- * @date  1/11/2023
- * @author Ugo VALLAT
- */
-void printListLog(List *l) {
-    testArgNull(l, "list.c", "printListLog", "l");
-
-    printl("\n<+>------------[ list ]-----------<+>\n\n");
-    printl("[list.c] size = %d\n", l->size);
-    printl("[list.c] memory size = %d\n", l->memory_size);
-    if (l->size <= 0)
-        printl("[list.c] list = [");
-    else {
-        printl("[list.c] list = [ %3d ", l->tab[0]);
-        for (unsigned i = 1; i < l->size; i++) {
-            printl(", %3d", l->tab[i]);
-        }
-    }
-    printl(" ]\n\n<->-------------------------------<->\n");
-}
-
-#endif

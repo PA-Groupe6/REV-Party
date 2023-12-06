@@ -52,7 +52,6 @@ void deleteGraph(ptrGraph *g) {
     testArgNull(*g, "graph.c", "deleteGraph", "*g");
 
     deleteMatrix(&(*g)->matrix);
-    char* label;
     while(!genListEmpty((*g)->labels))
             free(genListPop((*g)->labels));
     free(*g);
@@ -164,7 +163,7 @@ char *graphGetLabel(Graph *g, unsigned int id) {
     if(id >= size)
         exitl("graph.c", "graphGetLabel", EXIT_FAILURE, "Invalide sommet %d", id);
 
-    char* label;
+    char* label = malloc(sizeof(char) * MAX_LENGHT_LABEL);
     strncpy(label, genListGet(g->labels, id), MAX_LENGHT_LABEL);
     return label;
 }
@@ -190,4 +189,67 @@ Arc *graphGetArc(Graph *g, unsigned id_src, unsigned id_dest) {
     arc->weight = weight;
 
     return arc;
+}
+
+
+/*------------------------------------------------------------------*/
+/*                            UTILS                                 */
+/*------------------------------------------------------------------*/
+
+
+/**
+ * @author Corentin LUDWIG
+ * @date  02/12/2023
+ */
+GenList *graphToListArcFromArcDest(Graph *g, Arc *arc){
+    GenList *l = createGenList(5);
+    int src = arc->id_dest;
+    int nbVertex = (int)graphNbVertex(g);
+    for(int i = 0; i < nbVertex; i++){
+        Arc *cur = graphGetArc(g,src,i);
+        if(cur == NULL){
+            genListAdd(l,(void*)cur);
+        }
+    }
+
+    return l;
+}
+
+
+/**
+ * @author Corentin LUDWIG
+ * @date  02/12/2023
+ */
+bool graphIsMakingCycle(Graph *g, Arc *arc){
+    testArgNull(g, "graph.c", "graphAddCycle", "g");
+    testArgNull(g, "graph.c", "graphAddCycle", "arc");
+
+    GenList *l_arc = createGenList(10);
+    GenList *l_to_add = createGenList(10);
+    unsigned int obj = arc->id_src;
+
+    bool test = false;
+
+    genListAdd(l_arc,(void*) arc);
+    while(!genListEmpty(l_arc) && !test){
+        Arc *cur = (Arc*) genListPop(l_arc);
+        l_to_add = graphToListArcFromArcDest(g,cur);
+
+        while(genListEmpty(l_to_add)){
+            cur = (Arc*) genListPop(l_to_add);
+            if(cur->id_dest == obj) test = true;
+            genListAdd(l_arc,(void*) cur);
+        }
+
+    }
+
+    while(!genListEmpty(l_arc))
+        free(genListPop(l_arc));
+    deleteGenList(&l_arc);
+
+    while(!genListEmpty(l_to_add))
+        free(genListPop(l_to_add));
+    deleteGenList(&l_to_add);
+
+    return test;
 }

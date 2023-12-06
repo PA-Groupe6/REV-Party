@@ -399,14 +399,5 @@ GenList *graphToListArcToVertex(Graph *g);
  */
 bool graphIsMakingCycle(Graph *g, Arc *arc);
 
-/*------------------------------------------------------------------*/
-/*                              DEBUG                               */
-/*------------------------------------------------------------------*/
-
-#ifdef DEBUG
-
-void printGraphLog(Graph *g);
-
-#endif
 
 #endif

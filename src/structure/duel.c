@@ -59,7 +59,8 @@ void deleteDuel(ptrDuel *d) {
         free(genListPop((*d)->labels));
     }
     deleteGenList(&((*d)->labels));
-    free(d);
+    free(*d);
+    *d = NULL;
 }
 
 /**
@@ -123,4 +124,3 @@ char *duelIndexToLabel(Duel *d, unsigned int index) {
     strncpy(label, genListGet(d->labels, index), MAX_LENGHT_LABEL);
     return label;
 }
-
