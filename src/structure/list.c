@@ -40,7 +40,6 @@ List *createList(unsigned memory_size) {
     List *l = malloc(sizeof(List));
     if (l == NULL)
         exitl("list.c", "createList", EXIT_FAILURE, "erreur malloc list");
-
     l->tab = malloc(sizeof(int) * memory_size);
     if (l->tab == NULL && memory_size != 0)
         exitl("list.c", "createList", EXIT_FAILURE, "erreur malloc tab");
@@ -55,9 +54,11 @@ List *createList(unsigned memory_size) {
  * @author Ugo VALLAT
  */
 void deleteList(ptrList *l) {
+#ifdef DEBUG
     /* test l != NULL */
     testArgNull(l, "list.c", "deleteList", "l");
     testArgNull((*l), "list.c", "deleteList", "*l");
+#endif
 
     /* libération de la mémoire */
     free((*l)->tab);
@@ -75,7 +76,9 @@ void deleteList(ptrList *l) {
  * @pre l != NULL
  */
 void adjustMemorySizeList(List *l, unsigned new_size) {
+#ifdef DEBUG
     testArgNull(l, "list.c", "adjustMemorySizeList", "l");
+#endif
 
     /* nouvelle taille de la liste */
     l->memory_size = new_size;
@@ -91,8 +94,10 @@ void adjustMemorySizeList(List *l, unsigned new_size) {
  * @author Ugo VALLAT
  */
 void listAdd(List *l, int v) {
+#ifdef DEBUG
     /* test l != NULL */
     testArgNull(l, "list.c", "listAdd", "l");
+#endif
 
     /* agrandissement de la liste si pleine */
     if (l->size == l->memory_size)
@@ -108,10 +113,12 @@ void listAdd(List *l, int v) {
  * @author Ugo VALLAT
  */
 void listInsert(List *l, int v, unsigned i) {
+#ifdef DEBUG
     /* vérification paramêtres */
     testArgNull(l, "list.c", "listInsert", "l");
     if (i > l->size)
         exitl("list.c", "listInsert", EXIT_FAILURE, "position (i) invalide");
+#endif
 
     /* agrandissement de la liste si pleine */
     if (l->size >= l->memory_size)
@@ -131,10 +138,12 @@ void listInsert(List *l, int v, unsigned i) {
  * @author Ugo VALLAT
  */
 int listPop(List *l) {
+#ifdef DEBUG
     /* vérification paramêtre */
     testArgNull(l, "list.c", "listPop", "l");
     if (l->size <= 0)
         exitl("list.c", "listPop", EXIT_FAILURE, "liste déjà vide");
+#endif
 
     /* suppression de l'élément */
     int elem = l->tab[l->size-1];
@@ -148,11 +157,13 @@ int listPop(List *l) {
  * @author Ugo VALLAT
  */
 int listRemove(List *l, unsigned i) {
+#ifdef DEBUG
     /* vérification paramêtres */
     testArgNull(l, "list.c", "listRemove", "l");
     if (i >= l->size)
         exitl("list.c.c", "listRemove", EXIT_FAILURE, "position (i) invalide");
-    
+#endif
+
     int elem = l->tab[i];
 
     /* suppression de l'élément */
@@ -169,7 +180,10 @@ int listRemove(List *l, unsigned i) {
  * @author Ugo VALLAT
  */
 bool listEmpty(List *l) {
+#ifdef DEBUG
     testArgNull(l, "list.c", "listEmpty", "l");
+#endif
+
     return l->size == 0;
 }
 
@@ -178,7 +192,10 @@ bool listEmpty(List *l) {
  * @author Ugo VALLAT
  */
 unsigned listSize(List *l) {
+#ifdef DEBUG
     testArgNull(l, "list.c", "lestSize", "l");
+#endif
+
     return l->size;
 }
 
@@ -187,8 +204,10 @@ unsigned listSize(List *l) {
  * @author Ugo VALLAT
  */
 List *listCopy(List *l) {
+#ifdef DEBUG
     /* vérification paramêtre */
     testArgNull(l, "list.c", "listCopy", "l");
+#endif
 
     /* création nouvelle liste */
     List *new = createList(l->size);
@@ -205,10 +224,12 @@ List *listCopy(List *l) {
  * @author Ugo VALLAT
  */
 int listGet(List *l, unsigned i) {
+#ifdef DEBUG
     /* vérification paramêtre */
     testArgNull(l, "list.c", "listGet", "l");
     if (i >= l->size)
         exitl("list.c", "listGet", EXIT_FAILURE, "position (%d) invalide", i);
+#endif
 
     return l->tab[i];
 }
@@ -218,10 +239,12 @@ int listGet(List *l, unsigned i) {
  * @author Ugo VALLAT
  */
 void listSet(List *l, int v, unsigned i) {
+#ifdef DEBUG
     /* vérification paramêtre */
     testArgNull(l, "list.c", "listSet", "l");
     if (i >= l->size)
         exitl("list.c", "listSet", EXIT_FAILURE, "position (%d) invalide", i);
+#endif
 
     l->tab[i] = v;
 }
@@ -267,7 +290,9 @@ unsigned next_backward(int i) { return i - 1; }
  * @author Ugo VALLAT
  */
 ListIte *createListIte(List *l, int dir) {
+#ifdef DEBUG
     testArgNull(l, "list.c", "createListIte", "l");
+#endif
 
     /* création de l'itérateur */
     ListIte *ite = malloc(sizeof(ListIte));
@@ -294,7 +319,10 @@ ListIte *createListIte(List *l, int dir) {
  * @author Ugo VALLAT
  */
 bool listIteHasNext(ListIte *ite) {
+#ifdef DEBUG
     testArgNull(ite, "list.c", "listIteHasNext", "ite");
+#endif
+
     unsigned next = ite->fnext(ite->cur);
     return (next < ite->list->size);
 }
@@ -304,9 +332,11 @@ bool listIteHasNext(ListIte *ite) {
  * @author Ugo VALLAT
  */
 void listIteNext(ListIte *ite) {
+#ifdef DEBUG
     testArgNull(ite, "list.c", "listIteNext", "ite");
     if (!listIteHasNext(ite))
         exitl("list.c", "listIteNext", EXIT_FAILURE, "aucun élément à lire");
+#endif
 
     ite->cur = ite->fnext(ite->cur);
     ite->next = true;
@@ -317,9 +347,11 @@ void listIteNext(ListIte *ite) {
  * @author Ugo VALLAT
  */
 int listIteGetValue(ListIte *ite) {
+#ifdef DEBUG
     testArgNull(ite, "list.c", "listIteGetValue", "ite");
     if (!ite->next)
         exitl("list.c", "listIteGetValue", EXIT_FAILURE, "lecture sans appel à next");
+#endif
 
     return listGet(ite->list, ite->cur);
 }
@@ -329,7 +361,10 @@ int listIteGetValue(ListIte *ite) {
  * @author Ugo VALLAT
  */
 void deleteListIte(ptrListIte *ite) {
+#ifdef DEBUG
     testArgNull(ite, "list.c", "deleteListIte", "ite");
+#endif
+
     deleteList(&((*ite)->list));
     free((*ite));
     *ite = NULL;
