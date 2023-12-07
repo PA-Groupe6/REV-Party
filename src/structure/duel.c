@@ -35,9 +35,11 @@ struct s_duel {
  * @date 30/11/2023
  */
 Duel *createDuel(unsigned nb_candidats, GenList *labels) {
+#ifdef DEBUG
     testArgNull(labels, "duel.c", "createDuel", "labels");
     if(genListSize(labels) != nb_candidats)
         exitl("duel.c", "createDuel", EXIT_FAILURE, "Nombre labels (%d) != nombre colonnes (%d)", genListSize(labels), nb_candidats);
+#endif
 
     Duel* duel = malloc(sizeof(Duel));
     duel->default_value = DEFAULT_VALUE;
@@ -52,8 +54,10 @@ Duel *createDuel(unsigned nb_candidats, GenList *labels) {
  * @date 30/11/2023
 */
 void deleteDuel(ptrDuel *d) {
+#ifdef DEBUG
     testArgNull(d, "duel.c", "deleteDuel", "d");
     testArgNull(*d, "duel.c", "deleteDuel", "*d");
+#endif
     deleteMatrix(&((*d)->matrix));
     while (!genListEmpty((*d)->labels)) {
         free(genListPop((*d)->labels));
@@ -67,12 +71,15 @@ void deleteDuel(ptrDuel *d) {
  * @date 30/11/2023
 */
 Duel *duelSetValue(Duel *d, unsigned int l, unsigned int c, int v) {
+#ifdef DEBUG
     testArgNull(d, "duel.c", "duelSetValue", "d");
     if(l > matrixNbLines(d->matrix) || c > matrixNbColonnes(d->matrix))
         exitl("duel.c", "duelSetValue", EXIT_FAILURE, "Invalide pos (%d,%d) dans duel (%d,%d)", 
             l,c, matrixNbLines(d->matrix), matrixNbColonnes(d->matrix));
     if(matrixGet(d->matrix, l, c) != d->default_value)
         exitl("duel.c", "duelSetValue", EXIT_FAILURE, "Echec set : valeur déjà set");
+#endif
+
     matrixSet(d->matrix, l, c, v);
     return d;
 }
@@ -82,11 +89,13 @@ Duel *duelSetValue(Duel *d, unsigned int l, unsigned int c, int v) {
  * @date 30/11/2023
 */
 int duelGetValue(Duel *d, unsigned int l, unsigned int c) {
+#ifdef DEBUG
     testArgNull(d, "duel.c", "duelGetValue", "d");
     if(l > matrixNbLines(d->matrix) || c > matrixNbColonnes(d->matrix))
         exitl("duel.c", "duelGetValue", EXIT_FAILURE, "Invalide pos (%d,%d) dans duel (%d,%d)", 
             l,c, matrixNbLines(d->matrix), matrixNbColonnes(d->matrix));
-    
+#endif
+
     return matrixGet(d->matrix, l, c);
 }
 
@@ -95,7 +104,10 @@ int duelGetValue(Duel *d, unsigned int l, unsigned int c) {
  * @date 30/11/2023
 */
 unsigned int duelNbCandidat(Duel *d) {
+#ifdef DEBUG
     testArgNull(d, "duel.c", "duelNbCandidat", "d");
+#endif
+
     return matrixNbColonnes(d->matrix);
 }
 
@@ -104,8 +116,11 @@ unsigned int duelNbCandidat(Duel *d) {
  * @date 30/11/2023
 */
 int duelLabelToIndex(Duel *d, char *label) {
+#ifdef DEBUG
     testArgNull(d, "duel.c", "duelLabelToIndex", "d");
     testArgNull(label, "duel.c", "duelLabelToIndex", "label");
+#endif
+
     return searchLabel(d->labels, label);
 }
 
@@ -114,11 +129,14 @@ int duelLabelToIndex(Duel *d, char *label) {
  * @date 30/11/2023
 */
 char *duelIndexToLabel(Duel *d, unsigned int index) {
+#ifdef DEBUG
     testArgNull(d, "duel.c", "duelIndexToLabel", "d");
     unsigned size = matrixNbColonnes(d->matrix);
     if(index > size)
         exitl("duel.c", "duelIndexToLabel", EXIT_FAILURE, "Invalide index (%d) dans duel (%d,%d)",
             index, size, size);
+#endif
+
     char* label = malloc(sizeof(char)*MAX_LENGHT_LABEL);
     strncpy(label, genListGet(d->labels, index), MAX_LENGHT_LABEL);
     return label;

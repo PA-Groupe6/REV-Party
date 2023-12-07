@@ -31,9 +31,11 @@ struct s_graph {
  * @date  13/11/2023
  */
 Graph *createGraph(unsigned int nb_vertex, GenList *labels) {
+#ifdef DEBUG
     testArgNull(labels, "graph.c", "createGraph", "labels");
     if(labels!= NULL && genListSize(labels) != nb_vertex)
         exitl("graph.c", "createGraph", EXIT_FAILURE, "Nombre labels (%d) != nombre sommets (%d)", genListSize(labels), nb_vertex);
+#endif
 
     Graph* graph = malloc(sizeof(Graph));
     graph->default_weight = DEFAULT_WEIGHT;
@@ -48,8 +50,10 @@ Graph *createGraph(unsigned int nb_vertex, GenList *labels) {
  * @date  13/11/2023
  */
 void deleteGraph(ptrGraph *g) {
+#ifdef DEBUG
     testArgNull(g, "graph.c", "deleteGraph", "g");
     testArgNull(*g, "graph.c", "deleteGraph", "*g");
+#endif
 
     deleteMatrix(&(*g)->matrix);
     while(!genListEmpty((*g)->labels))
@@ -63,6 +67,7 @@ void deleteGraph(ptrGraph *g) {
  * @date  13/11/2023
  */
 void graphAdd(Graph *g, unsigned int id_src, unsigned int id_dest, int weight){
+#ifdef DEBUG
     testArgNull(g, "graph.c", "graphAdd", "g");
     unsigned size = matrixNbColonnes(g->matrix);
     if(id_src >= size || id_dest >= size)
@@ -73,7 +78,8 @@ void graphAdd(Graph *g, unsigned int id_src, unsigned int id_dest, int weight){
              weight);
     if(matrixGet(g->matrix, id_src, id_dest) != g->default_weight)
         exitl("graph.c", "graphAdd", EXIT_FAILURE, "Ajout sur arc déjà existant (%d,%d)", id_src, id_dest);
-    
+#endif
+
     matrixSet(g->matrix, id_src, id_dest, weight);
     g->nb_arc++;
 }
@@ -84,6 +90,7 @@ void graphAdd(Graph *g, unsigned int id_src, unsigned int id_dest, int weight){
  * @date  13/11/2023
  */
 void graphSetWeight(Graph *g, unsigned int id_src, unsigned int id_dest, int weight){
+#ifdef DEBUG
     testArgNull(g, "graph.c", "graphSetWeight", "g");
     unsigned size = matrixNbColonnes(g->matrix);
     if(id_src >= size || id_dest >= size)
@@ -94,7 +101,8 @@ void graphSetWeight(Graph *g, unsigned int id_src, unsigned int id_dest, int wei
              weight);
     if(matrixGet(g->matrix, id_src, id_dest) == g->default_weight)
         exitl("graph.c", "graphSetWeight", EXIT_FAILURE, "Arc inexistant (%d,%d)", id_src, id_dest);
-    
+#endif
+
     matrixSet(g->matrix, id_src, id_dest, weight);
 }
 
@@ -103,6 +111,7 @@ void graphSetWeight(Graph *g, unsigned int id_src, unsigned int id_dest, int wei
  * @date  13/11/2023
  */
 void graphRemove(Graph *g, unsigned int id_src, unsigned int id_dest) {
+#ifdef DEBUG
     testArgNull(g, "graph.c", "graphRemove", "g");
     unsigned size = matrixNbColonnes(g->matrix);
     if(id_src >= size || id_dest >= size)
@@ -111,6 +120,7 @@ void graphRemove(Graph *g, unsigned int id_src, unsigned int id_dest) {
     if(matrixGet(g->matrix, id_src, id_dest) == g->default_weight)
         exitl("graph.c", "graphRemove", EXIT_FAILURE, "Echec remove : arc (%d,%d) inexistant",
             id_src, id_dest);
+#endif
     
     matrixSet(g->matrix, id_src, id_dest, g->default_weight);
     g->nb_arc--;
@@ -121,17 +131,19 @@ void graphRemove(Graph *g, unsigned int id_src, unsigned int id_dest) {
  * @date  13/11/2023
  */
 int graphGetWeight(Graph *g, unsigned int id_src, unsigned int id_dest) {
+#ifdef DEBUG
     testArgNull(g, "graph.c", "graphGetWeight", "g");
     unsigned size = matrixNbColonnes(g->matrix);
     if(id_src >= size || id_dest >= size)
         exitl("graph.c", "graphGetWeight", EXIT_FAILURE, "Invalide sommet %d-%d dans graph (%d)",
              id_src, id_dest, size);
-    
+#endif
+
     int weight = matrixGet(g->matrix, id_src, id_dest);
     if( weight == g->default_weight)
         exitl("graph.c", "graphGetWeight", EXIT_FAILURE, "Echec remove : arc (%d,%d) inexistant",
             id_src, id_dest);
-    
+
     return weight;
 }
 
@@ -140,7 +152,10 @@ int graphGetWeight(Graph *g, unsigned int id_src, unsigned int id_dest) {
  * @date  13/11/2023
  */
 unsigned int graphNbVertex(Graph *g) {
+#ifdef DEBUG
     testArgNull(g, "graph.c", "graphNbVertex", "g");
+#endif
+
     return matrixNbColonnes(g->matrix);
 }
 
@@ -149,7 +164,10 @@ unsigned int graphNbVertex(Graph *g) {
  * @date  13/11/2023
  */
 unsigned int graphNbArc(Graph *g) {
+#ifdef DEBUG
     testArgNull(g, "graph.c", "graphNbArc", "g");
+#endif
+
     return g->nb_arc;
 }
 
@@ -158,10 +176,12 @@ unsigned int graphNbArc(Graph *g) {
  * @date  13/11/2023
  */
 char *graphGetLabel(Graph *g, unsigned int id) {
+#ifdef DEBUG
     testArgNull(g, "graph.c", "graphGetLabel", "g");
     unsigned size = matrixNbColonnes(g->matrix);
     if(id >= size)
         exitl("graph.c", "graphGetLabel", EXIT_FAILURE, "Invalide sommet %d", id);
+#endif
 
     char* label = malloc(sizeof(char) * MAX_LENGHT_LABEL);
     strncpy(label, genListGet(g->labels, id), MAX_LENGHT_LABEL);
@@ -173,11 +193,13 @@ char *graphGetLabel(Graph *g, unsigned int id) {
  * @date  13/11/2023
  */
 Arc *graphGetArc(Graph *g, unsigned id_src, unsigned id_dest) {
+#ifdef DEBUG
     testArgNull(g, "graph.c", "graphGetArc", "g");
     unsigned size = matrixNbColonnes(g->matrix);
     if(id_src >= size || id_dest >= size)
         exitl("graph.c", "graphGetArc", EXIT_FAILURE, "Invalide sommet %d-%d dans graph (%d)",
              id_src, id_dest, size);
+#endif
     
     int weight = matrixGet(g->matrix, id_src, id_dest);
     if(weight == g->default_weight)
@@ -221,8 +243,10 @@ GenList *graphToListArcFromArcDest(Graph *g, Arc *arc){
  * @date  02/12/2023
  */
 bool graphIsMakingCycle(Graph *g, Arc *arc){
+#ifdef DEBUG
     testArgNull(g, "graph.c", "graphAddCycle", "g");
     testArgNull(g, "graph.c", "graphAddCycle", "arc");
+#endif
 
     GenList *l_arc = createGenList(10);
     GenList *l_to_add = createGenList(10);
