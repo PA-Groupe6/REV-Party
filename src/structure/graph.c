@@ -247,10 +247,12 @@ bool graphIsMakingCycle(Graph *g, Arc *arc){
     testArgNull(g, "graph.c", "graphAddCycle", "g");
     testArgNull(g, "graph.c", "graphAddCycle", "arc");
 #endif
+    testArgNull(g, "graph.c", "graphAddCycle", "g");
+    testArgNull(g, "graph.c", "graphAddCycle", "arc");
 
     GenList *l_arc = createGenList(10);
-    GenList *l_to_add = createGenList(10);
-    unsigned int obj = arc->id_src;
+    GenList *l_to_add;
+    unsigned int goal = arc->id_src;
 
     bool test = false;
 
@@ -259,15 +261,15 @@ bool graphIsMakingCycle(Graph *g, Arc *arc){
         Arc *cur = (Arc*) genListPop(l_arc);
         l_to_add = graphToListArcFromArcDest(g,cur);
 
-        while(genListEmpty(l_to_add)){
+        while(!genListEmpty(l_to_add) && !test){
             cur = (Arc*) genListPop(l_to_add);
-            if(cur->id_dest == obj) test = true;
+            if(cur->id_dest == goal) test = true;
             genListAdd(l_arc,(void*) cur);
         }
 
     }
 
-    while(!genListEmpty(l_arc))
+    // while(!genListEmpty(l_arc)
         free(genListPop(l_arc));
     deleteGenList(&l_arc);
 
