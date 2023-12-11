@@ -1,5 +1,5 @@
 /**
- * @author Ugo VALLAT, IVANOVA ALina 
+ * @author IVANOVA ALina, Ugo VALLAT
  * @date 4/11/2023
  *
  * @brief Fichier d'implémentation de la méthode Single Member (Uninominal) à deux rounds
