@@ -1,7 +1,12 @@
 #include <string.h>
 #include <malloc.h>
 #include "condorcet.h"
+#include "../structure/graph.h"
 #include "../structure/data_struct_utils.h"
+
+/**************
+*   MINIMAX   *
+***************/
 
 /**
  * @author Alina IVANOVA
@@ -95,12 +100,23 @@ GenList* theWinnerMinimax(Duel* duel) {
     return winners;
 }
 
- GenList* theWinnerRankedPairs(Duel* duel) {
+/*******************
+*   RANKED PAIRS   *
+*******************/
+
+GenList* theWinnerRankedPairs(Duel* duel){
+    // en attente de l'implémentation de la fonction graphToSortedList
     // TODO
+    printf("NON IMPLEMENTEE!\n");
     return createGenList(10);
 }
 
+/**************
+*   SCHULZE   *
+**************/
+
  GenList* theWinnerSchulze(Duel* duel) {
     // TODO
+    printf("NON IMPLEMENTEE!\n");
     return createGenList(10);
 }
