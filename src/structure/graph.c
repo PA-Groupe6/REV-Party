@@ -247,9 +247,12 @@ bool graphIsMakingCycle(Graph *g, Arc *arc){
     testArgNull(g, "graph.c", "graphAddCycle", "g");
     testArgNull(g, "graph.c", "graphAddCycle", "arc");
 #endif
+<<<<<<< HEAD
     testArgNull(g, "graph.c", "graphAddCycle", "g");
     testArgNull(g, "graph.c", "graphAddCycle", "arc");
 #endif
+=======
+>>>>>>> data-structures
 
     GenList *l_arc = createGenList(10);
     GenList *l_to_add;
