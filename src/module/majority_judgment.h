@@ -34,6 +34,14 @@
 
 
 
+typedef struct s_winner_MajorityJudgment {
+    int candIndex;
+    float mediane;
+    float percentSup;
+    float percentInf;
+}Candidate;
+
+
 /**
  * @author IVANOVA ALina 
  * @date 04/11/2023
@@ -43,7 +51,7 @@
  *
  * @return Le nom du candidat gagnant
 */
-char theWinnerMajorityJudgment(Bale* bale);
+GenList* theWinnerMajorityJudgment(Bale* bale);
 
 
 

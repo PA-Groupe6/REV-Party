@@ -132,6 +132,49 @@ bool testUniqueMatrixWithIte(Matrix* m,int l, int c, unsigned nbl, unsigned nbc)
 */
 
 bool testCreateMatrix() {
+    emptyStringBuilder(string_builder);
+    printsb("\n <+>--- Test Matrix Create ---<+>");
+
+    /* parcours */
+    (l==-1) ? (i = 0) : (i = l);
+    for(; i < imax; i++) {
+        for(((c == -1)?(j = 0):(j = c)); j < jmax; j++) {
+            if(!matrixIteHasNext(ite)){
+                printsb(" <+>--- echec has next\n");
+                return false;
+            }
+            if(matrixIteNext(ite) != (int)(i*line_size+j)) {
+                printsb(" <+>--- echec next\n");
+                return false;
+            }
+            if(matrixIteGetValue(ite) != (int)(i*line_size+j)) {
+                printsb(" <+>--- echec get value\n");
+                return false;
+            }
+        }
+    }
+
+    /* Fin du parcours */
+    if(matrixIteHasNext(ite)) {
+        printsb(" <+>--- echec next fin\n");
+        return false;
+    }
+    deleteMatrixIte(&ite);
+    return true;
+}
+
+
+
+/*
+    =============
+    === TESTS ===
+    =============
+*/
+
+bool testCreateMatrix() {
+    emptyStringBuilder(string_builder);
+    printsb("\n <+>--- Test Matrix Create ---<+>");
+
     /* test matrice taille (0,0) */
     printsb( "\ntest sur matrice taille (0,0)...");
     Matrix* m1 = createMatrix(0, 0, DEFAULT_VALUE);
