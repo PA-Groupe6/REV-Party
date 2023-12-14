@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "module/condorcet.h"
 #include "module/majority_judgment.h"
 #include "module/single_member.h"
@@ -6,40 +7,57 @@
 #include "utils/csv_reader.h"
 #include "logger.h"
 
+void deleteWinners(ptrGenList* winners) {
+    while (!genListEmpty(*winners))
+        free(genListPop(*winners));
+    deleteGenList(winners);
+}
+
 void uni1(char* source_file) {
     Bale* bale = csvToBale(source_file);
     GenList* winners = theWinnerOneRound(bale);
+    deleteBale(&bale);
     displayListWinnerSingle(winners);
+    deleteWinners(&winners);
 }
 
 void uni2(char* source_file) {
     Bale* bale = csvToBale(source_file);
     GenList* winners = theWinnerTwoRounds(bale);
+    deleteBale(&bale);
     displayListWinnerSingleTwo(winners);
+    deleteWinners(&winners);
 }
 
 void minimax(char* source_file) {
     Duel* duel = csvToDuel(source_file);
     GenList* winners = theWinnerMinimax(duel);
+    deleteDuel(&duel);
     displayListWinnerCondorcet(winners, "minimax");
+    deleteWinners(&winners);
 }
 
 void rankedPairs(char* source_file) {
     Duel* duel = csvToDuel(source_file);
     GenList* winners = theWinnerRankedPairs(duel);
+    deleteDuel(&duel);
     displayListWinnerCondorcet(winners, "rangement des pairs");
+    deleteWinners(&winners);
 }
 
 void schulze(char* source_file) {
     Duel* duel = csvToDuel(source_file);
     GenList* winners = theWinnerSchulze(duel);
+    deleteDuel(&duel);
     displayListWinnerCondorcet(winners, "schulze");
+    deleteWinners(&winners);
 }
 
 void majorityJudgment(char* source_file) {
     Bale* bale = csvToBale(source_file);
     GenList* winners = theWinnerMajorityJudgment(bale);
-    (void) winners;
+    deleteBale(&bale);
+    deleteWinners(&winners);
     //displayListWinnerMajorityJudgment(winners);
 }
 
