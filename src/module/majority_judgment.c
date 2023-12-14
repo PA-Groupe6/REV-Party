@@ -28,8 +28,8 @@
 #include "majority_judgment.h"
 
 /**
+ * @date 15/12/2023
  * @author Alina IVANOVA
- * @date 24/11/2023 
  */
 int compare(const void *a, const void *b) {
     return (*(int *)a - *(int *)b);
@@ -37,173 +37,206 @@ int compare(const void *a, const void *b) {
 
 
 /**
+ * @date 15/12/2023
  * @author Alina IVANOVA
- * @date 24/11/2023 
  */
 int* sortingVotesCandidate(Bale* bale, int candidate){
     int nbVotes = baleNbVoter(bale);
     int* votes = malloc(sizeof(int)*nbVotes);
-    for (int voter = 0; voter<nbVotes; voter++)votes[voter] = baleGetValue(bale, voter, candidate);
+    for (int voter = 0; voter<nbVotes; voter++)
+        votes[voter] = baleGetValue(bale, voter, candidate);
     qsort(votes, nbVotes, sizeof(int), compare);
     return votes;
 }
 
 
 /**
+ * @date 15/12/2023
  * @author Alina IVANOVA
- * @date 24/11/2023 
  */
 int medianeCandidate(Bale* bale, int candidate){
-    int nbVotes = baleNbVoter(bale);;
-    int* votes = sortingVotesCandidate(bale,candidate);
-    if(nbVotes%2!=0) {
-        int a = votes[(nbVotes/2)];
-        free(votes);
-        return a;
-    }
-    else{
-        int a = (votes[nbVotes/2]+ votes[nbVotes/2-1])/2;
-        free(votes);
-        return a;
-    }
-}
-
-
-/**
- * @author Alina IVANOVA
- * @date 24/11/2023 
- */
-GenList* severalWinners(Bale* bale, int nbWinningCandidates, int maxMediane, int* indexesMaxMed){
-    GenList* candidates = createGenList(sizeof(Candidate)*nbWinningCandidates);
-    Candidate* candidatePerc = malloc(sizeof(Candidate)); 
     int nbVotes = baleNbVoter(bale);
-    float percentageInf, percentageSup;
-    //creating each candidate struct with percentages
-    for (int cand = 0; cand<nbWinningCandidates;cand++){
-        int* sortedVotes = sortingVotesCandidate(bale, indexesMaxMed[cand]);
-        int electeursInf = 0;
-        int currentVote = sortedVotes[electeursInf];
-        while(currentVote!=maxMediane){
-            electeursInf++;
-            currentVote = sortedVotes[electeursInf];
-        }
-        percentageInf = (float) electeursInf/nbVotes;
-        int electeursMed = electeursInf;
-        while(currentVote == maxMediane && electeursMed<nbVotes-1){//combien on a les valeur egales a mediane
-            electeursMed++;
-            currentVote = sortedVotes[electeursMed];
-        }
-        electeursMed -=electeursInf; 
-        percentageSup = (float) (nbVotes-electeursMed-electeursInf)/nbVotes;//percentage of votes Superieurs
-        candidatePerc->candIndex = indexesMaxMed[cand];
-        candidatePerc->percentInf = percentageInf;
-        candidatePerc->percentSup = percentageSup;
-        candidatePerc->mediane = maxMediane;
-        genListAdd(candidates, candidatePerc);
+    int* votes = sortingVotesCandidate(bale,candidate);
+    int a;
+    if(nbVotes%2!=0) {
+        a = votes[(nbVotes/2)];
+    } else{
+        a = (votes[nbVotes/2]+ votes[nbVotes/2-1])/2;
     }
-    return candidates;
+    free(votes);
+    return a;
 }
 
 
 /**
- * @author Alina IVANOVA
- * @date 24/11/2023 
+ * @date 15/12/2023
+ * @author IVANOVA Alina, LAFORGE Mateo
+ * @brief calcule le pourcentage inférieur et supérieurs des votes pour un candidat
+ * 
+ * @param[in] bale matrice ballot source
+ * @param[in] candidate indice candidat
+ * @param[out] precentInf pourcentage inférieur de vote du candidat
+ * @param[out] percentSup pourcentage supérieur de vote du candidat
+*/
+void computePercentagesCandidate(Bale* bale, int candidate, int median, float* percentInf, float* percentSup) {
+    int nbVotes = baleNbVoter(bale);
+    int* sortedVotes = sortingVotesCandidate(bale, candidate);
+    int nbInfVote = 0;
+    int nbSupVote = 0;
+    int currentVote;
+    for (int i = 0; i < baleNbVoter(bale); i++) {
+        currentVote = sortedVotes[i];
+        if (currentVote < median)
+            nbInfVote++;
+        else if (currentVote > median)
+            nbSupVote++;
+    }
+    free(sortedVotes);
+    *percentInf = (float) nbInfVote/nbVotes;
+    *percentSup = (float) nbSupVote/nbVotes;
+}
+
+
+/**
+ * @date 15/12/2023
+ * @author IVANOVA Alina, LAFORGE Mateo
+ * @brief peuple la liste winners des candidats dans indexCandidates avec leurs pourcentages d'opposants et partisans
+ * 
+ * @param[in] bale le ballot source
+ * @param[in-out] winners liste des candidats vainqueurs
+ * @param[in] median la mediane avec laquelle les candidats ont gagnés
+ * @param[in] nbWinners nombre de vainqueurs
+ * @param[in] indexCandidates listes des indices des candidats vainqueurs
  */
-GenList* bestCand(GenList* winners, int nbVotes){
-    int nbCand = genListSize(winners);
-    float maxPerc = 0, percSup;
-    int* IndLessEvilCand = malloc(sizeof(int)*nbCand);
-    Candidate* currentCandidate = malloc(sizeof(Candidate));
-    GenList* bestCandidates;
-    for (int i = 0; i<nbCand; i++){
-        currentCandidate = genListGet(winners, i);
-        percSup = currentCandidate->percentSup;
-        if(maxPerc>percSup){
-            while(!bestCandidates) free((Candidate*)genListPop(bestCandidates));
-            maxPerc = percSup;
-            genListAdd(bestCandidates, currentCandidate);
-        }
-        else if(maxPerc==percSup){
-            genListAdd(bestCandidates, currentCandidate);
-        }
+void severalWinners(Bale* bale, GenList* winners, int median, int nb_winners, int* indexCandidates) {
+    // création de tout les candidats avec leurs pourcentages
+    for (int i = 0; i < nb_winners; i++) {
+        Candidate* winner = malloc(sizeof(struct s_winner_MajorityJudgment));
+        winner->candIndex = indexCandidates[i];
+        winner->mediane = median;
+        computePercentagesCandidate(bale, winner->candIndex, median, &winner->percentInf, &winner->percentSup);
+        genListAdd(winners, winner);
     }
-    return bestCandidates;
 }
 
 
 /**
- * @author Alina IVANOVA
- * @date 24/11/2023 
+ * @date 15/12/2023
+ * @author IVANOVA Alina, LAFORGE Mateo
+ * @brief applique la tactique du meilleur bien (récupère le candidat qui a le plus de partisans)
+ * 
+ * @param[in] winners liste des gagnants courant à départagés
+ * @pre |winners| > 1
+ * 
+ * @return la liste des vainqueurs de cette tactique
+ * @note il peux subsister des ex-aeqo dans la liste de retour
  */
-GenList* leastHarmCand(GenList* winners, int nbVotes){
-    int nbCand = genListSize(winners);
-    float minPerc = 1, percInf;
-    int* IndLessEvilCand = malloc(sizeof(int)*nbCand);
-    Candidate* currentCandidate = malloc(sizeof(Candidate));
-    GenList* lessEvilCandidates;
-    for (int i = 0; i<nbCand; i++){
-        currentCandidate = genListGet(winners, i);
-        percInf = currentCandidate->percentInf;
-        if(minPerc>percInf){
-            while(!lessEvilCandidates) free((Candidate*)genListPop(lessEvilCandidates));
-            minPerc = percInf;
-            genListAdd(lessEvilCandidates, currentCandidate);
+GenList* bestCand(GenList* winners){
+    GenList* best_winners = createGenList(genListSize(winners));
+    float max_perc = 0.0f;
+    Candidate* current_cand;
+    float current_perc;
+    // pour chaque candidats dans la liste des gagnants
+    for (int i = 0; i < genListSize(winners); i ++) {
+        current_cand = (Candidate*) genListGet(winners, i);
+        current_perc = current_cand->percentSup;
+        if (current_perc > max_perc) {
+            // mise à jour du min
+            max_perc = current_perc;
+            // vide la liste
+            while(!genListEmpty(best_winners))
+                genListPop(best_winners);
         }
-        else if(minPerc==percInf){
-            genListAdd(lessEvilCandidates, currentCandidate);
+        if (current_perc >= max_perc) {
+            genListAdd(best_winners, current_cand);
         }
     }
-    return lessEvilCandidates;
+    while (!genListEmpty(winners))
+        free(genListPop(winners));
+    deleteGenList(&winners);
+    return best_winners;
 }
 
 
 /**
- * @author Alina IVANOVA
- * @date 24/11/2023 
+ * @date 15/12/2023
+ * @author IVANOVA Alina, LAFORGE Mateo
+ * @brief applique la tactique du moindre mal (récupère le candidat qui a le moins d'opposants)
+ * 
+ * @param[in] winners liste des gagnants courant à départagés
+ * @pre |winners| > 1
+ * 
+ * @return la liste des vainqueurs de cette tactique
+ * @note il peux subsister des ex-aeqo dans la liste de retour
  */
-GenList* winningCandidates(Bale* bale){
-    int nbCand = baleNbCandidat(bale);
-    int* medianes = malloc(sizeof(int)*nbCand);
-    int maxMediane = 0, k = 1;
-    int* indexMaxMed = malloc(sizeof(int)*nbCand);
-    for(int cand = 0; cand< nbCand; cand++){
-        medianes[cand] = medianeCandidate(bale, cand);
-        if (medianes[cand]>maxMediane){
-            maxMediane = medianes[cand];
-            k = 1;
-            indexMaxMed[0] = cand;
+GenList* leastHarmCand(GenList* winners) {
+    GenList* least_harm_winners = createGenList(genListSize(winners));
+    float min_perc = 1.0f;
+    Candidate* current_cand;
+    float current_perc;
+    // pour chaque candidats dans la liste des gagnants
+    for (int i = 0; i < genListSize(winners); i ++) {
+        current_cand = (Candidate*) genListGet(winners, i);
+        current_perc = current_cand->percentInf;
+        if (current_perc < min_perc) {
+            // mise à jour du min
+            min_perc = current_perc;
+            // vide la liste
+            while(!genListEmpty(least_harm_winners))
+                genListPop(least_harm_winners);
         }
-        else if (medianes[cand] == maxMediane){
-            k++;
-            indexMaxMed[k-1] = cand;
+        if (current_perc <= min_perc) {
+            genListAdd(least_harm_winners, current_cand);
         }
     }
-    GenList* winner_s = createGenList(sizeof(Candidate)*nbCand);
-    if (k>1){
-        //printf("i'm in if in the main function\n");
-        winner_s = severalWinners(bale, k, maxMediane,indexMaxMed);
-        //printf("i left the function severalwinners\n");
-        GenList* leastEvilCand = leastHarmCand(winner_s, baleNbVoter(bale));
-        GenList* bestOutOfBest;
-        if(genListSize(leastEvilCand)>1) 
-            bestOutOfBest = bestCand(leastEvilCand,baleNbVoter(bale));
-        }
-    else {
-        int winner = indexMaxMed[0];
-        free(indexMaxMed);
-    }
-    return winner_s;
+    while (!genListEmpty(winners))
+        free(genListPop(winners));
+    deleteGenList(&winners);
+    return least_harm_winners;
 }
 
 
-
-
 /**
+ * @date 15/12/2023
  * @author Alina IVANOVA
- * @date 24/11/2023 
  */
 GenList* theWinnerMajorityJudgment(Bale* bale){
-    GenList* winners = winningCandidates(bale);
-    printf("%d\n",genListSize(winners));
-    return winners;
+    // calcule du vainqueur par médiane
+    int nb_cand = baleNbCandidat(bale);
+    int medianes[nb_cand];
+    int index_winners[nb_cand];
+    int max_median = 0, nb_winners = 1;
+    for(int cand = 0; cand < nb_cand; cand++){
+        medianes[cand] = medianeCandidate(bale, cand);
+        if (medianes[cand]>max_median){
+            max_median = medianes[cand];
+            nb_winners = 1;
+            index_winners[0] = cand;
+        }
+        else if (medianes[cand] == max_median){
+            index_winners[nb_winners] = cand;
+            nb_winners++;
+        }
+    }
+
+    // liste générique retournée
+    GenList* winner_s = createGenList(nb_winners);
+
+    if (nb_winners>1) { // si ex-aeqo utilise des techniques plus avancées
+        // peupler la liste winner_s des candidats ex-aeqo
+        severalWinners(bale, winner_s, max_median, nb_winners, index_winners);
+        // parmis les ex-aeqo, calcul du vainqueur par moindre mal
+        winner_s = leastHarmCand(winner_s);
+        if(genListSize(winner_s) > 1) // si encore ex-aeqo
+            // parmis les ex-aeqo, calcul du vainqueur par meilleur bien
+            winner_s = bestCand(winner_s);
+    } else {
+        Candidate* winner = malloc(sizeof(Candidate));
+        winner->candIndex = index_winners[0];
+        winner->mediane = max_median;
+        computePercentagesCandidate(bale, winner->candIndex, winner->mediane, &winner->percentInf, &winner->percentSup);
+        genListAdd(winner_s, winner);
+    }
+
+    return winner_s;
 }

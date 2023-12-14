@@ -30,6 +30,10 @@ unsigned* voteCount(Bale* bale){
     return votesComplete;
 }
 
+/***********
+*   UNI1   *
+***********/
+
 /**
  * @author Alina IVANOVA, Corentin LUDWIG
  * @date 21/11/2023 
@@ -88,6 +92,10 @@ GenList* theWinnerOneRound(Bale* bale){
 
     return list;
 }
+
+/***********
+*   UNI2   *
+***********/
 
 /**
  * @name Ugo VALLAT

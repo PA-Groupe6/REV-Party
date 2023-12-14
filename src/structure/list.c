@@ -398,3 +398,31 @@ void printListLog(List *l) {
 }
 
 #endif
+/*------------------------------------------------------------------*/
+/*                              DEBUG                               */
+/*------------------------------------------------------------------*/
+
+#ifdef DEBUG
+
+/**
+ * @date  1/11/2023
+ * @author Ugo VALLAT
+ */
+void printListLog(List *l) {
+    testArgNull(l, "list.c", "printListLog", "l");
+
+    printl("\n<+>------------[ list ]-----------<+>\n\n");
+    printl("[list.c] size = %d\n", l->size);
+    printl("[list.c] memory size = %d\n", l->memory_size);
+    if (l->size <= 0)
+        printl("[list.c] list = [");
+    else {
+        printl("[list.c] list = [ %3d ", l->tab[0]);
+        for (unsigned i = 1; i < l->size; i++) {
+            printl(", %3d", l->tab[i]);
+        }
+    }
+    printl(" ]\n\n<->-------------------------------<->\n");
+}
+
+#endif

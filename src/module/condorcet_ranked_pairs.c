@@ -5,7 +5,7 @@
  *
  * @brief Fichier d'implementation de la méthode Condorcet avec le rangement des paires par ordre décroissant  
  *
- * Ce module implémente la méthode de Condorcet avec le rangement des paires par ordre décroissant pour les structures de données duel.h et graph.h
+ * Ce module implémente la méthode de Condorcet avec le rangement des paires par ordre décroissant pour la structure de données duel.h
  *
  * La méthode de Condorcet Ranked Pairs est utilisée pour déterminer les préférences collectives d'un ensemble de choix en se basant sur les préférences individuelles des votants. 
  * Les paires de choix sont classées par ordre décroissant en fonction de leur force relative, et le gagnant est déterminé en respectant ces classements.
