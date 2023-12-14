@@ -251,6 +251,7 @@ GenList *graphToSortedList(Graph *g, int order){
             }
         }
     }
+    return l;
 }
 
 
