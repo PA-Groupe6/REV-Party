@@ -74,7 +74,7 @@ int medianeCandidate(Bale* bale, int candidate){
  * @date 24/11/2023 
  */
 GenList* severalWinners(Bale* bale, int nbWinningCandidates, int maxMediane, int* indexesMaxMed){
-    GenList* candidates;
+    GenList* candidates = createGenList(sizeof(Candidate)*nbWinningCandidates);
     Candidate* candidatePerc = malloc(sizeof(Candidate)); 
     int nbVotes = baleNbVoter(bale);
     float percentageInf, percentageSup;
@@ -89,9 +89,9 @@ GenList* severalWinners(Bale* bale, int nbWinningCandidates, int maxMediane, int
         }
         percentageInf = (float) electeursInf/nbVotes;
         int electeursMed = electeursInf;
-        while(currentVote == maxMediane){//combien on a les valeur egles a mediane
+        while(currentVote == maxMediane && electeursMed<nbVotes-1){//combien on a les valeur egales a mediane
             electeursMed++;
-            currentVote = sortedVotes[electeursInf];
+            currentVote = sortedVotes[electeursMed];
         }
         electeursMed -=electeursInf; 
         percentageSup = (float) (nbVotes-electeursMed-electeursInf)/nbVotes;//percentage of votes Superieurs
@@ -178,9 +178,11 @@ GenList* winningCandidates(Bale* bale){
             indexMaxMed[k-1] = cand;
         }
     }
-    GenList* winner_s;
+    GenList* winner_s = createGenList(sizeof(Candidate)*nbCand);
     if (k>1){
+        //printf("i'm in if in the main function\n");
         winner_s = severalWinners(bale, k, maxMediane,indexMaxMed);
+        //printf("i left the function severalwinners\n");
         GenList* leastEvilCand = leastHarmCand(winner_s, baleNbVoter(bale));
         GenList* bestOutOfBest;
         if(genListSize(leastEvilCand)>1) 
@@ -202,5 +204,6 @@ GenList* winningCandidates(Bale* bale){
  */
 GenList* theWinnerMajorityJudgment(Bale* bale){
     GenList* winners = winningCandidates(bale);
+    printf("%d\n",genListSize(winners));
     return winners;
 }
