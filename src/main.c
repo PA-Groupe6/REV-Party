@@ -115,5 +115,7 @@ int main(int argc, char* argv[]) {
 
     close_logger();
 
+    free(cmd);
+
     return 0;
 }
