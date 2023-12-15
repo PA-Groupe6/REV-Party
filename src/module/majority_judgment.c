@@ -122,6 +122,25 @@ void severalWinners(Bale* bale, GenList* winners, int median, int nb_winners, in
 
 /**
  * @date 15/12/2023
+ * @author LAFORGE Mateo
+ * @brief regarde si la liste de vainqueurs contient un vainqueur spécifique
+ * 
+ * @param[in] winners la liste de vainqueurs
+ * @param[in] winner le vainqueur à chercher
+ * @pre winners est une liste de Candidats
+ * 
+ * @return vrai si winner est dans winners, faux sinon
+*/
+bool winnersContains(GenList* winners, Candidate* winner) {
+    for (unsigned int i = 0; i < genListSize(winners); i++)
+        if (genListGet(winners, i) == winner)
+            return true;
+    return false;
+}
+
+
+/**
+ * @date 15/12/2023
  * @author IVANOVA Alina, LAFORGE Mateo
  * @brief applique la tactique du meilleur bien (récupère le candidat qui a le plus de partisans)
  * 
@@ -137,7 +156,7 @@ GenList* bestCand(GenList* winners){
     Candidate* current_cand;
     float current_perc;
     // pour chaque candidats dans la liste des gagnants
-    for (int i = 0; i < genListSize(winners); i ++) {
+    for (unsigned int i = 0; i < genListSize(winners); i ++) {
         current_cand = (Candidate*) genListGet(winners, i);
         current_perc = current_cand->percentSup;
         if (current_perc > max_perc) {
@@ -151,8 +170,11 @@ GenList* bestCand(GenList* winners){
             genListAdd(best_winners, current_cand);
         }
     }
-    while (!genListEmpty(winners))
-        free(genListPop(winners));
+    while (!genListEmpty(winners)) {
+        void* winner = genListPop(winners);
+        if (!winnersContains(best_winners, winner))
+            free(winner);
+    }
     deleteGenList(&winners);
     return best_winners;
 }
@@ -175,7 +197,7 @@ GenList* leastHarmCand(GenList* winners) {
     Candidate* current_cand;
     float current_perc;
     // pour chaque candidats dans la liste des gagnants
-    for (int i = 0; i < genListSize(winners); i ++) {
+    for (unsigned int i = 0; i < genListSize(winners); i ++) {
         current_cand = (Candidate*) genListGet(winners, i);
         current_perc = current_cand->percentInf;
         if (current_perc < min_perc) {
@@ -189,8 +211,11 @@ GenList* leastHarmCand(GenList* winners) {
             genListAdd(least_harm_winners, current_cand);
         }
     }
-    while (!genListEmpty(winners))
-        free(genListPop(winners));
+    while (!genListEmpty(winners)) {
+        void* winner = genListPop(winners);
+        if (!winnersContains(least_harm_winners, winner))
+            free(winner);
+    }
     deleteGenList(&winners);
     return least_harm_winners;
 }
