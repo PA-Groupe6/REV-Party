@@ -320,7 +320,69 @@ bool testListCopy() {
     return true;
 }
 
+bool testListIte() {
+    List* l;
+    ListIte* ite;
 
+
+
+    /* test sur une liste vide */
+    l = createList(0);
+
+    printsb( "\ntest List ite taille=0 FROM_BEGIN");
+    ite = createListIte(l, FROM_BEGIN);
+    if(!ite) return echecTest(" X-- pointeur null");
+    if(listIteHasNext(ite)) return echecTest(" X-- hasNext");
+    deleteListIte(&ite);
+    if(ite) return echecTest(" X-- delete iterator != null");
+    printsb("\n\t-test passé\n");
+
+    printsb( "\ntest List ite taille=0 FROM_END");
+    ite = createListIte(l, FROM_END);
+    if(!ite) return echecTest(" X-- pointeur null");
+    if(listIteHasNext(ite)) return echecTest(" X-- hasNext");
+    deleteListIte(&ite);
+    if(ite) return echecTest(" X-- delete iterator != null");
+    printsb("\n\t-test passé\n");
+
+    deleteList(&l);
+
+    /* test sur une liste taille LIST_SIZE */
+    l = createUniqueList(LIST_SIZE);
+
+    printsb( "\ntest List ite taille=LIST_SIZE FROM_BEGIN");
+    ite = createListIte(l, FROM_BEGIN);
+    if(!ite) return echecTest(" X-- pointeur null");
+    for(unsigned i = 0; i < LIST_SIZE; i++) {
+        if(!listIteHasNext(ite)) return echecTest(" X-- !hasNext avant fin");
+        listIteNext(ite);
+        if(listIteGetValue(ite) != (int)i) return echecTest(" X-- GetValue != i");
+    }
+    if(listIteHasNext(ite)) return echecTest(" X-- hasnext fin");
+    deleteListIte(&ite);
+    if(ite) return echecTest(" X-- delete iterator != null");
+    printsb("\n\t-test passé\n");
+
+    printsb( "\ntest List ite taille=LIST_SIZE FROM_END");
+    ite = createListIte(l, FROM_END);
+    if(!ite) return echecTest(" X-- pointeur null");
+    for(unsigned i = LIST_SIZE-1; i < LIST_SIZE; i--) {
+        if(!listIteHasNext(ite)) return echecTest(" X-- !hasNext avant fin");
+        listIteNext(ite);
+        if(listIteGetValue(ite) != (int)i) return echecTest(" X-- GetValue != i");
+    }
+    if(listIteHasNext(ite)) return echecTest(" X-- hasnext fin");
+    deleteListIte(&ite);
+    if(ite) return echecTest(" X-- delete iterator != null");
+    printsb("\n\t-test passé\n");
+
+    deleteList(&l);
+    
+
+
+    return true;
+
+}
 
 
 
@@ -346,7 +408,8 @@ int main() {
     test_fun(testListRemove, 16, "testListRemove");
     test_fun(testListSet, 32, "testListSet");
     test_fun(testListEmpty, 64, "testListEmpty");
-    test_fun(testListCopy, 64, "testListCopy");
+    test_fun(testListCopy, 128, "testListCopy");
+    test_fun(testListIte, 129, "testListIte");
 
 
     afterAll();

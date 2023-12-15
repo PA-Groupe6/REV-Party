@@ -322,6 +322,72 @@ bool testGenListCopy() {
 
 
 
+
+bool testGenListIte() {
+    GenList* l;
+    GenListIte* ite;
+
+
+
+    /* test sur une liste vide */
+    l = createGenList(0);
+
+    printsb( "\ntest genList ite taille=0 FROM_BEGIN");
+    ite = createGenListIte(l, FROM_BEGIN);
+    if(!ite) return echecTest(" X-- pointeur null");
+    if(genListIteHasNext(ite)) return echecTest(" X-- hasNext");
+    deleteGenListIte(&ite);
+    if(ite) return echecTest(" X-- delete iterator != null");
+    printsb("\n\t-test passé\n");
+
+    printsb( "\ntest genList ite taille=0 FROM_END");
+    ite = createGenListIte(l, FROM_END);
+    if(!ite) return echecTest(" X-- pointeur null");
+    if(genListIteHasNext(ite)) return echecTest(" X-- hasNext");
+    deleteGenListIte(&ite);
+    if(ite) return echecTest(" X-- delete iterator != null");
+    printsb("\n\t-test passé\n");
+
+    deleteGenList(&l);
+
+    /* test sur une liste taille LIST_SIZE */
+    l = createUniqueGenList(LIST_SIZE);
+
+    printsb( "\ntest genList ite taille=LIST_SIZE FROM_BEGIN");
+    ite = createGenListIte(l, FROM_BEGIN);
+    if(!ite) return echecTest(" X-- pointeur null");
+    for(long unsigned i = 0; i < LIST_SIZE; i++) {
+        if(!genListIteHasNext(ite)) return echecTest(" X-- !hasNext avant fin");
+        genListIteNext(ite);
+        if(genListIteGetValue(ite) != (void*)i) return echecTest(" X-- GetValue != i");
+    }
+    if(genListIteHasNext(ite)) return echecTest(" X-- hasnext fin");
+    deleteGenListIte(&ite);
+    if(ite) return echecTest(" X-- delete iterator != null");
+    printsb("\n\t-test passé\n");
+
+    printsb( "\ntest genList ite taille=LIST_SIZE FROM_END");
+    ite = createGenListIte(l, FROM_END);
+    if(!ite) return echecTest(" X-- pointeur null");
+    for(long unsigned i = LIST_SIZE-1; i < LIST_SIZE; i--) {
+        if(!genListIteHasNext(ite)) return echecTest(" X-- !hasNext avant fin");
+        genListIteNext(ite);
+        if(genListIteGetValue(ite) != (void*)i) return echecTest(" X-- GetValue != i");
+    }
+    if(genListIteHasNext(ite)) return echecTest(" X-- hasnext fin");
+    deleteGenListIte(&ite);
+    if(ite) return echecTest(" X-- delete iterator != null");
+    printsb("\n\t-test passé\n");
+
+    deleteGenList(&l);
+    
+
+
+    return true;
+}
+
+
+
 void test_fun(bool(*f)(), int fnb, char* fname) {
     beforeEach();
     bool test_success = f();
@@ -344,8 +410,10 @@ int main() {
     test_fun(testGenListRemove, 16, "testGenListRemove");
     test_fun(testGenListSet, 32, "testGenListSet");
     test_fun(testGenListEmpty, 64, "testGenListEmpty");
-    test_fun(testGenListCopy, 64, "testGenListCopy");
+    test_fun(testGenListCopy, 128, "testGenListCopy");
+    test_fun(testGenListIte, 129, "testGenListIte");
 
+    
 
     afterAll();
 
