@@ -38,11 +38,11 @@ unsigned* voteCount(Bale* bale){
  * @author Alina IVANOVA, Corentin LUDWIG
  * @date 21/11/2023 
  */
-List* maxVotesCandidat(int* votes, int nb_candidat){
-    int max = votes[0];
+List* maxVotesCandidat(unsigned int* votes, unsigned int nb_candidat){
+    unsigned int max = votes[0];
     List *winner = createList(1);
     listAdd(winner, 0);
-    for (int i = 1; i < nb_candidat; i++ ){
+    for (unsigned int i = 1; i < nb_candidat; i++ ){
         if (votes[i] > max) {
             max = votes[i];
             while(!listEmpty(winner))
@@ -68,7 +68,7 @@ GenList* theWinnerOneRound(Bale* bale){
     if(nb_candidat == 0) return list;
 
     /* décompte des voies de chaque candidat */
-    int* summaryOfVotes = voteCount(bale);
+    unsigned int* summaryOfVotes = voteCount(bale);
 
     /* Récupération du nom du gagnant */
     List* winningCandidates = maxVotesCandidat(summaryOfVotes, nb_candidat);
@@ -247,7 +247,7 @@ List* winnerOfsecondRound(int* scores, unsigned nb_winners) {
 /**
  * @name Ugo VALLAT
  * @date 30/11/2023
- * @brief Récupère les information du candidat i est les stock dans une structure WinnerSingleTwo
+ * @brief Récupère les information du candidat i et les stock dans une structure WinnerSingleTwo
  * 
  * @param b Ballot des votes 
  * @param id Indentifiant du gagnant (numéro de colonne dans le ballot)
