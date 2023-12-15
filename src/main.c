@@ -7,12 +7,26 @@
 #include "utils/csv_reader.h"
 #include "logger.h"
 
+/**
+ * @date 15/12/2023
+ * @author LAFORGE Mateo
+ * @brief libère la mémoire prise par une liste générique de candidats gagnants (le retour type d'une fonction module)
+ * 
+ * @param winners la liste à libérer
+ */
 void deleteWinners(ptrGenList* winners) {
     while (!genListEmpty(*winners))
         free(genListPop(*winners));
     deleteGenList(winners);
 }
 
+/**
+ * @date 15/12/2023
+ * @author LAFORGE Mateo
+ * @brief applique la méthode uni1 sur le fichier source_file et affiche son résultat pour l'utilisateur
+ * 
+ * @param source_file le fichier d'entrée fournit par l'utilisateur
+ */
 void uni1(char* source_file) {
     Bale* bale = csvToBale(source_file);
     GenList* winners = theWinnerOneRound(bale);
@@ -21,6 +35,13 @@ void uni1(char* source_file) {
     deleteWinners(&winners);
 }
 
+/**
+ * @date 15/12/2023
+ * @author LAFORGE Mateo
+ * @brief applique la méthode uni2 sur le fichier source_file et affiche son résultat pour l'utilisateur
+ * 
+ * @param source_file le fichier d'entrée fournit par l'utilisateur
+ */
 void uni2(char* source_file) {
     Bale* bale = csvToBale(source_file);
     GenList* winners = theWinnerTwoRounds(bale);
@@ -29,6 +50,13 @@ void uni2(char* source_file) {
     deleteWinners(&winners);
 }
 
+/**
+ * @date 15/12/2023
+ * @author LAFORGE Mateo
+ * @brief applique la méthode minimax sur le fichier source_file et affiche son résultat pour l'utilisateur
+ * 
+ * @param source_file le fichier d'entrée fournit par l'utilisateur
+ */
 void minimax(char* source_file) {
     Duel* duel = csvToDuel(source_file);
     GenList* winners = theWinnerMinimax(duel);
@@ -37,6 +65,13 @@ void minimax(char* source_file) {
     deleteWinners(&winners);
 }
 
+/**
+ * @date 15/12/2023
+ * @author LAFORGE Mateo
+ * @brief applique la méthode de rangement des pairs sur le fichier source_file et affiche son résultat pour l'utilisateur
+ * 
+ * @param source_file le fichier d'entrée fournit par l'utilisateur
+ */
 void rankedPairs(char* source_file) {
     Duel* duel = csvToDuel(source_file);
     GenList* winners = theWinnerRankedPairs(duel);
@@ -45,6 +80,13 @@ void rankedPairs(char* source_file) {
     deleteWinners(&winners);
 }
 
+/**
+ * @date 15/12/2023
+ * @author LAFORGE Mateo
+ * @brief applique la méthode de schulze sur le fichier source_file et affiche son résultat pour l'utilisateur
+ * 
+ * @param source_file le fichier d'entrée fournit par l'utilisateur
+ */
 void schulze(char* source_file) {
     Duel* duel = csvToDuel(source_file);
     GenList* winners = theWinnerSchulze(duel);
@@ -53,6 +95,13 @@ void schulze(char* source_file) {
     deleteWinners(&winners);
 }
 
+/**
+ * @date 15/12/2023
+ * @author LAFORGE Mateo
+ * @brief applique la méthode du jugement majoritaire sur le fichier source_file et affiche son résultat pour l'utilisateur
+ * 
+ * @param source_file le fichier d'entrée fournit par l'utilisateur
+ */
 void majorityJudgment(char* source_file) {
     Bale* bale = csvToBale(source_file);
     GenList* winners = theWinnerMajorityJudgment(bale);
@@ -61,6 +110,13 @@ void majorityJudgment(char* source_file) {
     //displayListWinnerMajorityJudgment(winners);
 }
 
+/**
+ * @date 15/12/2023
+ * @author LAFORGE Mateo
+ * @brief applique dans l'ordre de définition toutes les méthodes de scrutins une à une en affichant à chaque fois le résultat
+ * 
+ * @param source_file le fichier d'entrée fournit par l'utilisateur
+ */
 void all(char* source_file) {
     printl("\n### uni1:\n\n");
     uni1(source_file);
