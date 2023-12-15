@@ -218,6 +218,42 @@ Arc *graphGetArc(Graph *g, unsigned id_src, unsigned id_dest) {
 /*                            UTILS                                 */
 /*------------------------------------------------------------------*/
 
+/**
+ * @author Corentin LUDWIG
+ * @date  14/12/2023
+ */
+void genListAddSorted(GenList *l, Arc e){
+    int i = 0;
+
+    while(genListSize(l) > i){
+        Arc *cur = genListGet(l, i);
+        if(cur->weight >= e.weight){
+            genListInsert(l, (void*)&e,i);
+            return;
+        }
+    }
+    genListAdd(l, (void*)&e);
+}
+
+/**
+ * @author Corentin LUDWIG
+ * @date  14/12/2023
+ */
+//TO DO gerer order
+GenList *graphToSortedList(Graph *g, int order){
+    int nb_vertex = graphNbVertex(g);
+    GenList *l = createGenList(graphNbArc(g));
+    for (int i = 0; i; i++) {
+        for (int j = 0; i; i++){
+            Arc *cur = graphGetArc(g,i,j);
+            if(cur != NULL){
+                genListAddSorted(l,*cur);
+            }
+        }
+    }
+    return l;
+}
+
 
 /**
  * @author Corentin LUDWIG
@@ -229,7 +265,7 @@ GenList *graphToListArcFromArcDest(Graph *g, Arc *arc){
     int nbVertex = (int)graphNbVertex(g);
     for(int i = 0; i < nbVertex; i++){
         Arc *cur = graphGetArc(g,src,i);
-        if(cur == NULL){
+        if(cur != NULL){
             genListAdd(l,(void*)cur);
         }
     }
