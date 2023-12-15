@@ -223,7 +223,7 @@ Arc *graphGetArc(Graph *g, unsigned id_src, unsigned id_dest) {
  * @date  14/12/2023
  */
 void genListAddSorted(GenList *l, Arc e){
-    int i = 0;
+    unsigned int i = 0;
 
     while(genListSize(l) > i){
         Arc *cur = genListGet(l, i);
@@ -241,10 +241,13 @@ void genListAddSorted(GenList *l, Arc e){
  */
 //TO DO gerer order
 GenList *graphToSortedList(Graph *g, int order){
-    int nb_vertex = graphNbVertex(g);
+    (void)order;
+    unsigned int nb_vertex = graphNbVertex(g);
+    (void)nb_vertex;
+    // TODO: utiliser nb_vertex
     GenList *l = createGenList(graphNbArc(g));
-    for (int i = 0; i; i++) {
-        for (int j = 0; i; i++){
+    for (unsigned int i = 0; i; i++) {
+        for (unsigned int j = 0; i; i++){
             Arc *cur = graphGetArc(g,i,j);
             if(cur != NULL){
                 genListAddSorted(l,*cur);
