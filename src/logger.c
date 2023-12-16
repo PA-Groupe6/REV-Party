@@ -10,6 +10,7 @@
 #include "structure/matrix.h"
 #include <errno.h>
 #include <string.h>
+#include "module/majority_judgment.h"
 
 #define YELLOW "\033[38;5;184m"
 #define ORANGE "\033[38;5;208m"
