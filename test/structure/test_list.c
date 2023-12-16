@@ -11,6 +11,19 @@
  */
 
 
+/**
+ * @file test_list.c
+ * @author Ugo VALLAT
+ * @brief Test sur la structure de données list
+ * 
+ * @remarks Les fonction suivantes ne sont pas explicitement testé mais sont
+ * utilisée dans les tests des autres fonctions : 
+ * - deleteList
+ * - listGet
+ * - listSize
+ */
+
+
 #include <stdio.h>
 #include <stdbool.h>
 #include <signal.h>

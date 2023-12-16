@@ -22,6 +22,8 @@
 /* dimension de la matrice de test */
 #define NB_LINE 100     /* NB_LINE > 2 */
 #define NB_COLUMN 200    /* NB_COLUMN > 2 */
+#define NB_LINE 100     /* NB_LINE > 2 */
+#define NB_COLUMN 200    /* NB_COLUMN > 2 */
 #define OTHER_VALUE 2   /* OTHER_VALUE != DEFAULT_VALUE */
 
 
@@ -46,6 +48,7 @@ void beforeAll() {
 
 void afterAll() {
     deleteStringBuilder(&string_builder);
+    close_logger();
     close_logger();
 }
 
@@ -134,6 +137,7 @@ bool testUniqueMatrixWithIte(Matrix* m,int l, int c, unsigned nbl, unsigned nbc)
 bool testCreateMatrix() {
     /* test matrice taille (0,0) */
     printsb( "\ntest sur matrice taille (0,0)...");
+    printsb( "\ntest sur matrice taille (0,0)...");
     Matrix* m1 = createMatrix(0, 0, DEFAULT_VALUE);
     if(!m1) return false;
     if((int)matrixNbLines(m1) != 0) return false;
@@ -142,6 +146,7 @@ bool testCreateMatrix() {
     deleteMatrix(&m1);
 
     /* test matrice taille (NB_COLUMN,0) */
+    printsb( "\ntest sur matrice taille (NB_COLUMN,0)...");
     printsb( "\ntest sur matrice taille (NB_COLUMN,0)...");
     Matrix* m2 = createMatrix(NB_COLUMN, 0, DEFAULT_VALUE);
     if(!m2) return false;
@@ -152,6 +157,7 @@ bool testCreateMatrix() {
 
     /* test matrice taille (0,NB_COLUMN) */
     printsb( "\ntest sur matrice taille (0,NB_COLUMN)...");
+    printsb( "\ntest sur matrice taille (0,NB_COLUMN)...");
     Matrix* m3 = createMatrix(0, NB_COLUMN, DEFAULT_VALUE);
     if(!m3) return false;
     if((int)matrixNbLines(m3) != 0) return false;
@@ -160,6 +166,7 @@ bool testCreateMatrix() {
     deleteMatrix(&m3);
 
     /* test matrice taille (NB_COLUMN,NB_COLUMN) */
+    printsb( "\ntest sur matrice taille (NB_COLUMN,NB_COLUMN)...");
     printsb( "\ntest sur matrice taille (NB_COLUMN,NB_COLUMN)...");
     Matrix* m4 = createMatrix(NB_COLUMN, NB_COLUMN, DEFAULT_VALUE);
     if(!m4) return false;

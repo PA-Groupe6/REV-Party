@@ -301,6 +301,10 @@ int default_fun(int v, unsigned int l, unsigned int c, void *buff) {
     (void)l; (void)c; (void)buff;
     return v; 
 }
+int default_fun(int v, unsigned int l, unsigned int c, void *buff) { 
+    (void)l; (void)c; (void)buff;
+    return v; 
+}
 
 /**
  * @date  1/11/2023

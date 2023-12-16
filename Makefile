@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=-Wextra -Wall -Werror -pedantic -std=c99 -pthread
+CFLAGS=-Wextra -Wall -Werror -pedantic -std=c99 -pthread 
 
 BINDIR=bin
 OBJDIR=obj
@@ -142,6 +142,9 @@ trankedpairs: $(OBJ_STRUCT) $(OBJ_TEST) $(OBJDIR)/module/condorcet_ranked_pairs.
 
 tschulze: $(OBJ_STRUCT) $(OBJ_TEST) $(OBJDIR)/module/condorcet_schulze.o $(OBJDIR)/utils/csv_reader.o
 	@$(call run_test,condorcet_schulze,module/,$^)
+
+tmajority_judgment: $(OBJ_STRUCT) $(OBJ_TEST) $(OBJDIR)/module/majority_judgment.o $(OBJDIR)/utils/csv_reader.o
+	@$(call run_test,majority_judgment,module/,$^)
 
 # test use case (test_produtct.c)
 test: $(OBJDIR)/test_utils.o $(EXEC)
