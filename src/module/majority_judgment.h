@@ -35,11 +35,12 @@
 
 
 typedef struct s_winner_MajorityJudgment {
+    char* name;
     int candIndex;
-    float mediane;
+    int mediane;
     float percentSup;
     float percentInf;
-}Candidate;
+}WinnerMajorityJudgment;
 
 
 /**
