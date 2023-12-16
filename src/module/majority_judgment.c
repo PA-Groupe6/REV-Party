@@ -44,6 +44,14 @@ int* sortingVotesCandidate(Bale* bale, int candidate){
     return votes;
 }
 
+/**
+ * @date 16/12/2023
+ * @author Alina IVANOVA
+ */
+int convertVotes(int initial_vote){
+    return (initial_vote/2+1);
+}
+
 
 /**
  * @date 15/12/2023
@@ -59,7 +67,7 @@ int medianCandidate(Bale* bale, int candidate){
         a = votes[nb_votes/2 - 1];
     }
     free(votes);
-    return a;
+    return convertVotes(a);
 }
 
 
@@ -82,9 +90,9 @@ void computePercentagesCandidate(Bale* bale, int candidate, int median, float* p
     for (unsigned int i = 0; i < baleNbVoter(bale); i++) {
         currentVote = sortedVotes[i];
         if (currentVote < median)
-            nbInfVote++;
-        else if (currentVote > median)
             nbSupVote++;
+        else if (currentVote > median)
+            nbInfVote++;//j'ai change pour le nbInfVote parce que 1-tres bien et 9-tres mal
     }
     free(sortedVotes);
     *percentInf = (float) nbInfVote/nbVotes;
@@ -227,8 +235,9 @@ GenList* theWinnerMajorityJudgment(Bale* bale){
     int nb_cand = baleNbCandidat(bale);
     int medians[nb_cand];
     int index_winners[nb_cand];
-    int max_median = 0, nb_winners = 1;
+    int min_median = 0, nb_winners = 1;
     for(int cand = 0; cand < nb_cand; cand++){
+<<<<<<< Updated upstream
         medians[cand] = medianCandidate(bale, cand);
         if (medians[cand]>max_median){
             max_median = medians[cand];
@@ -236,6 +245,15 @@ GenList* theWinnerMajorityJudgment(Bale* bale){
             index_winners[0] = cand;
         }
         else if (medians[cand] == max_median){
+=======
+        medianes[cand] = medianeCandidate(bale, cand);
+        if (medianes[cand]<min_median){
+            min_median = medianes[cand];
+            nb_winners = 1;
+            index_winners[0] = cand;
+        }
+        else if (medianes[cand] == min_median){
+>>>>>>> Stashed changes
             index_winners[nb_winners] = cand;
             nb_winners++;
         }
@@ -246,7 +264,7 @@ GenList* theWinnerMajorityJudgment(Bale* bale){
 
     if (nb_winners>1) { // si ex-aeqo utilise des techniques plus avancées
         // peupler la liste winner_s des candidats ex-aeqo
-        severalWinners(bale, winner_s, max_median, nb_winners, index_winners);
+        severalWinners(bale, winner_s, min_median, nb_winners, index_winners);
         // parmis les ex-aeqo, calcul du vainqueur par moindre mal
         winner_s = leastHarmCand(winner_s);
         if(genListSize(winner_s) > 1) // si encore ex-aeqo
@@ -254,6 +272,11 @@ GenList* theWinnerMajorityJudgment(Bale* bale){
             winner_s = bestCand(winner_s);
     } else {
         WinnerMajorityJudgment* winner = malloc(sizeof(WinnerMajorityJudgment));
+<<<<<<< Updated upstream
+=======
+        winner->candIndex = index_winners[0];
+        winner->mediane = min_median;
+>>>>>>> Stashed changes
         char* winner_name =  baleColumnToLabel(bale, index_winners[0]);
         strncpy(winner->name, winner_name, MAX_LENGHT_LABEL);
         free(winner_name);
