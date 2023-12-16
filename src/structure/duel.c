@@ -12,7 +12,7 @@
 #include <malloc.h>
 #include "../logger.h"
 #include <string.h>
-
+#include "bale.h"
 
 
 /*------------------------------------------------------------------*/
@@ -140,5 +140,47 @@ char *duelIndexToLabel(Duel *d, unsigned int index) {
     char* label = malloc(sizeof(char)*MAX_LENGHT_LABEL);
     strncpy(label, genListGet(d->labels, index), MAX_LENGHT_LABEL);
     return label;
+}
+
+
+Duel* duelFromBale(Bale *b) {
+#ifdef DEBUG
+    testArgNull(b, "duel.c", "duelFromBale", "b");
+#endif
+    unsigned nbl, nbc;
+    nbl = baleNbVoter(b);
+    nbc = baleNbCandidat(b);
+
+    /* récupération des labels */
+    GenList *labels = createGenList(nbc);
+    for(unsigned i = 0; i < nbc; i++) {
+        genListAdd(labels, baleColumnToLabel(b, i));
+    }
+
+    /* création de duel */
+    Duel* duel = malloc(sizeof(Duel));
+    duel->default_value = DEFAULT_VALUE;
+    duel->labels = labels;
+    duel->matrix = createMatrix(nbc, nbc, 0);
+
+    /* calcul des scores */
+    int score_x, score_y;
+    for(unsigned l = 0; l < nbl; l++) {
+        for(unsigned x = 0; x < nbc-1; x++) {
+            for(unsigned y = x + 1; y< nbc; y++) {
+                score_x = baleGetValue(b, l, x);
+                score_y = baleGetValue(b, l, y);
+                if(score_x!=score_y) {
+                    if(score_x == -1 || (score_y!=-1 && score_x>score_y))
+                        matrixSet(duel->matrix, y, x, matrixGet(duel->matrix, y, x)+1);
+                    else
+                        matrixSet(duel->matrix, x, y, matrixGet(duel->matrix, x, y)+1);
+                }
+            }
+        }
+    }
+
+    return duel;
+
 }
 
