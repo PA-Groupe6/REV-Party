@@ -21,6 +21,7 @@
  * @param id_label identifiant du jeu de test
  * @pre 1<= id_label <= 5
  * @return Liste des labels
+ * @note Ne pas free les labels (uniquement durant les tests)
  */
 GenList* loadLabelsInList(unsigned id_label);
 
