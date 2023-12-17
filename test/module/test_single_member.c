@@ -46,13 +46,13 @@ void afterEach() {
 }
 
 bool echecTest(char* msg) {
-    printsb(msg);
+    char buff[256] = "\n X-- ";
+    strncat(buff, msg,256);
+    printsb(buff);
     return false;
 }
 
-void displayWinnerSingleMember(WinnerSingle *winner) {
-    printf("\t<+> %s : %3.2f\n", winner->name, winner->score);
-}
+
 
 bool testOneRoundOnBale(char* file) {
     GenList* lwinner;
@@ -62,12 +62,9 @@ bool testOneRoundOnBale(char* file) {
     displayBaleLog(bale);
     printsb("\t- calcul\n");
     lwinner = theWinnerOneRound(bale);
-    if(!lwinner) return echecTest(" X-- pointeur null\n");
-    if(genListSize(lwinner) == 0) return echecTest(" X-- Aucun gagnant\n");
-    printf("\nListe de vainqueurs : \n");
-    for(unsigned i = 0; i < genListSize(lwinner); i++) {
-        displayWinnerSingleMember(genListGet(lwinner, i));
-    }
+    if(!lwinner) return echecTest("pointeur null\n");
+    if(genListSize(lwinner) == 0) return echecTest("Aucun gagnant\n");
+    displayListWinnerSingle(lwinner);
     deleteBale(&bale);
     while(!genListEmpty(lwinner))
         free(genListPop(lwinner));
@@ -77,33 +74,34 @@ bool testOneRoundOnBale(char* file) {
 
 bool testTheWinnerOneRound() {
 
+
     printsb("\ntest sur ballot 1...");
-    testOneRoundOnBale("test/ressource/unit/bale_1.csv");
+    testOneRoundOnBale("test/ressource/bale_1.csv");
     printsb( "\n\t- test passé\n");
 
     printsb("\ntest sur ballot 2...");
-    testOneRoundOnBale("test/ressource/unit/bale_2.csv");
+    testOneRoundOnBale("test/ressource/bale_2.csv");
     printsb( "\n\t- test passé\n");
 
     printsb("\ntest sur ballot 3...");
-    testOneRoundOnBale("test/ressource/unit/bale_3.csv");
+    testOneRoundOnBale("test/ressource/bale_3.csv");
     printsb( "\n\t- test passé\n");
 
     printsb("\ntest sur ballot 4...");
-    testOneRoundOnBale("test/ressource/unit/bale_4.csv");
+    testOneRoundOnBale("test/ressource/bale_4.csv");
     printsb( "\n\t- test passé\n");
 
     printsb("\ntest sur ballot 5...");
-    testOneRoundOnBale("test/ressource/unit/bale_5.csv");
+    testOneRoundOnBale("test/ressource/bale_5.csv");
     printsb( "\n\t- test passé\n");
 
     printsb("\ntest sur ballot 6...");
-    testOneRoundOnBale("test/ressource/unit/bale_6.csv");
+    testOneRoundOnBale("test/ressource/bale_6.csv");
     printsb( "\n\t- test passé\n");
 
 
     printsb("\ntest sur ballot 7...");
-    testOneRoundOnBale("test/ressource/unit/bale_7.csv");
+    testOneRoundOnBale("test/ressource/bale_7.csv");
     printsb( "\n\t- test passé\n");
 
 
@@ -112,9 +110,7 @@ bool testTheWinnerOneRound() {
 
 }
 
-void displayWinnerSingleMemberTwo(WinnerSingleTwo *winner) {
-    printf("\t<+> Tour(%d) %s : %3.2f\n", winner->round, winner->name, winner->score);
-}
+
 
 bool testTwoRoundsOnBale(char* file) {
     GenList* lwinner;
@@ -128,13 +124,11 @@ bool testTwoRoundsOnBale(char* file) {
     /* calcul des cainqueurs */
     printsb("\t- calcul\n");
     lwinner = theWinnerTwoRounds(bale);
-    if(!lwinner) return echecTest(" X-- pointeur null\n");
-    if(genListSize(lwinner) == 0) return echecTest(" X-- Aucun gagnant\n");
+    if(!lwinner) return echecTest("pointeur null\n");
+    if(genListSize(lwinner) == 0) return echecTest("Aucun gagnant\n");
 
     /* Affichage des vainqueurs */
-    for(unsigned i = 0; i < genListSize(lwinner); i++) {
-        displayWinnerSingleMemberTwo(genListGet(lwinner, i));
-    }
+    displayListWinnerSingleTwo(lwinner);
 
     /* libération mémoire */
     deleteBale(&bale);
@@ -147,32 +141,32 @@ bool testTwoRoundsOnBale(char* file) {
 bool testTheWinnerTwoRounds() {
 
     printsb("\ntest sur ballot 1...");
-    testTwoRoundsOnBale("test/ressource/unit/bale_1.csv");
+    testTwoRoundsOnBale("test/ressource/bale_1.csv");
     printsb( "\n\t- test passé\n");
 
     printsb("\ntest sur ballot 2...");
-    testTwoRoundsOnBale("test/ressource/unit/bale_2.csv");
+    testTwoRoundsOnBale("test/ressource/bale_2.csv");
     printsb( "\n\t- test passé\n");
 
     printsb("\ntest sur ballot 3...");
-    testTwoRoundsOnBale("test/ressource/unit/bale_3.csv");
+    testTwoRoundsOnBale("test/ressource/bale_3.csv");
     printsb( "\n\t- test passé\n");
 
     printsb("\ntest sur ballot 4...");
-    testTwoRoundsOnBale("test/ressource/unit/bale_4.csv");
+    testTwoRoundsOnBale("test/ressource/bale_4.csv");
     printsb( "\n\t- test passé\n");
 
     printsb("\ntest sur ballot 5...");
-    testTwoRoundsOnBale("test/ressource/unit/bale_5.csv");
+    testTwoRoundsOnBale("test/ressource/bale_5.csv");
     printsb( "\n\t- test passé\n");
 
     printsb("\ntest sur ballot 6...");
-    testTwoRoundsOnBale("test/ressource/unit/bale_6.csv");
+    testTwoRoundsOnBale("test/ressource/bale_6.csv");
     printsb( "\n\t- test passé\n");
 
 
     printsb("\ntest sur ballot 7...");
-    testTwoRoundsOnBale("test/ressource/unit/bale_7.csv");
+    testTwoRoundsOnBale("test/ressource/bale_7.csv");
     printsb( "\n\t- test passé\n");
 
     return true;
