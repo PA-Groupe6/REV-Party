@@ -79,32 +79,32 @@ bool testSchulzeOnDuel(char* file) {
 bool testSchulze() {
 
     printsb("\ntest sur duel 1...");
-    testSchulzeOnDuel("test/ressource/unit/duel_1.csv");
+    testSchulzeOnDuel("test/ressource/duel_1.csv");
     printsb( "\n\t- test passé\n");
 
     printsb("\ntest sur duel 2...");
-    testSchulzeOnDuel("test/ressource/unit/duel_2.csv");
+    testSchulzeOnDuel("test/ressource/duel_2.csv");
     printsb( "\n\t- test passé\n");
 
     printsb("\ntest sur duel 3...");
-    testSchulzeOnDuel("test/ressource/unit/duel_3.csv");
+    testSchulzeOnDuel("test/ressource/duel_3.csv");
     printsb( "\n\t- test passé\n");
 
     printsb("\ntest sur duel 4...");
-    testSchulzeOnDuel("test/ressource/unit/duel_4.csv");
+    testSchulzeOnDuel("test/ressource/duel_4.csv");
     printsb( "\n\t- test passé\n");
 
     printsb("\ntest sur duel 5...");
-    testSchulzeOnDuel("test/ressource/unit/duel_5.csv");
+    testSchulzeOnDuel("test/ressource/duel_5.csv");
     printsb( "\n\t- test passé\n");
 
     printsb("\ntest sur duel 6...");
-    testSchulzeOnDuel("test/ressource/unit/duel_6.csv");
+    testSchulzeOnDuel("test/ressource/duel_6.csv");
     printsb( "\n\t- test passé\n");
 
 
     printsb("\ntest sur duel 7...");
-    testSchulzeOnDuel("test/ressource/unit/duel_7.csv");
+    testSchulzeOnDuel("test/ressource/duel_7.csv");
     printsb( "\n\t- test passé\n");
 
 
