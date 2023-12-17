@@ -34,21 +34,22 @@
  * @brief trie la liste generique
  * @remark utilise le trie a bulle
  */
-GenList* sortGenList(GenList* arcs){
+void sortGenList(GenList* arcs){
     int i, j;
     Arc *a1,*a2;
     int size = genListSize(arcs);
+    printf("NB %d\n", size);
     for (i = 0; i < size; i++) {
-        for (j = 0; j < size - i; j++) {
+        for (j = 0; j < size - i-1; j++) {
             a1 = (Arc*)genListGet(arcs, j);
             a2 = (Arc*)genListGet(arcs, j+1);
-            if (a1->weight< a2->weight) {
+            //printf("weight arc1 %d \t weight arc2 %d\n", a1->weight, a2->weight);
+            if (a1->weight < a2->weight) {
                 genListSet(arcs, (void*) a1, j+1);
                 genListSet(arcs, (void*) a2, j);
             }
         }
     }
-    return arcs;
 }
 
 
@@ -60,12 +61,11 @@ GenList* sortGenList(GenList* arcs){
 GenList* sortedArcsCreate(Duel* duel){
     //creating a graph
     int nb_cand = duelNbCandidat(duel) ;
-    GenList* arcs = createGenList(sizeof(Arc)*nb_cand*2);
+    GenList* arcs = createGenList(nb_cand*2);
 
     for (int i = 0; i< nb_cand ; i++){
-        for (int j = i+1; j<nb_cand-1; j++){  
+        for (int j = i+1; j<nb_cand; j++){  
             //adding the arc or duel to the graph
-            int weight;
             Arc* arc = malloc(sizeof(Arc));
             int cand1_vs = duelGetValue(duel, i, j);
             int cand2_vs = duelGetValue(duel, j, i);
@@ -83,9 +83,8 @@ GenList* sortedArcsCreate(Duel* duel){
             } 
         }    
     }
-    GenList* sorted_arcs = sortGenList(arcs);
-    free(arcs);
-    return sorted_arcs;
+    sortGenList(arcs);
+    return arcs;
 }
 
 /**
@@ -100,11 +99,13 @@ Graph* creatingGraph(Duel* duel){
         genListAdd(labels_graph, duelIndexToLabel(duel, i));
     }
 
+    GenList* arcs_list = sortedArcsCreate(duel);
+    int nb_arcs = genListSize(arcs_list);
+
     Graph* winner_graph = createGraph(nb_cand, labels_graph);
 
-    GenList* arcs_list = sortedArcsCreate(duel);
 
-    for (int i = 0; i< nb_cand; i++){
+    for (int i = 0; i< nb_arcs; i++){
         Arc* arc_current = genListGet(arcs_list, i);
         if(!graphIsMakingCycle(winner_graph, arc_current)){
             graphAdd(winner_graph,arc_current->id_src ,arc_current->id_dest , arc_current->weight);
@@ -130,7 +131,6 @@ GenList* findWinnerGraph(Duel* duel){
     int nb_arcs = graphNbArc(graph);
     int* wins_arcs = malloc(sizeof(int)*nb_cand);
 
-    GenList* winners = createGenList(sizeof(WinnerCondorcet)*nb_cand);
 
     for(int i = 0; i<nb_cand; i++) wins_arcs[i] = 0;
 
@@ -141,10 +141,12 @@ GenList* findWinnerGraph(Duel* duel){
     }
     
     int max_winnings = 0;//max_role_src
+    
+    GenList* winners = createGenList(nb_cand);
 
     for(int i = 0; i < nb_cand; i++){
         if(wins_arcs[i]>max_winnings){
-            while(!winners) free((WinnerCondorcet*)genListPop(winners));
+            while(genListSize(winners)!=0) free((WinnerCondorcet*)genListPop(winners));
 
             max_winnings = wins_arcs[i];
             
@@ -185,8 +187,6 @@ GenList* findWinnerGraph(Duel* duel){
  * @return Le gagnant en utilisant la structure WinnerCondorcet.
 */
 GenList* theWinnerRankedPairs(Duel* duel){
-    int nb_cand = duelNbCandidat(duel) ;
-
     GenList* winners;
 
     if (CondorcetWinnerCriterion(duel)==NULL) {

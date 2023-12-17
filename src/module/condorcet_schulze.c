@@ -47,16 +47,16 @@ int min(int a, int b) {
 GenList* arcsCreate(Duel* duel){
     //creating a graph
     int nb_cand = duelNbCandidat(duel) ;
-    GenList* arcs = createGenList(sizeof(Arc)*nb_cand*2);
+    GenList* arcs = createGenList(nb_cand*(nb_cand-1));
 
-    for (int i = 0; i< nb_cand ; i++){
-        for (int j = i+1; j<nb_cand-1; j++){  
+    for ( int i = 0; i< nb_cand ; i++){
+        for ( int j = i+1; j<nb_cand; j++){  
             //adding the arc or duel to the graph
-            int weight;
             Arc* arc = malloc(sizeof(Arc));
             Arc* arc_inverse = malloc(sizeof(Arc));
             int cand1_vs = duelGetValue(duel, i, j);
             int cand2_vs = duelGetValue(duel, j, i);
+
             if(cand1_vs>cand2_vs) {
                 arc->id_dest = j;
                 arc->id_src = i;
@@ -77,8 +77,11 @@ GenList* arcsCreate(Duel* duel){
             } 
             genListAdd(arcs, arc);
             genListAdd(arcs, arc_inverse);
+            printf("Arc_init: %d,%d\n",arc->id_src, arc->id_dest);
+            printf("Arc_init: %d,%d\n",arc_inverse->id_src, arc_inverse->id_dest);
         }    
     }
+
     return arcs;
 }
 
@@ -101,8 +104,9 @@ Graph* graphCreate(Duel* duel){
 
     GenList* arcs_list = arcsCreate(duel);
 
-    for (int i = 0; i< nb_cand; i++){
+    for (int i = 0; i< nb_cand*(nb_cand-1); i++){
         Arc* arc_current = genListGet(arcs_list, i);
+        //printf("Arc: %d,%d\n",arc_current->id_src, arc_current->id_dest);
         graphAdd(winner_graph,arc_current->id_src ,arc_current->id_dest , arc_current->weight);
     }
     return winner_graph;
@@ -156,9 +160,9 @@ Graph* findingPaths(Duel* duel){
  */
 
 Duel* createDuelfromGraph(Graph* graph){
-    GenList* list_from_graph = graphToList(graph);
-    int nb_cand = graphNbArc(graph);
-    GenList* labels = malloc(sizeof(char*)*nb_cand);
+    int nb_cand = graphNbVertex(graph);
+    GenList* labels = createGenList(nb_cand);
+    printf("size graph: %d\n", nb_cand);
     for (int i = 0 ; i<nb_cand; i++){
         genListAdd(labels, graphGetLabel(graph, i));
     }
@@ -197,7 +201,7 @@ GenList* findWinnerGraph(Duel* duel){
         }
 
         if (max_wins<winsCandidate){
-            while(!candidates) free((WinnerCondorcet*)genListPop(candidates));
+           while(genListSize(candidates)!=0) free((WinnerCondorcet*)genListPop(candidates));
             max_wins = winsCandidate;
             
             WinnerCondorcet* cand_possible = malloc(sizeof(WinnerCondorcet));
@@ -235,8 +239,6 @@ GenList* findWinnerGraph(Duel* duel){
  * @return Le gagnant en utilisant la structure WinnerCondorcet.
 */
 GenList* theWinnerSchulze(Duel* duel){
-    int nb_cand = duelNbCandidat(duel) ;
-
     GenList* winners;
 
     if (CondorcetWinnerCriterion(duel)==NULL) {

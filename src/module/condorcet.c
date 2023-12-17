@@ -46,7 +46,7 @@ WinnerCondorcet* CondorcetWinnerCriterion(Duel* duel) {
  * @author Alina IVANOVA
  * @date 20/11/2023 
  */
-GenList* miniMaxCandidat(Duel* duel) {
+GenList* miniMaxCandidat(Duel* duel){
     int nbCandidats= duelNbCandidat(duel);
     int miniDifference;
     GenList* candidates = createGenList(1);
@@ -58,10 +58,12 @@ GenList* miniMaxCandidat(Duel* duel) {
                 maxDiffCandidat = diff;
             }
         }
+        
         if (cand1 == 0 || miniDifference>maxDiffCandidat){
-            while(!candidates) free((WinnerCondorcet*)genListPop(candidates));
+            while(genListSize(candidates)!=0) free((WinnerCondorcet*)genListPop(candidates));
 
             miniDifference = maxDiffCandidat;
+            
             WinnerCondorcet* cand_possible = malloc(sizeof(WinnerCondorcet));
             cand_possible->score = maxDiffCandidat;
             char* winner_name =  duelIndexToLabel(duel, cand1);
@@ -85,15 +87,17 @@ GenList* miniMaxCandidat(Duel* duel) {
  * @author Alina IVANOVA
  * @date 20/11/2023 
  */
-GenList* theWinnerMinimax(Duel* duel) {
+GenList* theWinnerMinimax(Duel* duel){
     GenList* winners;
+    WinnerCondorcet* wtmp;
 
-    if (CondorcetWinnerCriterion(duel)==NULL) {
+    wtmp = CondorcetWinnerCriterion(duel);
+    if (wtmp==NULL) {
         winners = miniMaxCandidat(duel);
     }
     else {
         winners = createGenList(1);
-        genListAdd(winners,CondorcetWinnerCriterion(duel));
+        genListAdd(winners,wtmp);
     }
     return winners;
 }

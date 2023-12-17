@@ -230,7 +230,7 @@ GenList* theWinnerMajorityJudgment(Bale* bale){
     int nb_cand = baleNbCandidat(bale);
     int medians[nb_cand];
     int index_winners[nb_cand];
-    int min_median = nb_cand, nb_winners = 1;
+    int min_median = nb_cand, nb_winners = 0;
     for(int cand = 0; cand < nb_cand; cand++){
         medians[cand] = medianCandidate(bale, cand);
         printf("%s median = %d\n", baleColumnToLabel(bale, cand),medians[cand]);

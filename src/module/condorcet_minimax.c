@@ -46,7 +46,7 @@ GenList* miniMaxCandidat(Duel* duel){
         
         if (cand1 == 0 || miniDifference>maxDiffCandidat){
             while(genListSize(candidates)!=0) free((WinnerCondorcet*)genListPop(candidates));
-            
+
             miniDifference = maxDiffCandidat;
             
             WinnerCondorcet* cand_possible = malloc(sizeof(WinnerCondorcet));
@@ -74,13 +74,15 @@ GenList* miniMaxCandidat(Duel* duel){
  */
 GenList* theWinnerMinimax(Duel* duel){
     GenList* winners;
+    WinnerCondorcet* wtmp;
 
-    if (CondorcetWinnerCriterion(duel)==NULL) {
+    wtmp = CondorcetWinnerCriterion(duel);
+    if (wtmp==NULL) {
         winners = miniMaxCandidat(duel);
     }
     else {
         winners = createGenList(1);
-        genListAdd(winners,CondorcetWinnerCriterion(duel));
+        genListAdd(winners,wtmp);
     }
     return winners;
- }
+}
