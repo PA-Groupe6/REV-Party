@@ -615,6 +615,7 @@ GenList *matrixMax(Matrix *m, int l, int c) {
 int fun_min(int v, unsigned int l, unsigned int c, void *buff) {
     GenList* lmin = (GenList*)buff;
     int* cur;
+    if(v < 1) return v;
     if(genListEmpty(lmin) || ((int*)genListGet(lmin, 0))[0] <= v) {
         if(((int*)genListGet(lmin, 0))[0] < v)
             while(!genListEmpty(lmin))
@@ -644,7 +645,7 @@ GenList *matrixMin(Matrix *m, int l, int c) {
     GenList* lmin = createGenList(1);
 
     /* parcours de la matrice */
-    matrixMap(m, l, c, fun_max, lmin);
+    matrixMap(m, l, c, fun_min, lmin);
     return lmin;
 }
 
