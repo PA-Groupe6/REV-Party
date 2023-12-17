@@ -314,22 +314,23 @@ bool graphIsMakingCycle(Graph *g, Arc *arc){
     while(!genListEmpty(l_arc) && !test){
         Arc *cur = (Arc*) genListPop(l_arc);
         l_to_add = graphToListArcFromArcDest(g,cur);
-
+        free(cur);
         while(!genListEmpty(l_to_add) && !test){
             cur = (Arc*) genListPop(l_to_add);
             if(cur->id_dest == goal) test = true;
             genListAdd(l_arc,(void*) cur);
         }
-
+        while(!genListEmpty(l_to_add))
+            free(genListPop(l_to_add));
+        deleteGenList(&l_to_add);
+       
     }
 
     while(!genListEmpty(l_arc))
         free(genListPop(l_arc));
     deleteGenList(&l_arc);
 
-    while(!genListEmpty(l_to_add))
-        free(genListPop(l_to_add));
-    deleteGenList(&l_to_add);
+
 
     return test;
 }

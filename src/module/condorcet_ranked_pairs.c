@@ -79,7 +79,7 @@ GenList* sortedArcsCreate(Duel* duel){
                 arc->id_src = j;
                 arc->weight = cand2_vs;
                 genListAdd(arcs, arc);
-            } 
+            }
         }    
     }
     sortGenList(arcs);
@@ -103,6 +103,10 @@ Graph* creatingGraph(Duel* duel){
 
     Graph* winner_graph = createGraph(nb_cand, labels_graph);
 
+    while(!genListEmpty(labels_graph))
+        free(genListPop(labels_graph));
+    deleteGenList(&labels_graph);
+
 
     for (int i = 0; i< nb_arcs; i++){
         Arc* arc_current = genListGet(arcs_list, i);
@@ -110,6 +114,10 @@ Graph* creatingGraph(Duel* duel){
             graphAdd(winner_graph,arc_current->id_src ,arc_current->id_dest , arc_current->weight);
         }
     }
+    while(!genListEmpty(arcs_list))
+        free(genListPop(arcs_list));
+    deleteGenList(&arcs_list);
+
     return winner_graph;
 }
 
@@ -138,6 +146,9 @@ GenList* findWinnerGraph(Duel* duel){
         src_id = arc_current->id_src;
         wins_arcs[src_id]++;
     }
+    while(!genListEmpty(arcs_sorted))
+        free(genListPop(arcs_sorted));
+    deleteGenList(&arcs_sorted);
     
     int max_winnings = 0;//max_role_src
     
