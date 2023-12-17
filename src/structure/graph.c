@@ -325,7 +325,7 @@ bool graphIsMakingCycle(Graph *g, Arc *arc){
 
     }
 
-    // while(!genListEmpty(l_arc)
+    while(!genListEmpty(l_arc))
         free(genListPop(l_arc));
     deleteGenList(&l_arc);
 
