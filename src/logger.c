@@ -530,7 +530,7 @@ unsigned maxLenghtLabelWinnerMajorityJudgmeent(GenList *l) {
     return max;
 }
 
-void displayListMajorityJudgment(GenList *l) {
+void displayListWinnerMajorityJudgment(GenList *l) {
     unsigned nb_winners = genListSize(l);
     unsigned max_lenght_winner = maxLenghtLabelWinnerMajorityJudgmeent(l);
     unsigned max_lenght_case = max_lenght_winner + 33;
@@ -549,7 +549,7 @@ void displayListMajorityJudgment(GenList *l) {
     WinnerMajorityJudgment *wtmp;
     for(unsigned i = 0; i < nb_winners; i++) {
         wtmp = genListGet(l, i);
-        printf("\t║  • %-*s : (%6.2f %%,%2d,%6.2f %%)  ║\n", max_lenght_winner, wtmp->name, wtmp->percentSup, wtmp->mediane , wtmp->percentInf);
+        printf("\t║  • %-*s : (%6.2f %%,%2d,%6.2f %%)  ║\n", max_lenght_winner, wtmp->name, wtmp->percent_sup, wtmp->median , wtmp->percent_inf);
     }
 
     /* bordure basse */

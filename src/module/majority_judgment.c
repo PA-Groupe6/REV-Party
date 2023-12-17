@@ -237,23 +237,13 @@ GenList* theWinnerMajorityJudgment(Bale* bale){
     int index_winners[nb_cand];
     int min_median = 0, nb_winners = 1;
     for(int cand = 0; cand < nb_cand; cand++){
-<<<<<<< Updated upstream
         medians[cand] = medianCandidate(bale, cand);
-        if (medians[cand]>max_median){
-            max_median = medians[cand];
+        if (medians[cand]<min_median){
+            min_median = medians[cand];
             nb_winners = 1;
             index_winners[0] = cand;
         }
-        else if (medians[cand] == max_median){
-=======
-        medianes[cand] = medianeCandidate(bale, cand);
-        if (medianes[cand]<min_median){
-            min_median = medianes[cand];
-            nb_winners = 1;
-            index_winners[0] = cand;
-        }
-        else if (medianes[cand] == min_median){
->>>>>>> Stashed changes
+        else if (medians[cand] == min_median){
             index_winners[nb_winners] = cand;
             nb_winners++;
         }
@@ -272,15 +262,10 @@ GenList* theWinnerMajorityJudgment(Bale* bale){
             winner_s = bestCand(winner_s);
     } else {
         WinnerMajorityJudgment* winner = malloc(sizeof(WinnerMajorityJudgment));
-<<<<<<< Updated upstream
-=======
-        winner->candIndex = index_winners[0];
-        winner->mediane = min_median;
->>>>>>> Stashed changes
         char* winner_name =  baleColumnToLabel(bale, index_winners[0]);
         strncpy(winner->name, winner_name, MAX_LENGHT_LABEL);
         free(winner_name);
-        winner->median = max_median;
+        winner->median = min_median;
         computePercentagesCandidate(bale, index_winners[0], winner->median, &winner->percent_inf, &winner->percent_sup);
         genListAdd(winner_s, winner);
     }

@@ -170,6 +170,6 @@ void displayListWinnerCondorcet(GenList *l, char* name_algo);
  * 
  * @param[in] l Liste des vainqueurs (Candidate)
  */
-void displayListMajorityJudgment(GenList *l);
+void displayListWinnerMajorityJudgment(GenList *l);
 
 #endif
