@@ -29,6 +29,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include "matrix.h"
+#include "bale.h"
 
 /**
  * @def DEFAULT_VALUE
@@ -325,5 +326,16 @@ Duel *duelFilter(Duel *d, fun_filter_duel fun, void *buff);
  */
 
 Duel *duelCopy(Duel *d);
+
+
+/**
+ * @date 16/12/2023
+ * @author Ugo VALLAT
+ * @brief Converti un ballot en duel
+ * 
+ * @param[in] b Ballot à vonvertir
+ * @return Duel* 
+ */
+Duel* duelFromBale(Bale *b);
 
 #endif

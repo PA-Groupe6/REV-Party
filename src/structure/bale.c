@@ -52,10 +52,12 @@ struct s_bale {
  * @brief Crée un ballot
  */
 Bale *createBale(unsigned int nbl, unsigned int nbc, GenList *labels) {
+#ifdef DEBUG
     testArgNull(labels, "bale.c", "createBale", "labels");
     if(genListSize(labels) != nbc)
         exitl("bale.c", "createBale", EXIT_FAILURE, "Nombre labels (%d) != nombre colonnes (%d)", genListSize(labels), nbc);
-    
+#endif
+
     Bale* bale = malloc(sizeof(Bale));
     bale->labels = copyLabels(labels);
     bale->matrix = createMatrix(nbl, nbc, DEFAULT_VALUE);
@@ -69,8 +71,11 @@ Bale *createBale(unsigned int nbl, unsigned int nbc, GenList *labels) {
  * @brief Supprime le ballot et ses données en libérant la mémoire
  */
 void deleteBale(ptrBale *b) {
+#ifdef DEBUG
     testArgNull(b, "bale.c", "deleteBale", "b");
     testArgNull(*b, "bale.c", "deleteBale", "*b");
+#endif
+
     deleteMatrix(&(*b)->matrix);
     while(!genListEmpty((*b)->labels))
         free(genListPop((*b)->labels));
@@ -85,9 +90,11 @@ void deleteBale(ptrBale *b) {
  * @brief Ajoute un élément dans le ballot à la position (l,c), l'élément
  */
 Bale *baleSetValue(Bale *b, unsigned int l, unsigned int c, int v) {
+#ifdef DEBUG
     testArgNull(b, "bale.c", "baleSetValue", "b");
     if(matrixGet(b->matrix, l, c) != b->default_value)
         exitl("bale.c", "baleSetValue", EXIT_FAILURE, "Impossible de modifier une valeur déjà set");
+#endif
     matrixSet(b->matrix, l, c, v);
     return b;
 }
@@ -98,7 +105,10 @@ Bale *baleSetValue(Bale *b, unsigned int l, unsigned int c, int v) {
  * @brief Renvoie la valeur à la position (l,c) dans le ballot
  */
 int baleGetValue(Bale *b, unsigned int l, unsigned int c) {
+#ifdef DEBUG
     testArgNull(b, "bale.c", "baleGetValue", "b");
+#endif
+
     return matrixGet(b->matrix, l, c);
 }
 
@@ -107,7 +117,10 @@ int baleGetValue(Bale *b, unsigned int l, unsigned int c) {
  * @author Ugo VALLAT
  */
 unsigned int baleNbVoter(Bale *b) {
+#ifdef DEBUG
     testArgNull(b, "bale.c", "baleNbVoter", "b");
+#endif
+
     return matrixNbLines(b->matrix);
 }
 
@@ -116,7 +129,10 @@ unsigned int baleNbVoter(Bale *b) {
  * @author Ugo VALLAT
  */
 unsigned int baleNbCandidat(Bale *b) {
+#ifdef DEBUG
     testArgNull(b, "bale.c", "baleNbCandidat", "b");
+#endif
+
     return matrixNbColonnes(b->matrix);
 }
 
@@ -127,8 +143,11 @@ unsigned int baleNbCandidat(Bale *b) {
  * @brief Renvoie le numéro de la colonne associée à l'étiquette
  */
 int baleLabelToColumn(Bale *b, char *label) {
+#ifdef DEBUG
     testArgNull(b, "bale.c", "baleLabelToColumn", "b");
     testArgNull(label, "bale.c", "baleLabelToColumn", "label");
+#endif
+
     return searchLabel(b->labels, label);
 }
 
@@ -138,10 +157,12 @@ int baleLabelToColumn(Bale *b, char *label) {
  * @brief Renvoie le label associé à la colonne
  */
 char *baleColumnToLabel(Bale *b, unsigned int c) {
+#ifdef DEBUG
     testArgNull(b, "bale.c", "baleColumnToLabel", "b");
     if(c >= genListSize(b->labels))
         exitl("bale.c", "baleColumnToLabel", EXIT_FAILURE, "Argument c (%d) invalide", c);
-    
+#endif
+
     char* label = malloc(sizeof(char)*MAX_LENGHT_LABEL);
     strncpy(label, genListGet(b->labels, c), MAX_LENGHT_LABEL);
     return label;
@@ -169,7 +190,10 @@ int fun_bale_to_matrix(int v, unsigned int l, unsigned int c, void *buff) {
  * avant le premier élément
  */
 BaleIte *createBaleIte(Bale *b, int l, int c, fun_ite_bale fun, void *buff) {
+#ifdef DEBUG
     testArgNull(b, "bale.c", "createBaleIte", "b");
+#endif
+
     BuffIte *buffite = malloc(sizeof(BuffIte));
     buffite->buff = buff;
     buffite->fun = fun;
@@ -241,7 +265,10 @@ void baleMap(Bale *b, int l, int c, fun_ite_bale fun, void *buff) {
  * @brief Renvoie la somme des élément positifs du ballot, d'une ligne ou d'une colonne
  */
 int baleSom(Bale *b, int l, int c) {
+#ifdef DEBUG
     testArgNull(b, "bale.c", "baleSom", "b");
+#endif
+
     return matrixSum(b->matrix, l, c);
 }
 
@@ -251,7 +278,10 @@ int baleSom(Bale *b, int l, int c) {
  * @brief Renvoie la/les plus grande valeur du ballot, d'une ligne ou d'une colonne
  **/
 GenList *baleMax(Bale *b, int l, int c) {
+#ifdef DEBUG
     testArgNull(b, "bale.c", "baleMax", "b");
+#endif
+
     return matrixMax(b->matrix, l, c);
 }
 
@@ -261,7 +291,10 @@ GenList *baleMax(Bale *b, int l, int c) {
  * @brief Renvoie la/les plus petite valeur du ballot, d'une ligne ou d'une colonne
  **/
 GenList *baleMin(Bale *b, int l, int c) {
+#ifdef DEBUG
     testArgNull(b, "bale.c", "baleMin", "b");
+#endif
+
     return matrixMin(b->matrix, l, c);
 }
 
@@ -273,7 +306,9 @@ GenList *baleMin(Bale *b, int l, int c) {
  * les éléments tel que fun(elem) = true
  */
 Bale *baleFilter(Bale *b, fun_filter_bale fun, void *buff) {
+#ifdef DEBUG
     testArgNull(b, "bale.c", "baleFilter", "b");
+#endif
 
     Bale* new = malloc(sizeof(Bale));
     new->default_value = b->default_value;
@@ -289,7 +324,10 @@ Bale *baleFilter(Bale *b, fun_filter_bale fun, void *buff) {
  */
 
 Bale *baleCopy(Bale *b) {
+#ifdef DEBUG
     testArgNull(b, "bale.c", "baleCopy", "b");
+#endif
+
     Bale* cp = malloc(sizeof(Bale));
     cp->default_value = b->default_value;
     cp->labels = copyLabels(b->labels);
