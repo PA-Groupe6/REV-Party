@@ -5,6 +5,7 @@
 
 #include "data_struct_utils.h"
 #include "genericlist.h"
+#include <stdio.h>
 #include <stdlib.h>
 #include "graph.h"
 #include "matrix.h"
@@ -262,11 +263,9 @@ void genListAddSorted(GenList *l, Arc e){
 GenList *graphToSortedList(Graph *g, int order){
     (void)order;
     unsigned int nb_vertex = graphNbVertex(g);
-    (void)nb_vertex;
-    // TODO: utiliser nb_vertex
     GenList *l = createGenList(graphNbArc(g));
-    for (unsigned int i = 0; i; i++) {
-        for (unsigned int j = 0; i; i++){
+    for (unsigned int i = 0; i<nb_vertex; i++) {
+        for (unsigned int j = 0; j<nb_vertex; j++){
             Arc *cur = graphGetArc(g,i,j);
             if(cur != NULL){
                 genListAddSorted(l,*cur);
