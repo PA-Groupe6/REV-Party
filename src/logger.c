@@ -10,6 +10,7 @@
 #include "structure/matrix.h"
 #include <errno.h>
 #include <string.h>
+#include "module/majority_judgment.h"
 
 #define YELLOW "\033[38;5;184m"
 #define ORANGE "\033[38;5;208m"
@@ -515,3 +516,48 @@ void displayListWinnerCondorcet(GenList *l, char* name_algo) {
     printStringN("═", max_lenght_case);
     printf("╝\n");
 }
+
+
+
+unsigned maxLenghtLabelWinnerMajorityJudgmeent(GenList *l) {
+    unsigned nb_winners = genListSize(l);
+    unsigned max = 0;
+    unsigned tmp;
+    for(unsigned i = 0; i < nb_winners; i++) {
+        tmp = strlen(((WinnerMajorityJudgment*)genListGet(l, i))->name);
+        if(tmp > max) max = tmp;
+    }
+    return max;
+}
+
+void displayListMajorityJudgment(GenList *l) {
+    unsigned nb_winners = genListSize(l);
+    unsigned max_lenght_winner = maxLenghtLabelWinnerMajorityJudgmeent(l);
+    unsigned max_lenght_case = max_lenght_winner + 33;
+
+    /* bordure haute */
+    printf("\t╔");
+    printStringN("═", max_lenght_case);
+    printf("╗\n");
+
+    /* titre */
+    printf("\t║  RESULTATS JUGEMENT MAJORITAIRE :");
+    printStringN(" ", max_lenght_case-34);
+    printf("║\n");
+
+    /* vainqueurs */
+    WinnerMajorityJudgment *wtmp;
+    for(unsigned i = 0; i < nb_winners; i++) {
+        wtmp = genListGet(l, i);
+        printf("\t║  • %-*s : (%6.2f %%,%2d,%6.2f %%)  ║\n", max_lenght_winner, wtmp->name, wtmp->percentSup, wtmp->mediane , wtmp->percentInf);
+    }
+
+    /* bordure basse */
+    printf("\t╚");
+    printStringN("═", max_lenght_case);
+    printf("╝\n");
+}
+
+
+
+

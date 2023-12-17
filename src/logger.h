@@ -164,5 +164,12 @@ void displayListWinnerSingle(GenList *l);
  */
 void displayListWinnerCondorcet(GenList *l, char* name_algo);
 
+/**
+ * @date 16/12/2023
+ * @brief Affiche la liste des résultats pour Jugement Majoritaire
+ * 
+ * @param[in] l Liste des vainqueurs (Candidate)
+ */
+void displayListMajorityJudgment(GenList *l);
 
 #endif
