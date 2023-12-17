@@ -36,19 +36,14 @@ int compare(const void *a, const void *b) {
 int* sortingVotesCandidate(Bale* bale, int candidate){
     int nbVotes = baleNbVoter(bale);
     int* votes = malloc(sizeof(int)*nbVotes);
-    for (int voter = 0; voter<nbVotes; voter++)
+    for (int voter = 0; voter<nbVotes; voter++){
         votes[voter] = baleGetValue(bale, voter, candidate);
+        if(votes[voter] ==-1) votes[voter] = baleNbCandidat(bale);
+    }
     qsort(votes, nbVotes, sizeof(int), compare);
     return votes;
 }
 
-/**
- * @date 16/12/2023
- * @author Alina IVANOVA
- */
-int convertVotes(int initial_vote){
-    return (initial_vote/2+1);
-}
 
 
 /**
@@ -65,7 +60,7 @@ int medianCandidate(Bale* bale, int candidate){
         a = votes[nb_votes/2 - 1];
     }
     free(votes);
-    return convertVotes(a);
+    return a;
 }
 
 
@@ -90,11 +85,13 @@ void computePercentagesCandidate(Bale* bale, int candidate, int median, float* p
         if (currentVote < median)
             nbSupVote++;
         else if (currentVote > median)
-            nbInfVote++;//j'ai change pour le nbInfVote parce que 1-tres bien et 9-tres mal
+            nbInfVote++;
     }
     free(sortedVotes);
     *percentInf = (float) nbInfVote/nbVotes;
     *percentSup = (float) nbSupVote/nbVotes;
+    printf("%s percent Sup %f \t percent Inf %f \n", baleColumnToLabel(bale, candidate), (*(float*)percentSup), (*(float*)percentInf));
+    printf("median %d \t nbSup %d \t nbInf %d\n",median, nbSupVote, nbInfVote);
 }
 
 
@@ -233,9 +230,10 @@ GenList* theWinnerMajorityJudgment(Bale* bale){
     int nb_cand = baleNbCandidat(bale);
     int medians[nb_cand];
     int index_winners[nb_cand];
-    int min_median = 0, nb_winners = 1;
+    int min_median = nb_cand, nb_winners = 1;
     for(int cand = 0; cand < nb_cand; cand++){
         medians[cand] = medianCandidate(bale, cand);
+        printf("%s median = %d\n", baleColumnToLabel(bale, cand),medians[cand]);
         if (medians[cand]<min_median){
             min_median = medians[cand];
             nb_winners = 1;
