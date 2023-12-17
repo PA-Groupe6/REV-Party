@@ -12,6 +12,8 @@
 #include <malloc.h>
 #include <string.h>
 #include "bale.h"
+#include "../logger.h"
+
 
 
 /*------------------------------------------------------------------*/

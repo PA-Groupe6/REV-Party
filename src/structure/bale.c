@@ -31,6 +31,7 @@
 #include "matrix.h"
 #include <malloc.h>
 #include <string.h>
+#include "../logger.h"
 
 
 
