@@ -615,9 +615,9 @@ GenList *matrixMax(Matrix *m, int l, int c) {
 int fun_min(int v, unsigned int l, unsigned int c, void *buff) {
     GenList* lmin = (GenList*)buff;
     int* cur;
-    if(v < 1) return v;
+    if(v < 0) return v;
     if(genListEmpty(lmin) || ((int*)genListGet(lmin, 0))[0] <= v) {
-        if(((int*)genListGet(lmin, 0))[0] < v)
+        if(!genListEmpty(lmin) && ((int*)genListGet(lmin, 0))[0] < v)
             while(!genListEmpty(lmin))
                 free(genListPop(lmin));
         cur = malloc(sizeof(int)*3);
