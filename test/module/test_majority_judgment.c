@@ -67,7 +67,7 @@ bool testMajorityJudgmentOnDuel(char* file) {
     lwinner = theWinnerMajorityJudgment(bale);
     if(!lwinner) return echecTest("pointeur null\n");
     if(genListSize(lwinner) == 0) return echecTest("Aucun gagnant\n");
-    displayListMajorityJudgment(lwinner);
+    displayListWinnerMajorityJudgment(lwinner);
 
     /* libération de la mémoire */
     deleteBale(&bale);

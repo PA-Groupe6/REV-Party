@@ -80,32 +80,32 @@ bool testMinimaxOnDuel(char* file) {
 bool testMinimax() {
 
     printsb("\ntest sur duel 1...");
-    testMinimaxOnDuel("test/ressource/unit/duel_1.csv");
+    testMinimaxOnDuel("test/ressource/duel_1.csv");
     printsb( "\n\t- test passé\n");
 
     printsb("\ntest sur duel 2...");
-    testMinimaxOnDuel("test/ressource/unit/duel_2.csv");
+    testMinimaxOnDuel("test/ressource/duel_2.csv");
     printsb( "\n\t- test passé\n");
 
     printsb("\ntest sur duel 3...");
-    testMinimaxOnDuel("test/ressource/unit/duel_3.csv");
+    testMinimaxOnDuel("test/ressource/duel_3.csv");
     printsb( "\n\t- test passé\n");
 
     printsb("\ntest sur duel 4...");
-    testMinimaxOnDuel("test/ressource/unit/duel_4.csv");
+    testMinimaxOnDuel("test/ressource/duel_4.csv");
     printsb( "\n\t- test passé\n");
 
     printsb("\ntest sur duel 5...");
-    testMinimaxOnDuel("test/ressource/unit/duel_5.csv");
+    testMinimaxOnDuel("test/ressource/duel_5.csv");
     printsb( "\n\t- test passé\n");
 
     printsb("\ntest sur duel 6...");
-    testMinimaxOnDuel("test/ressource/unit/duel_6.csv");
+    testMinimaxOnDuel("test/ressource/duel_6.csv");
     printsb( "\n\t- test passé\n");
 
 
     printsb("\ntest sur duel 7...");
-    testMinimaxOnDuel("test/ressource/unit/duel_7.csv");
+    testMinimaxOnDuel("test/ressource/duel_7.csv");
     printsb( "\n\t- test passé\n");
 
 

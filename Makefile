@@ -91,7 +91,7 @@ run_test= if [ -f $(TSTDIR)/$(2)test_$(1).c ]; then \
 # TODO règles modules
 
 OBJ_STRUCT = $(OBJDIR)/structure/list.o $(OBJDIR)/structure/genericlist.o $(OBJDIR)/structure/matrix.o \
-	$(OBJDIR)/structure/data_struct_utils.o $(OBJDIR)/structure/bale.o $(OBJDIR)/structure/duel.o
+	$(OBJDIR)/structure/data_struct_utils.o $(OBJDIR)/structure/bale.o $(OBJDIR)/structure/duel.o $(OBJDIR)/structure/graph.o
 
 OBJ_TEST = $(OBJDIR)/logger.o $(OBJDIR)/test_utils.o
 
@@ -134,13 +134,13 @@ tcsv_reader: $(OBJ_STRUCT) $(OBJ_TEST) $(OBJDIR)/utils/csv_reader.o
 tsingle_member:  $(OBJ_STRUCT) $(OBJ_TEST) $(OBJDIR)/module/single_member_two_rounds.o $(OBJDIR)/module/single_member_one_round.o $(OBJDIR)/utils/csv_reader.o
 	@$(call run_test,single_member,module/,$^)
 
-tminimax: $(OBJ_STRUCT) $(OBJ_TEST) $(OBJDIR)/module/condorcet_minimax.o $(OBJDIR)/utils/csv_reader.o
+tminimax: $(OBJ_STRUCT) $(OBJ_TEST) $(OBJDIR)/module/condorcet_minimax.o $(OBJDIR)/utils/csv_reader.o $(OBJDIR)/module/condorcet_criterion.o
 	@$(call run_test,condorcet_minimax,module/,$^)
 
-trankedpairs: $(OBJ_STRUCT) $(OBJ_TEST) $(OBJDIR)/module/condorcet_ranked_pairs.o $(OBJDIR)/utils/csv_reader.o
+trankedpairs: $(OBJ_STRUCT) $(OBJ_TEST) $(OBJDIR)/module/condorcet_ranked_pairs.o $(OBJDIR)/utils/csv_reader.o $(OBJDIR)/module/condorcet_criterion.o
 	@$(call run_test,condorcet_ranked_pairs,module/,$^)
 
-tschulze: $(OBJ_STRUCT) $(OBJ_TEST) $(OBJDIR)/module/condorcet_schulze.o $(OBJDIR)/utils/csv_reader.o
+tschulze: $(OBJ_STRUCT) $(OBJ_TEST) $(OBJDIR)/module/condorcet_schulze.o $(OBJDIR)/utils/csv_reader.o $(OBJDIR)/module/condorcet_criterion.o
 	@$(call run_test,condorcet_schulze,module/,$^)
 
 tmajority_judgment: $(OBJ_STRUCT) $(OBJ_TEST) $(OBJDIR)/module/majority_judgment.o $(OBJDIR)/utils/csv_reader.o

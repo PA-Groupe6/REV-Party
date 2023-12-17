@@ -78,32 +78,32 @@ bool testRankedPairsOnDuel(char* file) {
 bool testRankedPairs() {
 
     printsb("\ntest sur duel 1...");
-    testRankedPairsOnDuel("test/ressource/unit/duel_1.csv");
+    testRankedPairsOnDuel("test/ressource/duel_1.csv");
     printsb( "\n\t- test passé\n");
 
     printsb("\ntest sur duel 2...");
-    testRankedPairsOnDuel("test/ressource/unit/duel_2.csv");
+    testRankedPairsOnDuel("test/ressource/duel_2.csv");
     printsb( "\n\t- test passé\n");
 
     printsb("\ntest sur duel 3...");
-    testRankedPairsOnDuel("test/ressource/unit/duel_3.csv");
+    testRankedPairsOnDuel("test/ressource/duel_3.csv");
     printsb( "\n\t- test passé\n");
 
     printsb("\ntest sur duel 4...");
-    testRankedPairsOnDuel("test/ressource/unit/duel_4.csv");
+    testRankedPairsOnDuel("test/ressource/duel_4.csv");
     printsb( "\n\t- test passé\n");
 
     printsb("\ntest sur duel 5...");
-    testRankedPairsOnDuel("test/ressource/unit/duel_5.csv");
+    testRankedPairsOnDuel("test/ressource/duel_5.csv");
     printsb( "\n\t- test passé\n");
 
     printsb("\ntest sur duel 6...");
-    testRankedPairsOnDuel("test/ressource/unit/duel_6.csv");
+    testRankedPairsOnDuel("test/ressource/duel_6.csv");
     printsb( "\n\t- test passé\n");
 
 
     printsb("\ntest sur duel 7...");
-    testRankedPairsOnDuel("test/ressource/unit/duel_7.csv");
+    testRankedPairsOnDuel("test/ressource/duel_7.csv");
     printsb( "\n\t- test passé\n");
 
 
