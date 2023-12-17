@@ -19,6 +19,7 @@
 #include <malloc.h>
 #include "../structure/genericlist.h"
 #include "majority_judgment.h"
+#include "../logger.h"
 
 /**
  * @date 15/12/2023
@@ -90,8 +91,6 @@ void computePercentagesCandidate(Bale* bale, int candidate, int median, float* p
     free(sortedVotes);
     *percentInf = (float) nbInfVote/nbVotes;
     *percentSup = (float) nbSupVote/nbVotes;
-    printf("%s percent Sup %f \t percent Inf %f \n", baleColumnToLabel(bale, candidate), (*(float*)percentSup), (*(float*)percentInf));
-    printf("median %d \t nbSup %d \t nbInf %d\n",median, nbSupVote, nbInfVote);
 }
 
 
@@ -226,14 +225,23 @@ GenList* leastHarmCand(GenList* winners) {
  * @author Alina IVANOVA
  */
 GenList* theWinnerMajorityJudgment(Bale* bale){
+#ifdef DEBUG
+    if (baleNbCandidat(bale) < 1)
+        exitl("majority_judgment.c", "theWinnerMajorityJudgement", 1, "Il n'y a pas assez de candidats pour déterminer un vainqueur\n");
+#endif
     // calcule du vainqueur par médiane
     int nb_cand = baleNbCandidat(bale);
+    int min_median, nb_winners = 1;
     int medians[nb_cand];
     int index_winners[nb_cand];
-    int min_median = nb_cand, nb_winners = 0;
-    for(int cand = 0; cand < nb_cand; cand++){
+    // initialisation du min
+    min_median = medianCandidate(bale, 0);
+    medians[0] = min_median;
+    nb_winners = 1;
+    index_winners[0] = 0;
+    // pour chaques candidats
+    for(int cand = 1; cand < nb_cand; cand++){
         medians[cand] = medianCandidate(bale, cand);
-        printf("%s median = %d\n", baleColumnToLabel(bale, cand),medians[cand]);
         if (medians[cand]<min_median){
             min_median = medians[cand];
             nb_winners = 1;

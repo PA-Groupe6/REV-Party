@@ -26,7 +26,7 @@ Module stringToModule(char *nom)
         return JUGEMENT_MAJORITAIRE;
     if (strcmp(nom, "all") == 0)
         return ALL;
-    exitl("interpreter", "StringToModule", EUNKWMTH, "methode inconnue");
+    exitl("interpreter", "StringToModule", EUNKWMTH, "methode inconnue\n");
     return -1;
 }
 
@@ -37,9 +37,8 @@ Module stringToModule(char *nom)
 
 Command* interprete(int argc, char *argv[])
 {
-    Command* command = malloc(sizeof(struct command_t));
+    Command* command = calloc(1, sizeof(struct command_t));
     int c;
-    memset(command, 0, sizeof(struct command_t));
     command->file_name[0] = '\0';
     command->log_file[0] = '\0';
     while ((c = getopt(argc, argv, "-i:-d:-j:-o:-m:")) != -1)

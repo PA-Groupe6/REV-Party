@@ -159,7 +159,7 @@ char *baleColumnToLabel(Bale *b, unsigned int c) {
 #ifdef DEBUG
     testArgNull(b, "bale.c", "baleColumnToLabel", "b");
     if(c >= genListSize(b->labels))
-        exitl("bale.c", "baleColumnToLabel", EXIT_FAILURE, "Argument c (%u) invalide", c);
+        exitl("bale.c", "baleColumnToLabel", EXIT_FAILURE, "Argument c (%d) invalide\n", c);
 #endif
 
     char* label = malloc(sizeof(char)*MAX_LENGHT_LABEL);

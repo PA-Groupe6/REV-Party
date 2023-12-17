@@ -25,12 +25,10 @@ void deleteWinners(ptrGenList* winners) {
  * @author LAFORGE Mateo
  * @brief applique la méthode uni1 sur le fichier source_file et affiche son résultat pour l'utilisateur
  * 
- * @param source_file le fichier d'entrée fournit par l'utilisateur
+ * @param bale le ballot fournit par l'utilisateur en entrée
  */
-void uni1(char* source_file) {
-    Bale* bale = csvToBale(source_file);
+void uni1(Bale* bale) {
     GenList* winners = theWinnerOneRound(bale);
-    deleteBale(&bale);
     displayListWinnerSingle(winners);
     deleteWinners(&winners);
 }
@@ -40,12 +38,10 @@ void uni1(char* source_file) {
  * @author LAFORGE Mateo
  * @brief applique la méthode uni2 sur le fichier source_file et affiche son résultat pour l'utilisateur
  * 
- * @param source_file le fichier d'entrée fournit par l'utilisateur
+ * @param bale le ballot fournit par l'utilisateur en entrée
  */
-void uni2(char* source_file) {
-    Bale* bale = csvToBale(source_file);
+void uni2(Bale* bale) {
     GenList* winners = theWinnerTwoRounds(bale);
-    deleteBale(&bale);
     displayListWinnerSingleTwo(winners);
     deleteWinners(&winners);
 }
@@ -55,12 +51,10 @@ void uni2(char* source_file) {
  * @author LAFORGE Mateo
  * @brief applique la méthode minimax sur le fichier source_file et affiche son résultat pour l'utilisateur
  * 
- * @param source_file le fichier d'entrée fournit par l'utilisateur
+ * @param duel la matrice de duels fournie par l'utilisateur en entrée
  */
-void minimax(char* source_file) {
-    Duel* duel = csvToDuel(source_file);
+void minimax(Duel* duel) {
     GenList* winners = theWinnerMinimax(duel);
-    deleteDuel(&duel);
     displayListWinnerCondorcet(winners, "minimax");
     deleteWinners(&winners);
 }
@@ -70,12 +64,10 @@ void minimax(char* source_file) {
  * @author LAFORGE Mateo
  * @brief applique la méthode de rangement des pairs sur le fichier source_file et affiche son résultat pour l'utilisateur
  * 
- * @param source_file le fichier d'entrée fournit par l'utilisateur
+ * @param duel la matrice de duels fournie par l'utilisateur en entrée
  */
-void rankedPairs(char* source_file) {
-    Duel* duel = csvToDuel(source_file);
+void rankedPairs(Duel* duel) {
     GenList* winners = theWinnerRankedPairs(duel);
-    deleteDuel(&duel);
     displayListWinnerCondorcet(winners, "rangement des pairs");
     deleteWinners(&winners);
 }
@@ -85,12 +77,10 @@ void rankedPairs(char* source_file) {
  * @author LAFORGE Mateo
  * @brief applique la méthode de schulze sur le fichier source_file et affiche son résultat pour l'utilisateur
  * 
- * @param source_file le fichier d'entrée fournit par l'utilisateur
+ * @param duel la matrice de duels fournie par l'utilisateur en entrée
  */
-void schulze(char* source_file) {
-    Duel* duel = csvToDuel(source_file);
+void schulze(Duel* duel) {
     GenList* winners = theWinnerSchulze(duel);
-    deleteDuel(&duel);
     displayListWinnerCondorcet(winners, "schulze");
     deleteWinners(&winners);
 }
@@ -100,14 +90,12 @@ void schulze(char* source_file) {
  * @author LAFORGE Mateo
  * @brief applique la méthode du jugement majoritaire sur le fichier source_file et affiche son résultat pour l'utilisateur
  * 
- * @param source_file le fichier d'entrée fournit par l'utilisateur
+ * @param bale le ballot fournit par l'utilisateur en entrée
  */
-void majorityJudgment(char* source_file) {
-    Bale* bale = csvToBale(source_file);
+void majorityJudgment(Bale* bale) {
     GenList* winners = theWinnerMajorityJudgment(bale);
-    deleteBale(&bale);
+    displayListWinnerMajorityJudgment(winners);
     deleteWinners(&winners);
-    //displayListWinnerMajorityJudgment(winners);
 }
 
 /**
@@ -117,19 +105,76 @@ void majorityJudgment(char* source_file) {
  * 
  * @param source_file le fichier d'entrée fournit par l'utilisateur
  */
-void all(char* source_file) {
-    printl("\n### uni1:\n\n");
-    uni1(source_file);
-    printl("\n### uni2:\n\n");
-    uni2(source_file);
-    printl("\n### minimax:\n\n");
-    minimax(source_file);
-    printl("\n### ranked pairs:\n\n");
-    rankedPairs(source_file);
-    printl("\n### schulze:\n\n");
-    schulze(source_file);
-    printl("\n### majority judgement:\n\n");
-    majorityJudgment(source_file);
+void all(Command* cmd) {
+    switch (cmd->file_type) {
+        case DUEL: {
+            warnl("main", "all", "Une Matrice de duel à été passée en paramètre -> exécution des méthodes de Condorcet\n");
+            Duel* duel = csvToDuel(cmd->file_name);
+
+            printl(" -= Minimax =-\n");
+            minimax(duel);
+            printl(" -= Rangement Des Pairs =-\n");
+            rankedPairs(duel);
+            printl(" -= Schulze =-\n");
+            schulze(duel);
+
+            deleteDuel(&duel);
+            break;
+        }
+        case BALE: {
+            Bale* bale = csvToBale(cmd->file_name);
+
+            printl(" -= Uni1 =-\n");
+            uni1(bale);
+            printl(" -= Uni2 =-\n");
+            uni2(bale);
+
+            Duel* duel = duelFromBale(bale);
+
+            printl(" -= Minimax =-\n");
+            minimax(duel);
+            printl(" -= Rangement Des Pairs =-\n");
+            rankedPairs(duel);
+            printl(" -= Schulze =-\n");
+            schulze(duel);
+
+            printl(" -= Jugment Majoritaire =-\n");
+            majorityJudgment(bale);
+
+            deleteDuel(&duel);
+            deleteBale(&bale);
+            break;
+        }
+        default:
+            exitl("main", "main", 1, "le type de fichier renvoyé par l'interpréteur est invalide\n");
+    }
+}
+
+/**
+ * @date 17/12/2023
+ * @author LAFORGE Mateo
+ * @brief récupère une structure Duel soit à partir d'une matrice de duel soit à partir d'un ballot
+ * 
+ * @param cmd commande permettant la récupération des informations pour la construction
+ * 
+ * @return la matrice de duel construite
+ */
+Duel* getDuel(Command* cmd) {
+    Duel* duel;
+    switch (cmd->file_type) {
+        case DUEL:
+            duel = csvToDuel(cmd->file_name);
+            break;
+        case BALE: {
+            Bale* bale = csvToBale(cmd->file_name);
+            duel = duelFromBale(bale);
+            deleteBale(&bale);
+            break;
+        }
+        default:
+            exitl("main", "main", 1, "le type de fichier renvoyé par l'interpréteur est invalide\n");
+    }
+    return duel;
 }
 
 int main(int argc, char* argv[]) {
@@ -144,29 +189,47 @@ int main(int argc, char* argv[]) {
     }
 
     switch(cmd->module) {
-        case UNI1:
-            uni1(cmd->file_name);
+        case UNI1: {
+            Bale* bale = csvToBale(cmd->file_name);
+            uni1(bale);
+            deleteBale(&bale);
             break;
-        case UNI2:
-            uni2(cmd->file_name);
+        }
+        case UNI2: {
+            Bale* bale = csvToBale(cmd->file_name); 
+            uni2(bale);
+            deleteBale(&bale);
             break;
-        case MINIMAX:
-            minimax(cmd->file_name);
+        }
+        case MINIMAX: {
+            Duel* duel = getDuel(cmd);
+            minimax(duel);
+            deleteDuel(&duel);
             break;
-        case RANGEMENT:
-            rankedPairs(cmd->file_name);
+        }
+        case RANGEMENT: {
+            Duel* duel = getDuel(cmd);
+            rankedPairs(duel);
+            deleteDuel(&duel);
             break;
-        case SCHULZE:
-            schulze(cmd->file_name);
+        }
+        case SCHULZE: {
+            Duel* duel = getDuel(cmd);
+            schulze(duel);
+            deleteDuel(&duel);
             break;
-        case JUGEMENT_MAJORITAIRE:
-            majorityJudgment(cmd->file_name);
+        }
+        case JUGEMENT_MAJORITAIRE: {
+            Bale* bale = csvToBale(cmd->file_name);
+            majorityJudgment(bale);
+            deleteBale(&bale);
             break;
+        }
         case ALL:
-            all(cmd->file_name);
+            all(cmd);
             break;
         default:
-            exitl("main", "main", 1, "le Module renvoyé par l'interpréteur est invalide");
+            exitl("main", "main", 1, "le Module renvoyé par l'interpréteur est invalide\n");
     }
 
     close_logger();

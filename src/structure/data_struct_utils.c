@@ -11,7 +11,7 @@
  */
 void testArgNull(void *arg, char *file, char *fun, char *name) {
     if (arg == NULL)
-        exitl(file, "hisArgNull", EXIT_FAILURE, "[%s in %s] %s : argument NULL", fun, file, name);
+        exitl(file, "hisArgNull", EXIT_FAILURE, "[%s in %s] %s : argument NULL\n", fun, file, name);
 }
 
 
@@ -27,7 +27,7 @@ GenList* copyLabels(GenList* labels) {
     for(int i = 0; i < (int)genListSize(labels); i++) {
         label = malloc(sizeof(char)*MAX_LENGHT_LABEL);
         if(strncpy(label, genListGet(labels, i), MAX_LENGHT_LABEL) == NULL)
-            exitl("data_struct_utils.c", "copyLabels", EXIT_FAILURE, "Echec copie label %s", genListGet(labels, i));
+            exitl("data_struct_utils.c", "copyLabels", EXIT_FAILURE, "Echec copie label %s\n", genListGet(labels, i));
         genListAdd(list, label);
     }
 
@@ -42,7 +42,7 @@ int searchLabel(GenList* labels, char* label) {
     testArgNull(labels, "data_struct_utils.c", "searchLabel","labels");
     testArgNull(label, "data_struct_utils.c", "searchLabel","label");
     if(strlen(label) > MAX_LENGHT_LABEL)
-        exitl("bale.c", "baleLabelToColumn", EXIT_FAILURE, "taille label %s > MAX_LENGHT_LABEL", label);
+        exitl("bale.c", "baleLabelToColumn", EXIT_FAILURE, "taille label %s > MAX_LENGHT_LABEL\n", label);
     
     unsigned int i;
     for(i = 0; i < genListSize(labels); i++) {
