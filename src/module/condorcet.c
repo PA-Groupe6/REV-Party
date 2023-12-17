@@ -52,12 +52,10 @@ GenList* miniMaxCandidat(Duel* duel) {
     GenList* candidates = createGenList(1);
     for (int cand1 = 0; cand1<nbCandidats;cand1++){
         int maxDiffCandidat = 0;
-        int contreCandidat = 0;
         for (int cand2 = 0; cand2 < nbCandidats; cand2++){
             int diff = duelGetValue(duel, cand1, cand2); 
             if(diff > maxDiffCandidat){
                 maxDiffCandidat = diff;
-                contreCandidat = cand2;
             }
         }
         if (cand1 == 0 || miniDifference>maxDiffCandidat){
@@ -107,6 +105,7 @@ GenList* theWinnerMinimax(Duel* duel) {
 GenList* theWinnerRankedPairs(Duel* duel){
     // en attente de l'implémentation de la fonction graphToSortedList
     // TODO
+    (void)duel;
     printf("NON IMPLEMENTEE!\n");
     return createGenList(10);
 }
@@ -117,6 +116,7 @@ GenList* theWinnerRankedPairs(Duel* duel){
 
  GenList* theWinnerSchulze(Duel* duel) {
     // TODO
+    (void)duel;
     printf("NON IMPLEMENTEE!\n");
     return createGenList(10);
 }

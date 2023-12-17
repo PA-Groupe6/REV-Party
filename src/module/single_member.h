@@ -18,7 +18,7 @@
 #include <stdbool.h>
 #include <errno.h>
 #include "../structure/bale.h"
-#include "../structure/duel.h"
+#include "../structure/data_struct_utils.h"
 
 
 /*------------------------------------------------------------------*/
@@ -28,12 +28,12 @@
 
 
 typedef struct s_winner_single {
-    char name[256];
+    char name[MAX_LENGHT_LABEL];
     float score;
 }WinnerSingle;
 
 typedef struct s_winner_single_two {
-    char name[256];
+    char name[MAX_LENGHT_LABEL];
     float score;
     unsigned round;
 }WinnerSingleTwo;

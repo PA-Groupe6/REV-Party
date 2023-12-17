@@ -1,9 +1,9 @@
 /**
  * @file majority_judgment.h
  * @author IVANOVA ALina 
- * @date 4/11/2023
+ * @date 16/12/2023
  *
- * @brief Fichier d'en-tête pour le module Single-Member(Uninominal)
+ * @brief Fichier d'en-tête pour le module de Jugement Majoritaire
  *
  * Ce module implémente jugement majoritaire pour la structure de données bale.h
  *
@@ -11,7 +11,7 @@
  *
  * Cette méthode est particulièrement utile dans les processus de vote et de décision.
  *
- * Ce fichier d'en-tête fournit les fonctions et les structures nécessaires pour calculer les résultats selon la méthode de Jugement Majoritaire pour les données contenues dans bale.h.
+ * Ce fichier d'en-tête fournit les fonctions et les structures nécessaires pour calculer les résultats selon la méthode de Jugement Majoritaire pour les données contenues dans un ballot donné
  *
  *
  *
@@ -26,6 +26,7 @@
 #include <stdbool.h>
 #include <errno.h>
 #include "../structure/bale.h"
+#include "../structure/data_struct_utils.h"
 
 
 /*------------------------------------------------------------------*/
@@ -35,12 +36,11 @@
 
 
 typedef struct s_winner_MajorityJudgment {
-    char* name;
-    int candIndex;
-    int mediane;
-    float percentSup;
-    float percentInf;
-}WinnerMajorityJudgment;
+    char name[MAX_LENGHT_LABEL];
+    int median;                    /* la médiane avec laquelle le vainqueur a gagné */
+    float percent_inf;             /* pourcentage d'opposants */
+    float percent_sup;             /* pourcentage de partisans */
+} WinnerMajorityJudgment;
 
 
 /**
