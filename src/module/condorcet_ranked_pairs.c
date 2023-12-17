@@ -122,21 +122,24 @@ Graph* creatingGraph(Duel* duel){
  */
 GenList* findWinnerGraph(Duel* duel){
     Graph* graph = creatingGraph(duel);
-
+    printf("SIZE GRAPH %d\n", graphNbVertex(graph));
     GenList* arcs_sorted = graphToSortedList(graph, DESCENDING);
 
-    free(graph);
 
     int nb_cand = duelNbCandidat(duel) ;
     int nb_arcs = graphNbArc(graph);
     int* wins_arcs = malloc(sizeof(int)*nb_cand);
 
+    //free(graph);
 
     for(int i = 0; i<nb_cand; i++) wins_arcs[i] = 0;
-
+    Arc* arc_current;
+    int src_id;
+    printf("SIZE ARCS: %d\n", genListSize(arcs_sorted));
     for(int i = 0; i<nb_arcs; i++){
-        Arc* arc_current =(Arc*) genListGet(arcs_sorted, i);
-        int src_id = arc_current->id_src;
+        arc_current =(Arc*) genListGet(arcs_sorted, i);
+        src_id = arc_current->id_src;
+        printf("SRC ID %d \t ID SRC ARC %d\n", src_id, arc_current->id_src);
         wins_arcs[src_id]++;
     }
     
