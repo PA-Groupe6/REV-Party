@@ -225,16 +225,14 @@ GenList *graphToList(Graph *g){
     int nb_cand = graphNbVertex(g);
     for(int i ; i<nb_cand;i++){
         for(int j; j<nb_cand;j++){
-                for (unsigned int i = 0; i; i++) {
-                    for (unsigned int j = 0; i; i++){
-                        Arc *cur = graphGetArc(g,i,j);
-                        if(cur != NULL){
-                            genListAdd(l,(void*)cur);
-                        }
-                    }
+            Arc *cur = graphGetArc(g,i,j);
+                if(cur != NULL){
+                    genListAdd(l,(void*)cur);
+
                 }       
         }
     }
+
     return l;
 }
 
@@ -242,18 +240,19 @@ GenList *graphToList(Graph *g){
  * @author Corentin LUDWIG
  * @date  14/12/2023
  */
-void genListAddSorted(GenList *l, Arc e){
+void genListAddSorted(GenList *l, Arc* e){
     unsigned int i = 0;
 
     while(genListSize(l) > i){
         Arc *cur = genListGet(l, i);
-        if(cur->weight >= e.weight){
-            genListInsert(l, (void*)&e,i);
+        if(cur->weight >= e->weight){
+            genListInsert(l, e,i);
             return;
         }
+        i++;
     }
-    genListAdd(l, (void*)&e);
-}
+    genListAdd(l, e);
+    }
 
 /**
  * @author Corentin LUDWIG
@@ -268,7 +267,7 @@ GenList *graphToSortedList(Graph *g, int order){
         for (unsigned int j = 0; j<nb_vertex; j++){
             Arc *cur = graphGetArc(g,i,j);
             if(cur != NULL){
-                genListAddSorted(l,*cur);
+                genListAddSorted(l,cur);
             }
         }
     }

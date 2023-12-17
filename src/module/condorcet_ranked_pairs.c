@@ -20,6 +20,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include "../structure/duel.h"
+#include <stdlib.h>
 #include <string.h>
 #include <malloc.h>
 #include "../structure/genericlist.h"
@@ -38,12 +39,10 @@ void sortGenList(GenList* arcs){
     int i, j;
     Arc *a1,*a2;
     int size = genListSize(arcs);
-    printf("NB %d\n", size);
     for (i = 0; i < size; i++) {
         for (j = 0; j < size - i-1; j++) {
             a1 = (Arc*)genListGet(arcs, j);
             a2 = (Arc*)genListGet(arcs, j+1);
-            //printf("weight arc1 %d \t weight arc2 %d\n", a1->weight, a2->weight);
             if (a1->weight < a2->weight) {
                 genListSet(arcs, (void*) a1, j+1);
                 genListSet(arcs, (void*) a2, j);
@@ -122,7 +121,6 @@ Graph* creatingGraph(Duel* duel){
  */
 GenList* findWinnerGraph(Duel* duel){
     Graph* graph = creatingGraph(duel);
-    printf("SIZE GRAPH %d\n", graphNbVertex(graph));
     GenList* arcs_sorted = graphToSortedList(graph, DESCENDING);
 
 
@@ -130,16 +128,14 @@ GenList* findWinnerGraph(Duel* duel){
     int nb_arcs = graphNbArc(graph);
     int* wins_arcs = malloc(sizeof(int)*nb_cand);
 
-    //free(graph);
+    deleteGraph(&graph);
 
     for(int i = 0; i<nb_cand; i++) wins_arcs[i] = 0;
     Arc* arc_current;
     int src_id;
-    printf("SIZE ARCS: %d\n", genListSize(arcs_sorted));
     for(int i = 0; i<nb_arcs; i++){
         arc_current =(Arc*) genListGet(arcs_sorted, i);
         src_id = arc_current->id_src;
-        printf("SRC ID %d \t ID SRC ARC %d\n", src_id, arc_current->id_src);
         wins_arcs[src_id]++;
     }
     
@@ -150,7 +146,6 @@ GenList* findWinnerGraph(Duel* duel){
     for(int i = 0; i < nb_cand; i++){
         if(wins_arcs[i]>max_winnings){
             while(genListSize(winners)!=0) free((WinnerCondorcet*)genListPop(winners));
-
             max_winnings = wins_arcs[i];
             
             WinnerCondorcet* cand_possible = malloc(sizeof(WinnerCondorcet));
@@ -173,6 +168,8 @@ GenList* findWinnerGraph(Duel* duel){
         }
     }
 
+    free(wins_arcs);
+
     return winners;
 
 }
@@ -192,12 +189,15 @@ GenList* findWinnerGraph(Duel* duel){
 GenList* theWinnerRankedPairs(Duel* duel){
     GenList* winners;
 
-    if (CondorcetWinnerCriterion(duel)==NULL) {
+    WinnerCondorcet* winner = CondorcetWinnerCriterion(duel);
+
+    if (winner==NULL) {
+        free(winner);
         winners = findWinnerGraph(duel);
     }
     else {
         winners = createGenList(1);
-        genListAdd(winners,CondorcetWinnerCriterion(duel));
+        genListAdd(winners,winner);
     }
     return winners;
 
