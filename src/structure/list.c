@@ -16,7 +16,6 @@
 #include "../logger.h"
 #include "data_struct_utils.h"
 #include <asm-generic/errno-base.h>
-#include <errno.h>
 #include <malloc.h>
 #include <stdbool.h>
 #include <stdlib.h>

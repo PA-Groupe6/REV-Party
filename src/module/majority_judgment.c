@@ -12,10 +12,8 @@
  * fortement recomandé de la vérifier surtout pour les fonctions ne renvoyant pas de pointeur
  */
 
-#include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include <errno.h>
 #include "../structure/bale.h"
 #include <string.h>
 #include <malloc.h>

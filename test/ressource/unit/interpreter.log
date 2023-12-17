@@ -1,0 +1,13 @@
+interprete :
+[exitl] interpreter > intrepreter : la commande doit avoir un -m
+interprete -m :
+[exitl] interpreter > intrepreter : balise non reconnu ou argument manquant
+interprete -m uni1 :
+[exitl] interpreter > intrepreter : la commande doit avoir un -i, -d ou -j
+interprete -m unknown :
+[exitl] interpreter > StringToModule : methode inconnueinterprete -d test/ressource/unit/duel_1.csv :
+[exitl] interpreter > intrepreter : la commande doit avoir un -m
+interprete -m uni1 -i :
+[exitl] interpreter > intrepreter : balise non reconnu ou argument manquant
+interprete -m jm -j test/ressource/unit/bale_1.csv :
+[exitl] interpreter > intrepreter : fichier d'entree inexistant

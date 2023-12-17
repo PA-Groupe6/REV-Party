@@ -10,7 +10,6 @@
 #include "duel.h"
 #include "matrix.h"
 #include <malloc.h>
-#include "../logger.h"
 #include <string.h>
 #include "bale.h"
 

@@ -3,7 +3,6 @@
  * @brief Structure graph implémentation
  */
 
-#include "bale.h"
 #include "data_struct_utils.h"
 #include "genericlist.h"
 #include <stdlib.h>
@@ -230,11 +229,12 @@ GenList *graphToList(Graph *g){
                         Arc *cur = graphGetArc(g,i,j);
                         if(cur != NULL){
                             genListAdd(l,(void*)cur);
+                        }
                     }
+                }       
         }
     }
-        }
-    }
+    return l;
 }
 
 /**

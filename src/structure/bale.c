@@ -24,14 +24,12 @@
 
 #include "data_struct_utils.h"
 #include "genericlist.h"
-#include <errno.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include "bale.h"
 #include "matrix.h"
 #include <malloc.h>
-#include "../logger.h"
 #include <string.h>
 
 
