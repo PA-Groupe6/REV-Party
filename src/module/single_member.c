@@ -1,47 +1,24 @@
-/**
- * @author IVANOVA ALina, Ugo VALLAT
- * @date 4/11/2023
- *
- * @brief Fichier d'implémentation de la méthode Single Member (Uninominal) à deux rounds
- *
- * Ce module implémente la méthode de Scrutin Uninominal à deux rounds pour la structure de données bale.h.
- *
- * La méthode de Scrutin est utilisée pour déterminer l'option gagnante à partir des votes. 
- * Cette méthode est particulièrement utile dans les processus de vote et de décision.
- *
- * Les électeurs votent pour un seul candidat. Celui qui obtient le plus grand nombre de voix, même sans obtenir la majorité absolue, remporte l'élection.
- *
- * @remark En cas d'erreur, la variable errno est positionnée à la valeur appropriée. Il est fortement recommandé de la vérifier, surtout pour les fonctions ne renvoyant pas de pointeur.
- */
-
-#include "single_member.h"
-#include "../structure/bale.h"
+#include <stdlib.h>
 #include <string.h>
-#include <stdbool.h>
-#include <stdio.h>
-#include <malloc.h>
 #include "../structure/list.h"
-#include <stdio.h>
-#include "../logger.h"
-
+#include "single_member.h"
 
 /**
- * @name Alina IVANOVA
- * @date 25/11/2023
+ * @author Alina IVANOVA
+ * @date 21/11/2023 
  * @brief Calcul le nombre de voix pour chaque candidat
  * 
  * @param bale Ballot des votes
  * @return Tableau des scores par ordre des candidats dans le ballot
  */
-unsigned* voteCountFirstRound(Bale* bale){
+unsigned* voteCount(Bale* bale){
     unsigned nb_votes = baleNbVoter(bale);
     unsigned nb_candidates = baleNbCandidat(bale);
-    unsigned* votesComplete = malloc(sizeof(unsigned)*nb_candidates);
+    unsigned* votesComplete = malloc(sizeof(int)*nb_candidates);
     memset(votesComplete, 0, sizeof(int)*nb_candidates);
-
     for (unsigned i = 0; i<nb_votes;i++){
         //on recoit le liste avec le(les) candidat(s) qui a recu le val max a partir d'electeur i
-        GenList* winner = baleMin(bale, i, -1);
+        GenList* winner = baleMax(bale, i, -1);
         if (genListSize(winner)==1){//si on a qu'un seul candidat avec le note max, on prend en compte le vote
             int cand = ((int*)genListGet(winner, 0))[2];//num de candidat avec le val max
             votesComplete[cand] += 1;//on ajoute le vote
@@ -52,6 +29,73 @@ unsigned* voteCountFirstRound(Bale* bale){
     }
     return votesComplete;
 }
+
+/***********
+*   UNI1   *
+***********/
+
+/**
+ * @author Alina IVANOVA, Corentin LUDWIG
+ * @date 21/11/2023 
+ */
+List* maxVotesCandidat(unsigned int* votes, unsigned int nb_candidat){
+    unsigned int max = votes[0];
+    List *winner = createList(1);
+    listAdd(winner, 0);
+    for (unsigned int i = 1; i < nb_candidat; i++ ){
+        if (votes[i] > max) {
+            max = votes[i];
+            while(!listEmpty(winner))
+                listPop(winner);
+            listAdd(winner, i);
+        } else if( votes[i] == max){
+            listAdd(winner,i);
+        }
+    }
+    return winner;
+}
+
+/**
+ * @author Alina IVANOVA
+ * @date 21/11/2023 
+ */
+GenList* theWinnerOneRound(Bale* bale){
+    GenList *list = createGenList(1);
+    WinnerSingle *winner;
+    char* winner_label;
+    unsigned nb_candidat = baleNbCandidat(bale);
+
+    if(nb_candidat == 0) return list;
+
+    /* décompte des voies de chaque candidat */
+    unsigned int* summaryOfVotes = voteCount(bale);
+
+    /* Récupération du nom du gagnant */
+    List* winningCandidates = maxVotesCandidat(summaryOfVotes, nb_candidat);
+
+    for (unsigned i = 0; i < listSize(winningCandidates); i++)
+    {
+        winner = malloc(sizeof(WinnerSingle));
+        int winningCandidate = listGet(winningCandidates,i);
+
+        /* récupération du label candidat */
+        winner_label = baleColumnToLabel(bale, winningCandidate);
+        strncpy(winner->name, winner_label, MAX_LENGHT_LABEL);
+        free(winner_label);
+
+        /* calcul du score */
+        winner->score = ((float)summaryOfVotes[winningCandidate]/baleNbVoter(bale)) * 100;
+        genListAdd(list,(void*)winner);
+    }
+    free(summaryOfVotes);
+    deleteList(&winningCandidates);
+
+    return list;
+}
+
+/***********
+*   UNI2   *
+***********/
 
 /**
  * @name Ugo VALLAT
@@ -203,7 +247,7 @@ List* winnerOfsecondRound(int* scores, unsigned nb_winners) {
 /**
  * @name Ugo VALLAT
  * @date 30/11/2023
- * @brief Récupère les information du candidat i est les stock dans une structure WinnerSingleTwo
+ * @brief Récupère les information du candidat i et les stock dans une structure WinnerSingleTwo
  * 
  * @param b Ballot des votes 
  * @param id Indentifiant du gagnant (numéro de colonne dans le ballot)
@@ -245,7 +289,7 @@ GenList* theWinnerTwoRounds(Bale* bale){
     if(nb_candidat == 0) return winners;
 
     /* ### debut du premier tour ### */
-    unsigned* round_1_scores = voteCountFirstRound(bale);
+    unsigned* round_1_scores = voteCount(bale);
     List* round_1_winners_id = winnersOffirstRound(round_1_scores, nb_candidat, nb_voters);
 
 
@@ -292,4 +336,3 @@ GenList* theWinnerTwoRounds(Bale* bale){
 
     return winners;
 }
-
