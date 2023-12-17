@@ -8,7 +8,7 @@
 #include "test_utils.h"
 
 #define printsb(msg) addLineStringBuilder(string_builder, msg)
-#define LOGGER_OUPTUT "test/ressource/unit/interpreter.log"
+#define LOGGER_OUPTUT "test/ressource/interpreter.log"
 
 StringBuilder* string_builder;
 int return_value;
@@ -100,8 +100,8 @@ bool testInterprete() {
     char* oflag = "-o";
     char* mflag = "-m";
     // donnée supplémentaire
-    char* bale_src_file = "test/ressource/unit/bale_1.csv";
-    char* duel_src_file = "test/ressource/unit/duel_1.csv";
+    char* bale_src_file = "test/ressource/bale_1.csv";
+    char* duel_src_file = "test/ressource/duel_1.csv";
     char* dest_file = "any"; // no-OP surs destination
 
     // sans arguments
@@ -146,7 +146,7 @@ bool testInterprete() {
     }
 
     // sans méthode
-    printsb("\n\ntest sur \"interprete -d test/ressource/unit/duel_1.csv\"");
+    printsb("\n\ntest sur \"interprete -d test/ressource/duel_1.csv\"");
     char* argv5[] = {cmd, dflag, duel_src_file};
     Command* cmd5 = try(3, argv5);
     if (cmd5 != NULL) {
@@ -166,7 +166,7 @@ bool testInterprete() {
     }
 
     // méthode all reconnue
-    printsb("\n\ntest sur \"interprete -m jm -j test/ressource/unit/bale_1.csv\"");
+    printsb("\n\ntest sur \"interprete -m jm -j test/ressource/bale_1.csv\"");
     char* argv7[] = {cmd, mflag, "jm", jflag, bale_src_file};
     Command* cmd7 = try(5, argv7);
     if (cmd7 == NULL
@@ -180,7 +180,7 @@ bool testInterprete() {
             printCommand(cmd7);
             free(cmd7);
         } else {
-            printsb("\n\tInterpreter gave NULL pointer\ntry looking in the log file in test/ressource/unit/");
+            printsb("\n\tInterpreter gave NULL pointer\ntry looking in the log file in test/ressource/");
         }
         return false;
     }
@@ -188,7 +188,7 @@ bool testInterprete() {
         free(cmd7);
 
     // sans ordre
-    printsb("\n\ntest sur \"interprete -j test/ressource/unit/bale_1.csv -m jm\"");
+    printsb("\n\ntest sur \"interprete -j test/ressource/bale_1.csv -m jm\"");
     char* argv8[] = {cmd, jflag, bale_src_file, mflag, "jm"};
     Command* cmd8 = try(5, argv8);
     if (cmd8 == NULL
@@ -202,7 +202,7 @@ bool testInterprete() {
             printCommand(cmd8);
             free(cmd8);
         } else {
-            printsb("\n\tInterpreter gave NULL pointer\ntry looking in the log file in test/ressource/unit/");
+            printsb("\n\tInterpreter gave NULL pointer\ntry looking in the log file in test/ressource/");
         }
         return false;
     }
@@ -210,7 +210,7 @@ bool testInterprete() {
         free(cmd8);
 
     // mauvais type de source pour méthode
-    printsb("\n\ntest sur \"interprete -d test/ressource/unit/duel_1.csv -m jm\"");
+    printsb("\n\ntest sur \"interprete -d test/ressource/duel_1.csv -m jm\"");
     char* argv9[] = {cmd, dflag, duel_src_file, mflag, "jm"};
     Command* cmd9 = try(5, argv9);
     if (cmd9 != NULL) {
@@ -220,7 +220,7 @@ bool testInterprete() {
     }
 
     // sortie optionnelle non spécifié
-    printsb("\n\ntest sur \"interprete -m jm -j test/ressource/unit/bale_1.csv -o\"");
+    printsb("\n\ntest sur \"interprete -m jm -j test/ressource/bale_1.csv -o\"");
     char* argv10[] = {cmd, mflag, "jm", jflag, bale_src_file, oflag};
     Command* cmd10 = try(6, argv10);
     if (cmd10 != NULL) {
@@ -230,7 +230,7 @@ bool testInterprete() {
     }
 
     // sortie optionnelle valide
-    printsb("\n\ntest sur \"interprete -m jm -j test/ressource/unit/bale_1.csv -o any\"");
+    printsb("\n\ntest sur \"interprete -m jm -j test/ressource/bale_1.csv -o any\"");
     char* argv11[] = {cmd, mflag, "jm", jflag, bale_src_file, oflag, dest_file};
     Command* cmd11 = try(7, argv11);
     if (cmd11 == NULL
@@ -245,7 +245,7 @@ bool testInterprete() {
             printCommand(cmd11);
             free(cmd11);
         } else {
-            printsb("\n\tInterpreter gave NULL pointer\ntry looking in the log file in test/ressource/unit/");
+            printsb("\n\tInterpreter gave NULL pointer\ntry looking in the log file in test/ressource/");
         }
         return false;
     }
