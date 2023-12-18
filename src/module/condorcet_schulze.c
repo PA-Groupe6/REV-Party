@@ -131,7 +131,6 @@ Graph* findingPaths(Duel* duel){
     Graph* graph_for_search = graphCreate(duel);
     int nb_cand = duelNbCandidat(duel);
     int cand_2vs1, cand_3vs1, cand_2vs3;
-    Arc* current_arc;
 
     for(int cand_3 = 0; cand_3<nb_cand; cand_3++){
         for(int cand_2 = 0;cand_2<nb_cand; cand_2++){
@@ -145,10 +144,7 @@ Graph* findingPaths(Duel* duel){
                         cand_2vs3 = graphGetWeight(graph_for_search, cand_2, cand_3);
                         cand_3vs1 = graphGetWeight(graph_for_search, cand_3, cand_1);
                         
-                        current_arc = graphGetArc(graph_for_search, cand_2, cand_1);
-
                         int weight = max(cand_2vs1, min(cand_2vs3, cand_3vs1));
-                        current_arc->weight = weight; 
 
                         graphSetWeight(graph_for_search, cand_2, cand_1, weight);
                     }
@@ -199,6 +195,7 @@ GenList* findWinnerGraph(Duel* duel){
     Graph* graph_path = findingPaths(duel);
     Duel* duel_path = createDuelfromGraph(graph_path);
 
+
     deleteGraph(&graph_path);
 
     int nb_cand= duelNbCandidat(duel);
@@ -211,7 +208,7 @@ GenList* findWinnerGraph(Duel* duel){
         for (int cand_2 = 0; cand_2 < nb_cand; cand_2++){
             int win = duelGetValue(duel_path, cand_1, cand_2); 
             int loss = duelGetValue(duel_path, cand_2, cand_1); 
-            if(win > loss)winsCandidate++;
+            if(win >= loss)winsCandidate++;
         }
 
         if (max_wins<winsCandidate){

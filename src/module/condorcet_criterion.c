@@ -32,7 +32,6 @@
  *
  * @return Le gagnant en utilisant la structure WinnerCondorcet ou NULL s'il n'y a pas de vaiqueur
 */
-
 WinnerCondorcet* CondorcetWinnerCriterion(Duel* duel){
     int nbCandidats= duelNbCandidat(duel);
     int maxWins = 0;
@@ -46,14 +45,11 @@ WinnerCondorcet* CondorcetWinnerCriterion(Duel* duel){
                 winsCandidate++;
             }
         }
-        if (maxWins<winsCandidate){
-            maxWins = winsCandidate;
-            winner = cand1;
-        }
-        else if (maxWins == winsCandidate) {
-            winner = -1;
-        }
+        if(winsCandidate == nbCandidats){
+                winner = cand1;
+            }
     }
+
     if (winner == -1) return NULL;
     WinnerCondorcet* vainqueur = malloc(sizeof(WinnerCondorcet));
     char* winner_name =  duelIndexToLabel(duel, winner);
