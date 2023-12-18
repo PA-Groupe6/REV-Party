@@ -29,10 +29,20 @@
 #include "../structure/data_struct_utils.h"
 
 
+/**
+ * @date 16/12/2023
+ * @author Alina IVANOVA
+ * @brief retourne la valeur maximale
+ */
 int max(int a, int b) {
     return (a > b) ? a : b;
 }
 
+/**
+ * @date 16/12/2023
+ * @author Alina IVANOVA
+ * @brief retourne la valeur minimale
+ */
 int min(int a, int b) {
     return (a < b) ? a : b;
 }
@@ -191,7 +201,7 @@ Duel* createDuelfromGraph(Graph* graph){
  * @author Alina IVANOVA
  * @brief creation d'un genlist de(s) gagnat(s) à partir d'un duel des chemins
  */
-GenList* findWinnerGraph(Duel* duel){
+GenList* findWinnerGraphPath(Duel* duel){
     Graph* graph_path = findingPaths(duel);
     Duel* duel_path = createDuelfromGraph(graph_path);
 
@@ -256,7 +266,7 @@ GenList* theWinnerSchulze(Duel* duel){
     GenList* winners;
     WinnerCondorcet* winner_condorcet = CondorcetWinnerCriterion(duel);
     if (winner_condorcet==NULL) {
-        winners = findWinnerGraph(duel);
+        winners = findWinnerGraphPath(duel);
     }
     else {
         winners = createGenList(1);

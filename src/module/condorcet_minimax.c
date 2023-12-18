@@ -30,6 +30,7 @@
 /**
  * @author Alina IVANOVA
  * @date 20/11/2023 
+ * @brief creation d'une liste avec le(s) gagnant(s) en utilisant la méthode Minimax
  */
 GenList* miniMaxCandidat(Duel* duel){
     int nbCandidats= duelNbCandidat(duel);

@@ -33,6 +33,7 @@ int compare(const void *a, const void *b) {
 /**
  * @date 15/12/2023
  * @author Alina IVANOVA
+ * @brief creation d'une liste des votes dans un ordre décroissant 
  */
 int* sortingVotesCandidate(Bale* bale, int candidate){
     int nbVotes = baleNbVoter(bale);
@@ -50,6 +51,7 @@ int* sortingVotesCandidate(Bale* bale, int candidate){
 /**
  * @date 15/12/2023
  * @author Alina IVANOVA
+ * @brief on cherche la mediane d'un candidat
  */
 int medianCandidate(Bale* bale, int candidate){
     int nb_votes = baleNbVoter(bale);
@@ -223,6 +225,7 @@ GenList* leastHarmCand(GenList* winners) {
 /**
  * @date 15/12/2023
  * @author Alina IVANOVA
+ * @brief creation d'une liste de(s) gagnant(s)
  */
 GenList* theWinnerMajorityJudgment(Bale* bale){
 #ifdef DEBUG
