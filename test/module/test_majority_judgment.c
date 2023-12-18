@@ -17,6 +17,31 @@
 
 
 /*
+    =======================
+    === DONNEES DE TEST ===
+    =======================
+*/
+
+#define NB_BALE 20
+#define MAX_NB_WINNER 10
+
+unsigned nb_winners_ref[NB_BALE] = {0,0,0,4,3,2,0,1,0,0,1,1};
+char label_winners_ref[NB_BALE][MAX_NB_WINNER][MAX_LENGHT_LABEL] = {
+    {""},{""},{""},
+    {"C1","C2","C3","C4"},   // 3
+    {"C1","C2","C3"},        // 4
+    {"C1"},                  // 5 
+    {""},
+    {"C1"},                  // 7
+    {""},{""},
+    {"C1","C2"},             // 10 
+    {"C1"},                  // 11
+    {"C2"}                   // 12
+
+};
+
+
+/*
     ===================
     === OUTILS TEST ===
     ===================
@@ -52,22 +77,46 @@ bool echecTest(char* msg) {
     return false;
 }
 
+bool verifResultMajorityJudgment(GenList* result, unsigned num_test) {
+#ifdef DEBUG
+    if(num_test >= NB_BALE) exitl("test_condorcet_schulze", "", EXIT_FAILURE, "num_test invalide %d >= %d", num_test, NB_BALE);
+#endif
+    unsigned nb_winners = genListSize(result);
+    if(nb_winners != nb_winners_ref[num_test]) return echecTest("Nombre de gagnants différent");
+    
+    WinnerMajorityJudgment *wtmp;
+    for(unsigned i = 0; i < nb_winners; i++) {
+        wtmp = (WinnerMajorityJudgment*)genListGet(result, i);
+        if(strcmp(wtmp->name, label_winners_ref[num_test][i])) return echecTest("mauvais gagnant");
+    }
+
+    return true;
+}
 
 
-bool testMajorityJudgmentOnDuel(char* file) {
+
+
+
+bool testMajorityJudgmentOnDuel(char* file, unsigned num_test) {
     GenList* lwinner;
     Bale* bale;
+    
     /* chargment du bale */
-    printsb("\t- chargement ballot\n");
+    printsb("\n\t- chargement ballot");
     bale = csvToBale(file);
-    displayBaleLog(bale);
 
     /* calcul des gagnants */
-    printsb("\t- calcul\n");
+    printsb("\n\t- calcul");
     lwinner = theWinnerMajorityJudgment(bale);
+
+    /* vérification des résultats */
     if(!lwinner) return echecTest("pointeur null\n");
-    if(genListSize(lwinner) == 0) return echecTest("Aucun gagnant\n");
-    displayListWinnerMajorityJudgment(lwinner);
+    if(!verifResultMajorityJudgment(lwinner, num_test)) {
+        printl("\n\n<+>---------------------------- [ %s ] :\n\n", file);
+        displayBaleLog(bale);
+        displayListWinnerMajorityJudgment(lwinner);
+        return false;
+    }
 
     /* libération de la mémoire */
     deleteBale(&bale);
@@ -79,41 +128,32 @@ bool testMajorityJudgmentOnDuel(char* file) {
 
 bool testTheWinnerMajorityJudgment() {
 
-
-    printsb("\ntest sur bale 1...");
-    testMajorityJudgmentOnDuel("test/ressource/bale_1.csv");
-    printsb( "\n\t- test passé\n");
-
-    printsb("\ntest sur bale 2...");
-    testMajorityJudgmentOnDuel("test/ressource/bale_2.csv");
-    printsb( "\n\t- test passé\n");
-
     printsb("\ntest sur bale 3...");
-    testMajorityJudgmentOnDuel("test/ressource/bale_3.csv");
+    if(!testMajorityJudgmentOnDuel("test/ressource/bale_3.csv",3)) return false;
     printsb( "\n\t- test passé\n");
 
     printsb("\ntest sur bale 4...");
-    testMajorityJudgmentOnDuel("test/ressource/bale_4.csv");
+    if(!testMajorityJudgmentOnDuel("test/ressource/bale_4.csv", 4)) return false;
     printsb( "\n\t- test passé\n");
 
     printsb("\ntest sur bale 5...");
-    testMajorityJudgmentOnDuel("test/ressource/bale_5.csv");
-    printsb( "\n\t- test passé\n");
-
-    printsb("\ntest sur bale 6...");
-    testMajorityJudgmentOnDuel("test/ressource/bale_6.csv");
+    if(!testMajorityJudgmentOnDuel("test/ressource/bale_5.csv", 5)) return false;
     printsb( "\n\t- test passé\n");
 
     printsb("\ntest sur bale 7...");
-    testMajorityJudgmentOnDuel("test/ressource/bale_7.csv");
+    if(!testMajorityJudgmentOnDuel("test/ressource/bale_7.csv", 7)) return false;
     printsb( "\n\t- test passé\n");
 
-    printsb("\ntest sur bale 8...");
-    testMajorityJudgmentOnDuel("test/ressource/bale_8.csv");
+    printsb("\ntest sur bale 10...");
+    if(!testMajorityJudgmentOnDuel("test/ressource/bale_10.csv", 10)) return false;
     printsb( "\n\t- test passé\n");
 
-    printsb("\ntest sur bale 9...");
-    testMajorityJudgmentOnDuel("test/ressource/bale_9.csv");
+    printsb("\ntest sur bale 11...");
+    if(!testMajorityJudgmentOnDuel("test/ressource/bale_11.csv", 11)) return false;
+    printsb( "\n\t- test passé\n");
+
+    printsb("\ntest sur bale 12...");
+    if(!testMajorityJudgmentOnDuel("test/ressource/bale_12.csv", 12)) return false;
     printsb( "\n\t- test passé\n");
 
     

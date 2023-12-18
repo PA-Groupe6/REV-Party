@@ -22,12 +22,12 @@
 
 unsigned nb_winners_ref[NB_DUEL] = {0,0,0,0,3,2,1,3,0,0,2,1,2};
 char label_winners_ref[NB_DUEL][MAX_NB_WINNER][MAX_LENGHT_LABEL] = {
-    {},{},{},{},
+    {""},{""},{""},{""},
     {"C1","C2","C3"},   // 4
     {"C2","C3"},        // 5
     {"C1"},             // 6
     {"C2","C3","C4"},   // 7
-    {},{},
+    {""},{""},
     {"C1","C4"},        // 10
     {"E"},              // 11
     {"B","D"}           // 12
@@ -106,6 +106,7 @@ bool testSchulzeOnDuel(char* file, unsigned num_test) {
     if(!lwinner) return echecTest("pointeur null\n");
 
     if(!verifResultSchulze(lwinner, num_test)) {
+        printl("\n\n<+>---------------------------- [ %s ] :\n\n", file);
         displayDuelLog(duel);
         displayListWinnerCondorcet(lwinner, "SCHULZE");
         return false;
