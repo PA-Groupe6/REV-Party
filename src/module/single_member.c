@@ -55,7 +55,6 @@ List* winnersOffirstRound(unsigned* scores, unsigned nb_candidat, unsigned nb_vo
     unsigned max1 = scores[0]; /* score le plus grand */
     /* recherche du premier max */
     for (unsigned i = 1; i < nb_candidat; i++){
-         printf("score = %d\n",scores[i]);
         if(scores[i] > max1){
             max1 = scores[i];
            
@@ -68,7 +67,7 @@ List* winnersOffirstRound(unsigned* scores, unsigned nb_candidat, unsigned nb_vo
             listAdd(winners, i);
     
     /* Si déjà plusieurs gagnants, pas de votes, ou 1 candidat > 50%, on arrête */
-    if(listSize(winners) > 1 || max1 == 0 || max1 > 2*nb_voter || tour_voulu == 1) return winners;
+    if(listSize(winners) > 1 || max1 == 0 || 2*max1 > nb_voter || tour_voulu == 1) return winners;
 
 
     /* ### 2eme parcours pour chercher le ou les seconds ### */
