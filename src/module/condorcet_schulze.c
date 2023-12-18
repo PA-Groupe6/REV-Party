@@ -77,8 +77,6 @@ GenList* arcsCreate(Duel* duel){
             } 
             genListAdd(arcs, arc);
             genListAdd(arcs, arc_inverse);
-            printf("Arc_init: %d,%d\n",arc->id_src, arc->id_dest);
-            printf("Arc_init: %d,%d\n",arc_inverse->id_src, arc_inverse->id_dest);
         }    
     }
 
@@ -106,9 +104,17 @@ Graph* graphCreate(Duel* duel){
 
     for (int i = 0; i< nb_cand*(nb_cand-1); i++){
         Arc* arc_current = genListGet(arcs_list, i);
-        //printf("Arc: %d,%d\n",arc_current->id_src, arc_current->id_dest);
         graphAdd(winner_graph,arc_current->id_src ,arc_current->id_dest , arc_current->weight);
     }
+
+    while(!genListEmpty(labels_graph))
+        free(genListPop(labels_graph));
+    deleteGenList(&labels_graph);
+
+    while(!genListEmpty(arcs_list))
+        free(genListPop(arcs_list));
+    deleteGenList(&arcs_list);
+
     return winner_graph;
 }
 
@@ -142,7 +148,9 @@ Graph* findingPaths(Duel* duel){
                         current_arc = graphGetArc(graph_for_search, cand_2, cand_1);
 
                         int weight = max(cand_2vs1, min(cand_2vs3, cand_3vs1));
-                        current_arc->weight = weight;
+                        current_arc->weight = weight; 
+
+                        // graphSetWeight(graph_for_search, cand_2, cand_1, weight);
                     }
                 }
             } 
@@ -162,7 +170,6 @@ Graph* findingPaths(Duel* duel){
 Duel* createDuelfromGraph(Graph* graph){
     int nb_cand = graphNbVertex(graph);
     GenList* labels = createGenList(nb_cand);
-    printf("size graph: %d\n", nb_cand);
     for (int i = 0 ; i<nb_cand; i++){
         genListAdd(labels, graphGetLabel(graph, i));
     }
@@ -174,6 +181,11 @@ Duel* createDuelfromGraph(Graph* graph){
             duelSetValue(duel, cand_2, cand , graphGetWeight(graph, cand_2, cand));
         }
     }
+
+    while(!genListEmpty(labels))
+        free(genListPop(labels));
+    deleteGenList(&labels);
+
     return duel;
 }
 
@@ -186,6 +198,8 @@ Duel* createDuelfromGraph(Graph* graph){
 GenList* findWinnerGraph(Duel* duel){
     Graph* graph_path = findingPaths(duel);
     Duel* duel_path = createDuelfromGraph(graph_path);
+
+    deleteGraph(&graph_path);
 
     int nb_cand= duelNbCandidat(duel);
 
@@ -224,6 +238,9 @@ GenList* findWinnerGraph(Duel* duel){
             genListAdd(candidates, cand_possible);
         }
     }
+
+    deleteDuel(&duel_path);
+
     return candidates;
 
 }
