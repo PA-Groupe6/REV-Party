@@ -17,6 +17,25 @@
 
 
 
+#define NB_DUEL 20
+#define MAX_NB_WINNER 10
+
+unsigned nb_winners_ref[NB_DUEL] = {0,0,0,0,3,2,1,3,0,0,2,1,2};
+char label_winners_ref[NB_DUEL][MAX_NB_WINNER][MAX_LENGHT_LABEL] = {
+    {},{},{},{},
+    {"C1","C2","C3"},   // 4
+    {"C2","C3"},        // 5
+    {"C1"},             // 6
+    {"C2","C3","C4"},   // 7
+    {},{},
+    {"C1","C4"},        // 10
+    {"E"},              // 11
+    {"B","D"}           // 12
+};
+
+
+
+
 
 /*
     ===================
@@ -48,27 +67,50 @@ void afterEach() {
 }
 
 bool echecTest(char* msg) {
-    printsb(msg);
+    char buff[256] = "\n X-- ";
+    strncat(buff, msg,256);
+    printsb(buff);
     return false;
+}
+
+bool verifResultSchulze(GenList* result, unsigned num_test) {
+#ifdef DEBUG
+    if(num_test >= NB_DUEL) exitl("test_condorcet_schulze", "", EXIT_FAILURE, "num_test invalide %d >= %d", num_test, NB_DUEL);
+#endif
+    unsigned nb_winners = genListSize(result);
+    if(nb_winners != nb_winners_ref[num_test]) return echecTest("Nombre de gagnants différent");
+    
+    WinnerCondorcet *wtmp;
+    for(unsigned i = 0; i < nb_winners; i++) {
+        wtmp = (WinnerCondorcet*)genListGet(result, i);
+        if(strcmp(wtmp->name, label_winners_ref[num_test][i])) return echecTest("mauvais gagnant");
+    }
+
+    return true;
 }
 
 
 
 
-bool testSchulzeOnDuel(char* file) {
+
+
+bool testSchulzeOnDuel(char* file, unsigned num_test) {
     GenList* lwinner;
     Duel* duel;
     printsb("\t- chargement duel\n");
     duel = csvToDuel(file);
-    displayDuelLog(duel);
     
     printsb("\t- calcul\n");
     lwinner = theWinnerSchulze(duel);
 
-    if(!lwinner) return echecTest(" X-- pointeur null\n");
+    if(!lwinner) return echecTest("pointeur null\n");
 
-    printf("\nListe de vainqueurs : \n");
-    displayListWinnerCondorcet(lwinner, "SCHULZE");
+    if(!verifResultSchulze(lwinner, num_test)) {
+        displayDuelLog(duel);
+        displayListWinnerCondorcet(lwinner, "SCHULZE");
+        return false;
+    }
+    
     deleteDuel(&duel);
     while(!genListEmpty(lwinner))
         free(genListPop(lwinner));
@@ -78,64 +120,32 @@ bool testSchulzeOnDuel(char* file) {
 
 bool testSchulze() {
 
-    // printsb("\ntest sur duel 1...");
-    // printl("\n\n<+>--------------------------------- test sur [ duel 1 ] :\n\n");
-    // testSchulzeOnDuel("test/ressource/duel_1.csv");
-    // printsb( "\n\t- test passé\n");
-
-    // printsb("\ntest sur duel 2...");
-    // printl("\n\n<+>--------------------------------- test sur [ duel 2 ] :\n\n");
-    // testSchulzeOnDuel("test/ressource/duel_2.csv");
-    // printsb( "\n\t- test passé\n");
-
-    // printsb("\ntest sur duel 3...");
-    // printl("\n\n<+>--------------------------------- test sur [ duel 3 ] :\n\n");
-    // testSchulzeOnDuel("test/ressource/duel_3.csv");
-    // printsb( "\n\t- test passé\n");
-
     printsb("\ntest sur duel 4...");
-    printl("\n\n<+>--------------------------------- test sur [ duel 4 ] :\n\n");
-    testSchulzeOnDuel("test/ressource/duel_4.csv");
+    if(!testSchulzeOnDuel("test/ressource/duel_4.csv",4)) return false;
     printsb( "\n\t- test passé\n");
 
     printsb("\ntest sur duel 5...");
-    printl("\n\n<+>--------------------------------- test sur [ duel 5 ] :\n\n");
-    testSchulzeOnDuel("test/ressource/duel_5.csv");
+    if(!testSchulzeOnDuel("test/ressource/duel_5.csv",5)) return false;
     printsb( "\n\t- test passé\n");
 
     printsb("\ntest sur duel 6...");
-    printl("\n\n<+>--------------------------------- test sur [ duel 6 ] :\n\n");
-    testSchulzeOnDuel("test/ressource/duel_6.csv");
+    if(!testSchulzeOnDuel("test/ressource/duel_6.csv",6)) return false;
     printsb( "\n\t- test passé\n");
 
     printsb("\ntest sur duel 7...");
-    printl("\n\n<+>--------------------------------- test sur [ duel 7 ] :\n\n");
-    testSchulzeOnDuel("test/ressource/duel_7.csv");
+    if(!testSchulzeOnDuel("test/ressource/duel_7.csv",7)) return false;
     printsb( "\n\t- test passé\n");
 
-    // printsb("\ntest sur duel 8...");
-    // printl("\n\n<+>--------------------------------- test sur [ duel 8 ] :\n\n");
-    // testSchulzeOnDuel("test/ressource/duel_of_bale_8.csv");
-    // printsb( "\n\t- test passé\n");
-
-    // printsb("\ntest sur duel 9...");
-    // printl("\n\n<+>--------------------------------- test sur [ duel 9 ] :\n\n");
-    // testSchulzeOnDuel("test/ressource/duel_of_bale_9.csv");
-    // printsb( "\n\t- test passé\n");
-
     printsb("\ntest sur duel 10...");
-    printl("\n\n<+>--------------------------------- test sur [ duel 10 ] :\n\n");
-    testSchulzeOnDuel("test/ressource/duel_10.csv");
+    if(!testSchulzeOnDuel("test/ressource/duel_10.csv",10)) return false;
     printsb( "\n\t- test passé\n");
 
     printsb("\ntest sur duel 11...");
-    printl("\n\n<+>--------------------------------- test sur [ duel 11 ] :\n\n");
-    testSchulzeOnDuel("test/ressource/duel_11.csv");
+    if(!testSchulzeOnDuel("test/ressource/duel_11.csv",11)) return false;
     printsb( "\n\t- test passé\n");
 
     printsb("\ntest sur duel 12...");
-    printl("\n\n<+>--------------------------------- test sur [ duel 12 ] :\n\n");
-    testSchulzeOnDuel("test/ressource/duel_12.csv");
+    if(!testSchulzeOnDuel("test/ressource/duel_12.csv",12)) return false;
     printsb( "\n\t- test passé\n");
 
     return true;
