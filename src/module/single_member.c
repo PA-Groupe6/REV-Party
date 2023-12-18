@@ -11,14 +11,14 @@
  * @param bale Ballot des votes
  * @return Tableau des scores par ordre des candidats dans le ballot
  */
-unsigned* voteCount(Bale* bale){
+unsigned* voteCountFirstRound(Bale* bale){
     unsigned nb_votes = baleNbVoter(bale);
     unsigned nb_candidates = baleNbCandidat(bale);
     unsigned* votesComplete = malloc(sizeof(int)*nb_candidates);
     memset(votesComplete, 0, sizeof(int)*nb_candidates);
     for (unsigned i = 0; i<nb_votes;i++){
         //on recoit le liste avec le(les) candidat(s) qui a recu le val max a partir d'electeur i
-        GenList* winner = baleMax(bale, i, -1);
+        GenList* winner = baleMin(bale, i, -1);
         if (genListSize(winner)==1){//si on a qu'un seul candidat avec le note max, on prend en compte le vote
             int cand = ((int*)genListGet(winner, 0))[2];//num de candidat avec le val max
             votesComplete[cand] += 1;//on ajoute le vote
@@ -29,7 +29,6 @@ unsigned* voteCount(Bale* bale){
     }
     return votesComplete;
 }
-
 /***********
 *   UNI1   *
 ***********/
@@ -38,11 +37,11 @@ unsigned* voteCount(Bale* bale){
  * @author Alina IVANOVA, Corentin LUDWIG
  * @date 21/11/2023 
  */
-List* maxVotesCandidat(unsigned int* votes, unsigned int nb_candidat){
-    unsigned int max = votes[0];
+List* maxVotesCandidat(unsigned* votes, int nb_candidat){
+    int max = votes[0];
     List *winner = createList(1);
     listAdd(winner, 0);
-    for (unsigned int i = 1; i < nb_candidat; i++ ){
+    for (int i = 1; i < nb_candidat; i++ ){
         if (votes[i] > max) {
             max = votes[i];
             while(!listEmpty(winner))
@@ -68,7 +67,7 @@ GenList* theWinnerOneRound(Bale* bale){
     if(nb_candidat == 0) return list;
 
     /* décompte des voies de chaque candidat */
-    unsigned int* summaryOfVotes = voteCount(bale);
+    unsigned* summaryOfVotes = voteCountFirstRound(bale);
 
     /* Récupération du nom du gagnant */
     List* winningCandidates = maxVotesCandidat(summaryOfVotes, nb_candidat);
@@ -247,7 +246,7 @@ List* winnerOfsecondRound(int* scores, unsigned nb_winners) {
 /**
  * @name Ugo VALLAT
  * @date 30/11/2023
- * @brief Récupère les information du candidat i et les stock dans une structure WinnerSingleTwo
+ * @brief Récupère les information du candidat i est les stock dans une structure WinnerSingleTwo
  * 
  * @param b Ballot des votes 
  * @param id Indentifiant du gagnant (numéro de colonne dans le ballot)
@@ -289,7 +288,7 @@ GenList* theWinnerTwoRounds(Bale* bale){
     if(nb_candidat == 0) return winners;
 
     /* ### debut du premier tour ### */
-    unsigned* round_1_scores = voteCount(bale);
+    unsigned* round_1_scores = voteCountFirstRound(bale);
     List* round_1_winners_id = winnersOffirstRound(round_1_scores, nb_candidat, nb_voters);
 
 
