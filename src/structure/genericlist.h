@@ -137,6 +137,18 @@ void genListSet(GenList *l, void *v, unsigned i);
 bool genListEmpty(GenList *l);
 
 /**
+ * @date 18/12/2023
+ * @author LAFORGE Mateo
+ * @brief Cherche un élément e dans une liste l et renvoie un booléen correspondant
+ * 
+ * @param[in] l la liste dans laquelle chercher
+ * @param[in] e l'élément à chercher
+ * 
+ * @return true si e est dans l, false sinon
+ */
+bool genListContains(GenList *l, void* e);
+
+/**
  * @date  5/11/2023
  * @brief Renvoie la taille de la liste (position + 1 du dernier élément)
  *

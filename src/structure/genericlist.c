@@ -195,6 +195,20 @@ bool genListEmpty(GenList *l) {
 }
 
 /**
+ * @date 18/12/2023
+ * @author LAFORGE Mateo
+*/
+bool genListContains(GenList *l, void* e) {
+#ifdef DEBUG
+    testArgNull(l, "genericlist.c"; "listContains", "l");
+#endif
+    for (unsigned int i = 0; i < genListSize(l); i++)
+        if (genListGet(l, i) == e)
+            return true;
+    return false;
+}
+
+/**
  * @date  1/11/2023
  * @author Ugo VALLAT
  */
