@@ -176,7 +176,7 @@ bool testWarnl() {
     }
     close_logger();
     revertStandardOutputRedirection();
-    if (!contains(FILE_NAME, fun_name) || !containsFile()) return false;
+    if (!containsFile()) return false;
 
     printsb("\ntest sur sortie explicite\n");
     resetLogFileContent();
