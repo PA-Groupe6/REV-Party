@@ -16,7 +16,26 @@
 #include "../../src/module/condorcet.h"
 
 
+/*
+    =======================
+    === DONNEES DE TEST ===
+    =======================
+*/
 
+#define NB_DUEL 20
+#define MAX_NB_WINNER 10
+
+unsigned nb_winners_ref[NB_DUEL] = {0,0,0,0,1,1,1,1,0,0,1};
+char label_winners_ref[NB_DUEL][MAX_NB_WINNER][MAX_LENGHT_LABEL] = {
+    {""},{""},{""},{""},
+    {"C3"},         // 4
+    {"C3"},         // 5
+    {"C1"},         // 6
+    {"C3"},         // 7
+    {""},{""},
+    {"C4"}          // 10
+
+};
 
 /*
     ===================
@@ -48,26 +67,52 @@ void afterEach() {
 }
 
 bool echecTest(char* msg) {
-    printsb(msg);
+    char buff[256] = "\n X-- ";
+    strncat(buff, msg,256);
+    printsb(buff);
     return false;
+}
+
+bool verifResultMinimax(GenList* result, unsigned num_test) {
+#ifdef DEBUG
+    if(num_test >= NB_DUEL) exitl("test_condorcet_ranked_pairs", "", EXIT_FAILURE, "num_test invalide %d >= %d", num_test, NB_DUEL);
+#endif
+    unsigned nb_winners = genListSize(result);
+    if(nb_winners != nb_winners_ref[num_test]) return echecTest("Nombre de gagnants différent");
+    
+    WinnerCondorcet *wtmp;
+    for(unsigned i = 0; i < nb_winners; i++) {
+        wtmp = (WinnerCondorcet*)genListGet(result, i);
+        if(strcmp(wtmp->name, label_winners_ref[num_test][i])) return echecTest("mauvais gagnant");
+    }
+
+    return true;
 }
 
 
 
-bool testRankedPairsOnDuel(char* file) {
+bool testRankedPairsOnDuel(char* file, unsigned num_test) {
     GenList* lwinner;
     Duel* duel;
     printsb("\t- chargement duel\n");
     duel = csvToDuel(file);
-    displayDuelLog(duel);
     
     printsb("\t- calcul\n");
     lwinner = theWinnerRankedPairs(duel);
 
-    if(!lwinner) return echecTest(" X-- pointeur null\n");
+    if(!lwinner) return echecTest("pointeur null\n");
+    if(!verifResultMinimax(lwinner, num_test)) {
+        printl("\n\n<+>---------------------------- [ %s ] :\n\n", file);
+        displayDuelLog(duel);
+        displayListWinnerCondorcet(lwinner, "RANGEMENT DES PAIRS");
 
-    printf("\nListe de vainqueurs : \n");
-    displayListWinnerCondorcet(lwinner, "RANKED PAIRS");
+        deleteDuel(&duel);
+        while(!genListEmpty(lwinner))
+            free(genListPop(lwinner));
+        deleteGenList(&lwinner);
+        return false;
+    }
+
     deleteDuel(&duel);
     while(!genListEmpty(lwinner))
         free(genListPop(lwinner));
@@ -77,35 +122,25 @@ bool testRankedPairsOnDuel(char* file) {
 
 bool testRankedPairs() {
 
-    printsb("\ntest sur duel 1...");
-    testRankedPairsOnDuel("test/ressource/duel_1.csv");
-    printsb( "\n\t- test passé\n");
-
-    printsb("\ntest sur duel 2...");
-    testRankedPairsOnDuel("test/ressource/duel_2.csv");
-    printsb( "\n\t- test passé\n");
-
-    printsb("\ntest sur duel 3...");
-    testRankedPairsOnDuel("test/ressource/duel_3.csv");
-    printsb( "\n\t- test passé\n");
-
     printsb("\ntest sur duel 4...");
-    testRankedPairsOnDuel("test/ressource/duel_4.csv");
+    if(!testRankedPairsOnDuel("test/ressource/duel_4.csv",4)) return false;
     printsb( "\n\t- test passé\n");
 
     printsb("\ntest sur duel 5...");
-    testRankedPairsOnDuel("test/ressource/duel_5.csv");
+    if(!testRankedPairsOnDuel("test/ressource/duel_5.csv",5)) return false;
     printsb( "\n\t- test passé\n");
 
     printsb("\ntest sur duel 6...");
-    testRankedPairsOnDuel("test/ressource/duel_6.csv");
+    if(!testRankedPairsOnDuel("test/ressource/duel_6.csv",6)) return false;
     printsb( "\n\t- test passé\n");
-
 
     printsb("\ntest sur duel 7...");
-    testRankedPairsOnDuel("test/ressource/duel_7.csv");
+    if(!testRankedPairsOnDuel("test/ressource/duel_7.csv",7)) return false;
     printsb( "\n\t- test passé\n");
 
+    printsb("\ntest sur duel 10...");
+    if(!testRankedPairsOnDuel("test/ressource/duel_10.csv",10)) return false;
+    printsb( "\n\t- test passé\n");
 
     return true;
 

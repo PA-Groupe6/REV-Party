@@ -136,48 +136,33 @@ GenList* findWinnerGraph(Duel* duel){
 
     int nb_cand = duelNbCandidat(duel) ;
     int nb_arcs = graphNbArc(graph);
-    int wins_arcs[nb_cand];
+    int lost_arcs[nb_cand];
 
     deleteGraph(&graph);
 
-    for(int i = 0; i<nb_cand; i++) wins_arcs[i] = 0;
+    for(int i = 0; i<nb_cand; i++) lost_arcs[i] = 0;
     Arc* arc_current;
     int src_id;
     for(int i = 0; i<nb_arcs; i++){
         arc_current =(Arc*) genListGet(arcs_sorted, i);
-        src_id = arc_current->id_src;
-        wins_arcs[src_id]++;
+        src_id = arc_current->id_dest;
+        lost_arcs[src_id]++;
     }
     while(!genListEmpty(arcs_sorted))
         free(genListPop(arcs_sorted));
     deleteGenList(&arcs_sorted);
     
-    int max_winnings = 0;//max_role_src
     
     GenList* winners = createGenList(nb_cand);
 
     for(int i = 0; i < nb_cand; i++){
-        if(wins_arcs[i]>max_winnings){
-            while(genListSize(winners)!=0) free((WinnerCondorcet*)genListPop(winners));
-            max_winnings = wins_arcs[i];
-            
+        if(lost_arcs[i]==0){  
             WinnerCondorcet* cand_possible = malloc(sizeof(WinnerCondorcet));
-            cand_possible->score = max_winnings;
             char* winner_name =  duelIndexToLabel(duel, i);
             strncpy(cand_possible->name, winner_name, MAX_LENGHT_LABEL);
-            
+            cand_possible->score = 0;
             free(winner_name);
             genListAdd(winners, cand_possible);
-        }
-        else if(wins_arcs[i]==max_winnings){
-            WinnerCondorcet* another_cand = malloc(sizeof(WinnerCondorcet));
-            
-            another_cand->score = max_winnings;
-            char* winner_name =  duelIndexToLabel(duel, i);
-            strncpy(another_cand->name, winner_name, MAX_LENGHT_LABEL);
-            
-            free(winner_name);
-            genListAdd(winners, another_cand);
         }
     }
 
