@@ -390,204 +390,211 @@ void displayDuelLog(Duel *d) {
 
 #define MAX(x, y) (x > y ? x : y)
 
-unsigned maxLenghtLabelWinner(GenList *l) {
+unsigned maxLengthLabel(GenList* l, char*(label_function(void*))) {
     unsigned nb_winners = genListSize(l);
     unsigned max = 0;
     unsigned tmp;
     for(unsigned i = 0; i < nb_winners; i++) {
-        tmp = strlen(((WinnerSingle*)genListGet(l, i))->name);
+        tmp = strlen(label_function(genListGet(l, i)));
         if(tmp > max) max = tmp;
     }
     return max;
 }
 
-unsigned maxLenghtLabelWinnerTwo(GenList *l) {
-    unsigned nb_winners = genListSize(l);
-    unsigned max = 0;
-    unsigned tmp;
-    for(unsigned i = 0; i < nb_winners; i++) {
-        tmp = strlen(((WinnerSingleTwo*)genListGet(l, i))->name);
-        if(tmp > max) max = tmp;
-    }
-    return max;
+char* singleWinnerName(void* arg) {
+    return ((WinnerSingle*) arg)->name;
+}
+char* singleTwoWinnerName(void* arg) {
+    return ((WinnerSingleTwo*) arg)->name;
+}
+char* condorcetWinnerName(void* arg) {
+    return ((WinnerSingleTwo*) arg)->name;
+}
+char* majorityJudgmentWinnerName(void* arg) {
+    return ((WinnerSingleTwo*) arg)->name;
 }
 
-
-unsigned maxLenghtLabelCondorcet(GenList *l) {
-    unsigned nb_winners = genListSize(l);
-    unsigned max = 0;
-    unsigned tmp;
-    for(unsigned i = 0; i < nb_winners; i++) {
-        tmp = strlen(((WinnerCondorcet*)genListGet(l, i))->name);
-        if(tmp > max) max = tmp;
-    }
-    return max;
+unsigned maxLengthLabelWinner(GenList *l) {
+    return maxLengthLabel(l, singleWinnerName);
+}
+unsigned maxLengthLabelWinnerTwo(GenList *l) {
+    return maxLengthLabel(l, singleTwoWinnerName);
+}
+unsigned maxLengthLabelCondorcet(GenList *l) {
+    return maxLengthLabel(l, condorcetWinnerName);
+}
+unsigned maxLengthLabelWinnerMajorityJudgmeent(GenList *l) {
+    return maxLengthLabel(l, majorityJudgmentWinnerName);
 }
 
-
-unsigned maxLenghtLabelWinnerMajorityJudgmeent(GenList *l) {
-    unsigned nb_winners = genListSize(l);
-    unsigned max = 0;
-    unsigned tmp;
-    for(unsigned i = 0; i < nb_winners; i++) {
-        tmp = strlen(((WinnerMajorityJudgment*)genListGet(l, i))->name);
-        if(tmp > max) max = tmp;
-    }
-    return max;
-}
-
-// décalage horizontal entre le texte affiché et les bordures
+/* décalage horizontal entre le texte affiché et les bordures */
 #define SPACE_BETWEEN_BORDER 2
 
-// phrase d'annonce
+/* phrase d'annonce */
 #define UNI1_BANNER "RESULTATS UNI 1 :"
-// taille de la phrase d'affichage d'un candidat sans compter la taille prise par le nom de celui-ci
+/* taille de la phrase d'affichage d'un candidat sans compter la taille prise par le nom de celui-ci */
 #define UNI1_WINNER_SENTENCE_LENGTH 13
 
 void displayListWinnerSingle(GenList *l) {
     unsigned nb_winners = genListSize(l);
-    unsigned max_lenght_winner = maxLenghtLabelWinner(l);
-    unsigned max_lenght_case = MAX(strlen(UNI1_BANNER), max_lenght_winner + UNI1_WINNER_SENTENCE_LENGTH);
+    unsigned max_length_winner = maxLengthLabelWinner(l);
+    unsigned max_length_case = MAX(strlen(UNI1_BANNER), max_length_winner + UNI1_WINNER_SENTENCE_LENGTH);
 
     /* bordure haute */
     printf("\t╔");
-    printStringN("═", max_lenght_case + (2 * SPACE_BETWEEN_BORDER));
+    printStringN("═", max_length_case + (2 * SPACE_BETWEEN_BORDER));
     printf("╗\n");
 
     /* titre */
     printf("\t║  %s", UNI1_BANNER);
-    printStringN(" ", max_lenght_case - strlen(UNI1_BANNER) + SPACE_BETWEEN_BORDER);
+    printStringN(" ", max_length_case - strlen(UNI1_BANNER) + SPACE_BETWEEN_BORDER);
     printf("║\n");
 
     /* vainqueurs */
     WinnerSingle *wtmp;
     for(unsigned i = 0; i < nb_winners; i++) {
         wtmp = genListGet(l, i);
-        printf("\t║  • %-*s : %6.2f %%", max_lenght_winner, wtmp->name, wtmp->score);
-        printStringN(" ", max_lenght_case - (UNI1_WINNER_SENTENCE_LENGTH + strlen(wtmp->name)) + SPACE_BETWEEN_BORDER);
+        printf("\t║  • %-*s : %6.2f %%", max_length_winner, wtmp->name, wtmp->score);
+        printStringN(" ", max_length_case - (UNI1_WINNER_SENTENCE_LENGTH + max_length_winner) + SPACE_BETWEEN_BORDER);
         printf("║\n");
     }
 
     /* bordure basse */
     printf("\t╚");
-    printStringN("═", max_lenght_case + (2 * SPACE_BETWEEN_BORDER));
+    printStringN("═", max_length_case + (2 * SPACE_BETWEEN_BORDER));
     printf("╝\n");
 }
 
+/* phrase d'annonce */
+#define UNI2_BANNER "RESULTATS UNI 2 :"
+/* taille de la phrase d'affichage d'un candidat sans compter la taille prise par le nom de celui-ci */
+#define UNI2_WINNER_SENTENCE_LENGTH 17
+/* phrase d'annonce du tour 1 */
+#define UNI2_FIRST_ROUND_BANNER "Tour 1..."
+/* phrase d'annonce du tour 2 */
+#define UNI2_SECOND_ROUND_BANNER "Tour 2..."
+
+void printWinnerSingleTwo(WinnerSingleTwo* winner, unsigned max_length_winner, unsigned max_length_case) {
+    printf("\t║   │  • %-*s : %6.2f %%", max_length_winner, winner->name, winner->score);
+    printStringN(" ", max_length_case - (UNI2_WINNER_SENTENCE_LENGTH + max_length_winner) + SPACE_BETWEEN_BORDER);
+    printf("║\n");
+}
 
 void displayListWinnerSingleTwo(GenList *l) {
     unsigned nb_winners = genListSize(l);
-    unsigned max_lenght_winner = maxLenghtLabelWinnerTwo(l);
-    unsigned max_lenght_case = max_lenght_winner + 24;
+    unsigned max_length_winner = maxLengthLabelWinnerTwo(l);
+    unsigned max_length_case = MAX(strlen(UNI2_BANNER), max_length_winner + UNI2_WINNER_SENTENCE_LENGTH);
 
     /* bordure haute */
     printf("\t╔");
-    printStringN("═", max_lenght_case);
+    printStringN("═", max_length_case + (2 * SPACE_BETWEEN_BORDER));
     printf("╗\n");
+    /* ligne vide */
     printf("\t║");
-    printStringN(" ", max_lenght_case);
+    printStringN(" ", max_length_case + (2 * SPACE_BETWEEN_BORDER));
     printf("║\n");
 
     /* titre */
-    printf("\t║  RESULTATS UNI 2 :");
-    printStringN(" ", max_lenght_case-19);
+    printf("\t║  %s", UNI2_BANNER);
+    printStringN(" ", max_length_case - strlen(UNI2_BANNER) + SPACE_BETWEEN_BORDER);
     printf("║\n");
 
     /* Tour 1 */
-    printf("\t║  Tour 1...");
-    printStringN(" ", max_lenght_case-11);
+    printf("\t║  %s", UNI2_FIRST_ROUND_BANNER);
+    printStringN(" ", max_length_case - strlen(UNI2_FIRST_ROUND_BANNER) + SPACE_BETWEEN_BORDER);
     printf("║\n");
 
     /* vainqueurs tour 1 */
     WinnerSingleTwo *wtmp;
     for(unsigned i = 0; i < nb_winners; i++) {
         wtmp = genListGet(l, i);
-        if(wtmp->round == 1)
-            printf("\t║   │  • %-*s : %6.2f %%     ║\n", max_lenght_winner, wtmp->name, wtmp->score);
+        if (wtmp->round == 1)
+            printWinnerSingleTwo(wtmp, max_length_winner, max_length_case);
     }
 
     /* Tour 2 */
-    printf("\t║  Tour 2...");
-    printStringN(" ", max_lenght_case-11);
+    printf("\t║  %s", UNI2_SECOND_ROUND_BANNER);
+    printStringN(" ", max_length_case - strlen(UNI2_SECOND_ROUND_BANNER) + SPACE_BETWEEN_BORDER);
     printf("║\n");
 
     /* vainqueurs tour 1 */
     for(unsigned i = 0; i < nb_winners; i++) {
         wtmp = genListGet(l, i);
         if(wtmp->round == 2)
-            printf("\t║   │  • %-*s : %6.2f %%     ║\n", max_lenght_winner, wtmp->name, wtmp->score);
+            printWinnerSingleTwo(wtmp, max_length_winner, max_length_case);
     }
 
-    /* bordure basse */
+    /* ligne vide */
     printf("\t║");
-    printStringN(" ", max_lenght_case);
+    printStringN(" ", max_length_case + (2 * SPACE_BETWEEN_BORDER));
     printf("║\n");
+    /* bordure basse */
     printf("\t╚");
-    printStringN("═", max_lenght_case);
+    printStringN("═", max_length_case + (2 * SPACE_BETWEEN_BORDER));
     printf("╝\n");
 }
 
 
 void displayListWinnerCondorcet(GenList *l, char* name_algo) {
     unsigned nb_winners = genListSize(l);
-    unsigned max_lenght_winner = maxLenghtLabelCondorcet(l);
-    unsigned max_lenght_case = max_lenght_winner + 20;
+    unsigned max_length_winner = maxLengthLabelCondorcet(l);
+    unsigned max_length_case = max_length_winner + 20;
 
     /* bordure haute */
     printf("\t╔");
-    printStringN("═", max_lenght_case);
+    printStringN("═", max_length_case);
     printf("╗\n");
 
     /* titre */
     printf("\t║  RESULTATS %s :", name_algo);
-    printStringN(" ", max_lenght_case-19);
+    printStringN(" ", max_length_case-19);
     printf("║\n");
 
     /* vainqueurs */
     WinnerCondorcet *wtmp;
     for(unsigned i = 0; i < nb_winners; i++) {
         wtmp = genListGet(l, i);
-        printf("\t║  • %-*s        ║\n", max_lenght_winner, wtmp->name);
+        printf("\t║  • %-*s        ║\n", max_length_winner, wtmp->name);
     }
 
     /* bordure basse */
     printf("\t╚");
-    printStringN("═", max_lenght_case);
+    printStringN("═", max_length_case);
     printf("╝\n");
 }
 
-// phrase d'annonce
+/* phrase d'annonce */
 #define MJ_BANNER "RESULTATS Jugement Majoritaire :"
-// taille de la phrase d'affichage d'un candidat sans compter la taille prise par le nom de celui-ci
+/* taille de la phrase d'affichage d'un candidat sans compter la taille prise par le nom de celui-ci */
 #define MJ_WINNER_SENTENCE_LENGTH 27
 
 void displayListWinnerMajorityJudgment(GenList *l) {
     unsigned nb_winners = genListSize(l);
-    unsigned max_lenght_winner = maxLenghtLabelWinnerMajorityJudgmeent(l);
-    unsigned max_lenght_case = MAX(strlen(MJ_BANNER), max_lenght_winner + MJ_WINNER_SENTENCE_LENGTH);
+    unsigned max_length_winner = maxLengthLabelWinnerMajorityJudgmeent(l);
+    unsigned max_length_case = MAX(strlen(MJ_BANNER), max_length_winner + MJ_WINNER_SENTENCE_LENGTH);
 
     /* bordure haute */
     printf("\t╔");
-    printStringN("═", max_lenght_case + (2 * SPACE_BETWEEN_BORDER));
+    printStringN("═", max_length_case + (2 * SPACE_BETWEEN_BORDER));
     printf("╗\n");
 
     /* titre */
     printf("\t║  %s", MJ_BANNER);
-    printStringN(" ", max_lenght_case - strlen(MJ_BANNER) + SPACE_BETWEEN_BORDER);
+    printStringN(" ", max_length_case - strlen(MJ_BANNER) + SPACE_BETWEEN_BORDER);
     printf("║\n");
 
     /* vainqueurs */
     WinnerMajorityJudgment *wtmp;
     for(unsigned i = 0; i < nb_winners; i++) {
         wtmp = genListGet(l, i);
-        printf("\t║  • %-*s : (%6.2f %%,%2d,%6.2f %%)", max_lenght_winner, wtmp->name, wtmp->percent_sup * 100, wtmp->median , wtmp->percent_inf * 100);
-        printStringN(" ", max_lenght_case - (MJ_WINNER_SENTENCE_LENGTH + strlen(wtmp->name)) + SPACE_BETWEEN_BORDER);
+        printf("\t║  • %-*s : (%6.2f %%,%2d,%6.2f %%)", max_length_winner, wtmp->name, wtmp->percent_sup * 100, wtmp->median , wtmp->percent_inf * 100);
+        printStringN(" ", max_length_case - (MJ_WINNER_SENTENCE_LENGTH + max_length_winner) + SPACE_BETWEEN_BORDER);
         printf("║\n");
     }
 
     /* bordure basse */
     printf("\t╚");
-    printStringN("═", max_lenght_case + (2 * SPACE_BETWEEN_BORDER)); //2: décalage côté gauche
+    printStringN("═", max_length_case + (2 * SPACE_BETWEEN_BORDER));
     printf("╝\n");
 }
 
