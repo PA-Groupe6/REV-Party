@@ -110,7 +110,7 @@ tinterpreter: $(OBJ_STRUCT) $(OBJ_TEST) $(OBJDIR)/interpreter.o
 tbale: $(OBJ_STRUCT) $(OBJ_TEST) $(OBJDIR)/structure/label_test_set.o
 	@$(call run_test,bale,structure/,$^)
 
-tduel: $(OBJ_STRUCT) $(OBJ_TEST) $(OBJDIR)/structure/label_test_set.o
+tduel: $(OBJ_STRUCT) $(OBJ_TEST) $(OBJDIR)/structure/label_test_set.o $(OBJDIR)/utils/csv_reader.o
 	@$(call run_test,duel,structure/,$^)
 
 tgenericlist: $(OBJ_STRUCT) $(OBJ_TEST) $(OBJDIR)/structure/label_test_set.o

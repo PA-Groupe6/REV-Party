@@ -8,10 +8,6 @@
  * - deleteDuel
  * - duelGetValue
  * - duelNbCandidat
- * -
- * -
- * -
- * -
  */
 
 
@@ -24,6 +20,7 @@
 #include "../test_utils.h"
 #include "../../src/structure/duel.h"
 #include "label_test_set.h"
+#include "../../src/utils/csv_reader.h"
 
 /* dimension de la matrice de test */
 #define NB_CANDIDAT NB_LABELS    /* NB_CANDIDAT > 2 */
@@ -152,7 +149,7 @@ bool checkLabels(unsigned id_label) {
     char* candidat_label;
     labels = loadLabelsInList(id_label);
 
-    if(!labels) return echecTest("\n X-- Erreur chargement labels");
+    if(!labels) return echecTest("Erreur chargement labels");
     d = createDuel(NB_CANDIDAT, labels);
     for(unsigned i = 0; i < NB_CANDIDAT; i++) {
         candidat_label = duelIndexToLabel(d, i);
@@ -166,11 +163,11 @@ bool checkLabels(unsigned id_label) {
 
 bool testDuelIndexToLabel() {
     printsb( "\ntest index to label ...");
-    if(!checkLabels(1)) return echecTest("\n X-- Echec avec label1");
-    if(!checkLabels(2)) return echecTest("\n X-- Echec avec label2");
-    if(!checkLabels(3)) return echecTest("\n X-- Echec avec label3");
-    if(!checkLabels(4)) return echecTest("\n X-- Echec avec label4");
-    if(!checkLabels(5)) return echecTest("\n X-- Echec avec label5");
+    if(!checkLabels(1)) return echecTest("Echec avec label1");
+    if(!checkLabels(2)) return echecTest("Echec avec label2");
+    if(!checkLabels(3)) return echecTest("Echec avec label3");
+    if(!checkLabels(4)) return echecTest("Echec avec label4");
+    if(!checkLabels(5)) return echecTest("Echec avec label5");
     printsb( "\n\t- test passé\n");
 
     return true;
@@ -183,13 +180,13 @@ bool searchLabels(unsigned id_label) {
     int index;
 
     labels = loadLabelsInList(id_label);
-    if(!labels) return echecTest("\n X-- Erreur chargement labels");
+    if(!labels) return echecTest("Erreur chargement labels");
 
     d = createDuel(NB_CANDIDAT, labels);
     for(unsigned i = 0; i < NB_CANDIDAT; i++) {
         index = duelLabelToIndex(d, genListGet(labels, i));
-        if(index == -1) return echecTest("\n X-- label introuvable");
-        if(index != (int)i) return echecTest("\n X-- labels différents");
+        if(index == -1) return echecTest("label introuvable");
+        if(index != (int)i) return echecTest("labels différents");
     }
     deleteGenList(&labels);
     deleteDuel(&d);
@@ -198,14 +195,75 @@ bool searchLabels(unsigned id_label) {
 
 bool testDuelLabelToIndex () {
     printsb( "\ntest index de label ...");
-    if(!searchLabels(1)) return echecTest("\n X-- Echec avec label1");
-    if(!searchLabels(2)) return echecTest("\n X-- Echec avec label2");
-    if(!searchLabels(3)) return echecTest("\n X-- Echec avec label3");
-    if(!searchLabels(4)) return echecTest("\n X-- Echec avec label4");
-    if(!searchLabels(5)) return echecTest("\n X-- Echec avec label5");
+    if(!searchLabels(1)) return echecTest("Echec avec label1");
+    if(!searchLabels(2)) return echecTest("Echec avec label2");
+    if(!searchLabels(3)) return echecTest("Echec avec label3");
+    if(!searchLabels(4)) return echecTest("Echec avec label4");
+    if(!searchLabels(5)) return echecTest("Echec avec label5");
     printsb( "\n\t- test passé\n");
 
     return true;
+}
+
+
+bool convertionBaleToDuel(char* path_bale, char* path_duel_ref) {
+    Duel* d_ref, *d_frome_b;
+    Bale* b;
+    unsigned nb_candidats;
+    char* label, *label_ref;
+
+    /* chargment de la donnée */
+    b = csvToBale(path_bale);
+    if(!b) return echecTest("Echec chargement bale 8");
+    d_ref = csvToDuel(path_duel_ref);
+    if(!d_ref) return echecTest("Echec chargement duel of bale 8");
+    printsb("\n chargement de la donnée réussi...");
+
+    /* convertion bale to duel */
+    d_frome_b = duelFromBale(b);
+    if(!d_frome_b) return echecTest("Pointeur null");
+    
+    /* test nouveau duel */
+    nb_candidats = duelNbCandidat(d_frome_b);
+    if(nb_candidats != duelNbCandidat(d_ref)) return echecTest("taille différente");
+    for(unsigned l = 0; l < nb_candidats; l++) {
+        /* test labels */
+        label_ref = duelIndexToLabel(d_ref, l);
+        label = duelIndexToLabel(d_frome_b, l);
+        if(strcmp(label, label_ref) != 0) return echecTest("label différent");
+        free(label);
+        free(label_ref);
+
+        /* test valeurs */
+        for(unsigned c = 0; c < nb_candidats; c++) {
+            if(duelGetValue(d_ref, l, c) != duelGetValue(d_frome_b, l, c))
+                return echecTest("Valeur différente");
+        }
+    }
+
+    /* libération de la mémoire */
+    deleteBale(&b);
+    deleteDuel(&d_ref);
+    deleteDuel(&d_frome_b);
+    printsb( "\n\t- test passé\n");
+
+    return true;
+}
+
+
+bool testDuelFromBale () {
+    
+
+    printsb( "\ntest sur bale  8...");
+    if(!convertionBaleToDuel("test/ressource/bale_8.csv", "test/ressource/duel_of_bale_8.csv")) return false;
+    printsb( "\n\t- test passé\n");
+
+    printsb( "\ntest sur bale  9...");
+    if(!convertionBaleToDuel("test/ressource/bale_9.csv", "test/ressource/duel_of_bale_9.csv")) return false;
+    printsb( "\n\t- test passé\n");
+
+    return true;
+
 }
 
 
@@ -229,6 +287,8 @@ int main() {
     test_fun(testDuelSetValue, 2, "testDuelSetValue");
     test_fun(testDuelLabelToIndex, 4, "testDuelLabelToIndex");
     test_fun(testDuelIndexToLabel, 8, "testDuelIndexToLabel");
+    test_fun(testDuelFromBale, 8, "testDuelFromBale");
+
 
 
 
