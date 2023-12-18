@@ -31,7 +31,6 @@ void uni1(Bale* bale) {
     GenList* winners = theWinnerOneRound(bale);
     displayListWinnerSingle(winners);
     deleteWinners(&winners);
-    printf("Nombre Votants: %d   -   Nombre Candidats: %d\n", baleNbVoter(bale), baleNbCandidat(bale));
 }
 
 /**
@@ -45,7 +44,6 @@ void uni2(Bale* bale) {
     GenList* winners = theWinnerTwoRounds(bale);
     displayListWinnerSingleTwo(winners);
     deleteWinners(&winners);
-    printf("Nombre Votants: %d   -   Nombre Candidats: %d\n", baleNbVoter(bale), baleNbCandidat(bale));
 }
 
 /**
@@ -56,15 +54,10 @@ void uni2(Bale* bale) {
  * @param[in] duel la matrice de duels fournie par l'utilisateur en entrée
  * @param[in] nb_voters nombre de votants (si il a été possible de l'extraire, NULL sinon)
  */
-void minimax(Duel* duel, unsigned* nb_voters) {
+void minimax(Duel* duel) {
     GenList* winners = theWinnerMinimax(duel);
     displayListWinnerCondorcet(winners, "minimax");
     deleteWinners(&winners);
-    if (nb_voters != NULL) {
-        printf("Nombre Votants: %d   -   Nombre Candidats: %d\n", *nb_voters, duelNbCandidat(duel));
-    } else {
-        printf("Nombre Candidats: %d\n", duelNbCandidat(duel));
-    }
 }
 
 /**
@@ -75,15 +68,10 @@ void minimax(Duel* duel, unsigned* nb_voters) {
  * @param[in] duel la matrice de duels fournie par l'utilisateur en entrée
  * @param[in] nb_voters nombre de votants (si il a été possible de l'extraire, NULL sinon)
  */
-void rankedPairs(Duel* duel, unsigned* nb_voters) {
+void rankedPairs(Duel* duel) {
     GenList* winners = theWinnerRankedPairs(duel);
     displayListWinnerCondorcet(winners, "rangement des pairs");
     deleteWinners(&winners);
-    if (nb_voters != NULL) {
-        printf("Nombre Votants: %d   -   Nombre Candidats: %d\n", *nb_voters, duelNbCandidat(duel));
-    } else {
-        printf("Nombre Candidats: %d\n", duelNbCandidat(duel));
-    }
 }
 
 /**
@@ -94,15 +82,10 @@ void rankedPairs(Duel* duel, unsigned* nb_voters) {
  * @param[in] duel la matrice de duels fournie par l'utilisateur en entrée
  * @param[in] nb_voters nombre de votants (si il a été possible de l'extraire, NULL sinon)
  */
-void schulze(Duel* duel, unsigned* nb_voters) {
+void schulze(Duel* duel) {
     GenList* winners = theWinnerSchulze(duel);
     displayListWinnerCondorcet(winners, "schulze");
     deleteWinners(&winners);
-    if (nb_voters != NULL) {
-        printf("Nombre Votants: %d   -   Nombre Candidats: %d\n", *nb_voters, duelNbCandidat(duel));
-    } else {
-        printf("Nombre Candidats: %d\n", duelNbCandidat(duel));
-    }
 }
 
 /**
@@ -116,7 +99,33 @@ void majorityJudgment(Bale* bale) {
     GenList* winners = theWinnerMajorityJudgment(bale);
     displayListWinnerMajorityJudgment(winners);
     deleteWinners(&winners);
-    printf("Nombre Votants: %d   -   Nombre Candidats: %d\n", baleNbVoter(bale), baleNbCandidat(bale));
+}
+
+/**
+ * @date 18/12/2023
+ * @author LAFORGE Mateo
+ * @brief affiche les nombres de votants et de candidats à partir d'un ballot
+ * 
+ * @param[in] bale ballot source
+ */
+void printNumbersFromBale(Bale* bale) {
+    printl("Nombre Votants: %d   -   Nombre Candidats: %d\n", baleNbVoter(bale), baleNbCandidat(bale));
+}
+
+/**
+ * @date 18/12/2023
+ * @author LAFORGE Mateo
+ * @brief affiche les nombres de candidats à partir d'une matrice de duel et le nombre de votant si nb_voters != NULL
+ * 
+ * @param[in] duel matrice de duel source
+ * @param[in] nb_voters nombre de votant extrait d'une conversion (peux être NULL si l'utilisateur a donné une matrice de duel)
+ */
+void printNumbersFromDuel(Duel* duel, unsigned* nb_voters) {
+    if (nb_voters == NULL) {
+        printl("Nombre Candidats: %d\n", duelNbCandidat(duel));
+    } else {
+        printl("Nombre Votants: %d   -   Nombre Candidats: %d\n", *nb_voters, duelNbCandidat(duel));
+    }
 }
 
 /**
@@ -133,12 +142,13 @@ void all(Command* cmd) {
             Duel* duel = csvToDuel(cmd->file_name);
 
             printl(" -= Minimax =-\n");
-            minimax(duel, NULL);
+            minimax(duel);
             printl(" -= Rangement Des Pairs =-\n");
-            rankedPairs(duel, NULL);
+            rankedPairs(duel);
             printl(" -= Schulze =-\n");
-            schulze(duel, NULL);
+            schulze(duel);
 
+            printNumbersFromDuel(duel, NULL);
             deleteDuel(&duel);
             break;
         }
@@ -151,19 +161,19 @@ void all(Command* cmd) {
             uni2(bale);
 
             Duel* duel = duelFromBale(bale);
-            unsigned nb_voters = baleNbVoter(bale);
 
             printl(" -= Minimax =-\n");
-            minimax(duel, &nb_voters);
+            minimax(duel);
             printl(" -= Rangement Des Pairs =-\n");
-            rankedPairs(duel, &nb_voters);
+            rankedPairs(duel);
             printl(" -= Schulze =-\n");
-            schulze(duel, &nb_voters);
+            schulze(duel);
 
             printl(" -= Jugment Majoritaire =-\n");
             majorityJudgment(bale);
 
             deleteDuel(&duel);
+            printNumbersFromBale(bale);
             deleteBale(&bale);
             break;
         }
@@ -189,6 +199,8 @@ Duel* getDuel(Command* cmd, unsigned* nb_voters) {
             duel = csvToDuel(cmd->file_name);
             break;
         case BALE: {
+            warnl("main.c", "getDuel",
+                "conversion d'une matrice de duel en ballot\n");
             Bale* bale = csvToBale(cmd->file_name);
             duel = duelFromBale(bale);
             // assigne nb_voters si possible
@@ -217,39 +229,45 @@ int main(int argc, char* argv[]) {
         case UNI1: {
             Bale* bale = csvToBale(cmd->file_name);
             uni1(bale);
+            printNumbersFromBale(bale);
             deleteBale(&bale);
             break;
         }
         case UNI2: {
             Bale* bale = csvToBale(cmd->file_name); 
             uni2(bale);
+            printNumbersFromBale(bale);
             deleteBale(&bale);
             break;
         }
         case MINIMAX: {
             unsigned nb_voters;
             Duel* duel = getDuel(cmd, &nb_voters);
-            minimax(duel, &nb_voters);
+            minimax(duel);
+            printNumbersFromDuel(duel, &nb_voters);
             deleteDuel(&duel);
             break;
         }
         case RANGEMENT: {
             unsigned nb_voters;
             Duel* duel = getDuel(cmd, &nb_voters);
-            rankedPairs(duel, &nb_voters);
+            rankedPairs(duel);
+            printNumbersFromDuel(duel, &nb_voters);
             deleteDuel(&duel);
             break;
         }
         case SCHULZE: {
             unsigned nb_voters;
             Duel* duel = getDuel(cmd, &nb_voters);
-            schulze(duel, &nb_voters);
+            schulze(duel);
+            printNumbersFromDuel(duel, &nb_voters);
             deleteDuel(&duel);
             break;
         }
         case JUGEMENT_MAJORITAIRE: {
             Bale* bale = csvToBale(cmd->file_name);
             majorityJudgment(bale);
+            printNumbersFromBale(bale);
             deleteBale(&bale);
             break;
         }
