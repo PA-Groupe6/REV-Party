@@ -122,20 +122,6 @@ void matrixSet(Matrix *m, unsigned int l, unsigned int c, int v) {
     listSet(genListGet(m->tab, l), v, c);
 }
 
-/**
- * @date  1/11/2023
- * @author Ugo VALLAT
- */
-void matrixErase(Matrix *m, unsigned int l, unsigned int c) {
-#ifdef DEBUG
-    testArgNull(m, "matrix.c", "matrixErase", "m");
-    if (l >= m->nbl || c >= m->nbc)
-        exitl("matrix.c", "matrixErase", EXIT_FAILURE,
-              "position invalide (%d,%d) dans matrice (%d,%d)", l, c, m->nbl, m->nbc);
-#endif
-
-    listSet(genListGet(m->tab, l), m->default_value, c);
-}
 
 /**
  * @date  1/11/2023
@@ -263,6 +249,7 @@ void matrixRemoveColumn(Matrix *m, unsigned int c) {
     deleteGenListIte(&ite);
     m->nbc--;
 }
+
 
 /*------------------------------------------------------------------*/
 /*                          ITERATEUR                               */
@@ -451,22 +438,6 @@ int matrixIteNext(MatrixIte *ite) {
     return before;
 }
 
-/**
- * @date  1/11/2023
- * @author Ugo VALLAT
- */
-int matrixIteGetValue(MatrixIte *ite) {
-#ifdef DEBUG
-    testArgNull(ite, "matrix.c", "matrixIteGetValue", "ite");
-    testMatrixModification(ite);
-    if (!(ite->next)) {
-        exitl("matrix.c", "matrixIteGetValue", EXIT_FAILURE, "Pas d'appel à next avant get");
-        return -1;
-    }
-#endif
-
-    return matrixGet(ite->matrix, ite->cur_l, ite->cur_c);
-}
 
 /**
  * @date  1/11/2023
@@ -506,100 +477,6 @@ void matrixMap(Matrix *m, int l, int c, fun_ite fun, void *buff) {
     deleteMatrixIte(&ite);
 }
 
-/**
- * @date  1/11/2023
- * @author Ugo VALLAT
- * @brief Ajoute la valeur courante au buffer
- * @param[in] v Valeur à ajouter
- * @param[in] l Ligne courante
- * @param[in] c Colonne courante
- * @param[in] buff Pointeur vers la somme des éléments
- * @return élément courant
- */
-int fun_som(int v, unsigned int l, unsigned int c, void *buff) {
-    (void)l; (void)c;
-    long int *som = (long int *)buff;
-    if (v > 0)
-        (*som) += v;
-    return v;
-}
-
-/**
- * @date  1/11/2023
- * @author Ugo VALLAT
- */
-long int matrixSum(Matrix *m, int l, int c) {
-#ifdef DEBUG
-    testArgNull(m, "matrix.c", "matrixSum", "m");
-    if (l >= (int)m->nbl || l < -1 || c >= (int)m->nbc || c < -1)
-        exitl("matrix.c", "matrixSum", EXIT_FAILURE,
-              "argument invalide (l,c)=(%d,%d) dans matrice (%d,%d)", l, c, m->nbl, m->nbc);
-#endif
-
-    /* création buffer sum */
-    long int *sum = malloc(sizeof(long int));
-    if (sum == NULL)
-        exitl("matrix.c", "matrixSum", EXIT_FAILURE, "Echec malloc buffer sum");
-    *sum = 0;
-
-    /* parcours de la matrice */
-    MatrixIte *ite = createMatrixIte(m, l, c, fun_som, sum);
-    while (matrixIteHasNext(ite))
-        matrixIteNext(ite);
-    deleteMatrixIte(&ite);
-
-    /* renvoie de la valeur */
-    long int vsum = *sum;
-    free(sum);
-    return vsum;
-}
-
-/**
- * @date  1/11/2023
- * @author Ugo VALLAT
- * @brief Compare la valeur courante à celle du buffer et stock le maximum dans le buffer (avec ses
- * coordonnées)
- * @param[in] v Valeur courante à comparer
- * @param[in] l Ligne courante
- * @param[in] c Colonne courante
- * @param[in] buff Pointeur vers le tableau [max, ligne_max, colone_max]
- * @return élément courant
- */
-int fun_max(int v, unsigned int l, unsigned int c, void *buff) {
-    GenList* lmax = (GenList*)buff;
-    int* cur;
-    if(genListEmpty(lmax) || ((int*)genListGet(lmax, 0))[0] <= v) {
-        if(!genListEmpty(lmax) && ((int*)genListGet(lmax, 0))[0] < v) {
-            while(!genListEmpty(lmax))
-                free(genListPop(lmax));
-        }
-        cur = malloc(sizeof(int)*3);
-        cur[0] = v;
-        cur[1] = l;
-        cur[2] = c;
-        genListAdd(lmax, cur);
-    }
-    return v;
-}
-
-/**
- * @date  1/11/2023
- * @author Ugo VALLAT
- */
-GenList *matrixMax(Matrix *m, int l, int c) {
-#ifdef DEBUG
-    testArgNull(m, "matrix.c", "matrixMax", "m");
-    if (l >= (int)m->nbl || l < -1 || c >= (int)m->nbc || c < -1)
-        exitl("matrix.c", "matrixMax", EXIT_FAILURE,
-              "argument invalide (l,c)=(%d,%d) dans matrice (%d,%d)", l, c, m->nbl, m->nbc);
-#endif
-
-    /* création buffer max */
-    GenList* lmax = createGenList(1);
-    /* parcours de la matrice */
-    matrixMap(m, l, c, fun_max, lmax);
-    return lmax;
-}
 
 /**
  * @date  1/11/2023
@@ -649,62 +526,7 @@ GenList *matrixMin(Matrix *m, int l, int c) {
     return lmin;
 }
 
-/**
- * @brief Structure utilisée par filter pour générer la nouvelle matrice
- *
- */
-typedef struct s_filter {
-    fun_filter_matrix fun;     /* Fonction de filtrage */
-    void *fun_buff;     /* buffer utilisé par la fonction de filtrage */
-    Matrix *new_matrix; /* matrice filtrée */
-} Filter;
 
-/**
- * @date  1/11/2023
- * @author Ugo VALLAT
- * @brief Ajoute l'élément courant à la nouvelle matrice si la fonction @ref fun_filter
- * renvoie true
- * @param[in] v Valeur courante
- * @param[in] l Ligne courante
- * @param[in] c Colonne courante
- * @param[in] buff Pointeur vers la structure Filter
- * @return élément courant
- */
-int applyFunFilter(int v, unsigned int l, unsigned int c, void *buff) {
-    Filter *filter = (Filter *)buff;
-    if (filter->fun(v, l, c, filter->fun_buff))
-        matrixSet(filter->new_matrix, l, c, v);
-    return v;
-}
-
-/**
- * @date  1/11/2023
- * @author Ugo VALLAT
- */
-Matrix *matrixFilter(Matrix *m, fun_filter_matrix fun, void *buff) {
-#ifdef DEBUG
-    testArgNull(m, "matrix.c", "matrixFilter", "m");
-#endif
-
-    /* Création nouvelle matrice et buffer */
-    Filter *filter = malloc(sizeof(Filter));
-    if (filter == NULL)
-        exitl("matrix.c", "matrixFilter", EXIT_FAILURE, "Echec malloc Filter");
-    filter->new_matrix = createMatrix(m->nbl, m->nbc, m->default_value);
-    filter->fun = fun;
-    filter->fun_buff = buff;
-
-    /* parcours de la matrice */
-    MatrixIte *ite = createMatrixIte(m, -1, -1, applyFunFilter, filter);
-    while (matrixIteHasNext(ite))
-        matrixIteNext(ite);
-    deleteMatrixIte(&ite);
-
-    /* renvoie de la nouvelle matrice */
-    Matrix *new = filter->new_matrix;
-    free(filter);
-    return new;
-}
 
 /**
  * @date  1/11/2023

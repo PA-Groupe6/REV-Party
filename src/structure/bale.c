@@ -167,122 +167,11 @@ char *baleColumnToLabel(Bale *b, unsigned int c) {
     return label;
 }
 
-/*------------------------------------------------------------------*/
-/*                          ITERATEUR                               */
-/*------------------------------------------------------------------*/
-
-typedef struct buff_ite {
-    fun_ite_bale fun;
-    void* buff;
-}BuffIte;
-
-int fun_bale_to_matrix(int v, unsigned int l, unsigned int c, void *buff) {
-    BuffIte *buff_ite = (BuffIte*)buff;
-    buff_ite->fun(v,l,c,buff_ite->buff);
-    return v;
-}
-
-/**
- * @date 13/11/2023
- * @author Ugo VALLAT
- * @brief Crée un itérateur sur le ballot passé en entrée et le positionne
- * avant le premier élément
- */
-BaleIte *createBaleIte(Bale *b, int l, int c, fun_ite_bale fun, void *buff) {
-#ifdef DEBUG
-    testArgNull(b, "bale.c", "createBaleIte", "b");
-#endif
-
-    BuffIte *buffite = malloc(sizeof(BuffIte));
-    buffite->buff = buff;
-    buffite->fun = fun;
-    return createMatrixIte(b->matrix, l, c, fun_bale_to_matrix, buffite);
-}
-
-/**
- * @date 13/11/2023
- * @author Ugo VALLAT
- * @brief Renvoie vrai si il reste des éléments à parcourir
- */
-bool baleIteHasNext(BaleIte *ite) {
-    return matrixIteHasNext(ite);
-}
-
-/**
- * @date 13/11/2023
- * @author Ugo VALLAT
- * @brief Décale l'itérateur sur le prochain élément, renvoie sa valeur et réalise
- *  le traitement de fun sans modification du ballot
- */
-int baleIteNext(BaleIte *ite) {
-    return matrixIteNext(ite);
-}
-
-/**
- * @date 13/11/2023
- * @author Ugo VALLAT
- * @brief Renvoie la valeur courrante
- */
-int baleIteGetValue(BaleIte *ite) {
-    return matrixIteGetValue(ite);
-}
-
-/**
- * @date 13/11/2023
- * @author Ugo VALLAT
- * @brief Supprime l'itérateur et libère la mémoire
- */
-void* deleteBaleIte(ptrBaleIte *ite) {
-    BuffIte *buff_ite = deleteMatrixIte(ite);
-    void* buff = buff_ite->buff;
-    free(buff_ite);
-    return buff;
-}
 
 /*------------------------------------------------------------------*/
 /*                            UTILS                                 */
 /*------------------------------------------------------------------*/
 
-/**
- * @date 13/11/2023
- * @author Ugo VALLAT
- * @brief Applique la fonction fun à tous les éléments spécifiés du ballot sans
- * les modifier
- */
-void baleMap(Bale *b, int l, int c, fun_ite_bale fun, void *buff) {
-    testArgNull(b, "bale.c", "baleMap", "b");
-    BuffIte *buff_ite = malloc(sizeof(BuffIte));
-    buff_ite->buff = buff;
-    buff_ite->fun = fun;
-    matrixMap(b->matrix, l, c, fun_bale_to_matrix, buff_ite);
-    free(buff_ite);
-}
-
-/**
- * @date 13/11/2023
- * @author Ugo VALLAT
- * @brief Renvoie la somme des élément positifs du ballot, d'une ligne ou d'une colonne
- */
-int baleSom(Bale *b, int l, int c) {
-#ifdef DEBUG
-    testArgNull(b, "bale.c", "baleSom", "b");
-#endif
-
-    return matrixSum(b->matrix, l, c);
-}
-
-/**
- * @date 13/11/2023
- * @author Ugo VALLAT
- * @brief Renvoie la/les plus grande valeur du ballot, d'une ligne ou d'une colonne
- **/
-GenList *baleMax(Bale *b, int l, int c) {
-#ifdef DEBUG
-    testArgNull(b, "bale.c", "baleMax", "b");
-#endif
-
-    return matrixMax(b->matrix, l, c);
-}
 
 /**
  * @date 13/11/2023
@@ -295,25 +184,6 @@ GenList *baleMin(Bale *b, int l, int c) {
 #endif
 
     return matrixMin(b->matrix, l, c);
-}
-
-
-/**
- * @date 13/11/2023
- * @author Ugo VALLAT
- * @brief Filtre le ballot et renvoie une copie du ballot avec uniquement
- * les éléments tel que fun(elem) = true
- */
-Bale *baleFilter(Bale *b, fun_filter_bale fun, void *buff) {
-#ifdef DEBUG
-    testArgNull(b, "bale.c", "baleFilter", "b");
-#endif
-
-    Bale* new = malloc(sizeof(Bale));
-    new->default_value = b->default_value;
-    new->labels = copyLabels(b->labels);
-    new->matrix = matrixFilter(b->matrix, fun, buff);
-    return new;
 }
 
 /**

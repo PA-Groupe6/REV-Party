@@ -113,18 +113,6 @@ unsigned int duelNbCandidat(Duel *d) {
     return matrixNbColonnes(d->matrix);
 }
 
-/**
- * @author Ugo VALLAT
- * @date 30/11/2023
-*/
-int duelLabelToIndex(Duel *d, char *label) {
-#ifdef DEBUG
-    testArgNull(d, "duel.c", "duelLabelToIndex", "d");
-    testArgNull(label, "duel.c", "duelLabelToIndex", "label");
-#endif
-
-    return searchLabel(d->labels, label);
-}
 
 /**
  * @author Ugo VALLAT

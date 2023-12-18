@@ -136,23 +136,6 @@ unsigned int baleNbVoter(Bale *b);
  */
 unsigned int baleNbCandidat(Bale *b);
 
-/**
- * @date 5/11/2023
- * @brief Renvoie le numéro de la colonne associée à l'étiquette, -1 si introvable
- *
- * @date 5/11/2023
- * @brief Renvoie le numéro de la colonne associée à l'étiquette, -1 si introvable
- *
- * @param[in] b Ballot à utiliser
- * @param[in] label  Etiquette de la colonne recherchée
- * @pre b != NULL
- *
- * @return numéro de la colonne, -1 si introvable
- * @pre b != NULL
- *
- * @return numéro de la colonne, -1 si introvable
- */
-int baleLabelToColumn(Bale *b, char *label);
 
 /**
  * @date 5/11/2023
@@ -169,149 +152,8 @@ int baleLabelToColumn(Bale *b, char *label);
 char *baleColumnToLabel(Bale *b, unsigned int c);
 
 /*------------------------------------------------------------------*/
-/*                          ITERATEUR                               */
-/*------------------------------------------------------------------*/
-
-/**
- * @date 5/11/2023
- * @brief Définition opaque de la structure BaleIte
- */
-typedef MatrixIte BaleIte;
-typedef MatrixIte* ptrBaleIte;
-
-/**
- * @date 5/11/2023
- * @brief Définie le type des fonctions prise en paramêtre de l'itérateur
- *
- * @param[in] v Valeur de la case courante
- * @param[in] l Ligne courante
- * @param[in] c Colonne courante
- * @param[in] buff pointeur vers un buffer pouvant stocker un résultat
- * @pre l < nb_ligne && c < nb_colonnes
- */
-typedef void (*fun_ite_bale)(int v, unsigned int l, unsigned int c, void *buff);
-
-/**
- * @date 5/11/2023
- * @brief Crée un itérateur sur le ballot passé en entrée et le positionne
- * avant le premier élément
- *
- *
- * @param[in] b Ballot à parcourir
- * @param[in] l Ligne à parcourir (-1 pour parcourir toutes les lignes)
- * @param[in] c Colonne à parcourir (-1 pour parcourir toutes les colonnes)
- * @param[in] fun Fonction à appliquer à chaque élément sans modification du ballot,
- * si NULL aucun traitement n'est effectué et l'itérateur ne renvoie que la valeur courante
- * @param[in] buff pointeur vers le buffer fourni à fun
- * @pre b != NULL
- * @pre -1 <= l < nb_ligne && -1 <= c < nb_colonnes
- *
- * @return Pointeur vers l'itérateur
- */
-BaleIte *createBaleIte(Bale *b, int l, int c, fun_ite_bale fun, void *buff);
-
-/**
- * @date 5/11/2023
- * @brief Renvoie vrai si il reste des éléments à parcourir
- *
- *
- * @param[in] ite Itérateur questionné
- * @pre ite != NULL
- *
- * @pre ite != NULL
- *
- * @return true si il reste des éléments, sinon false
- */
-bool baleIteHasNext(BaleIte *ite);
-
-/**
- * @date 5/11/2023
- * @brief Décale l'itérateur sur le prochain élément, renvoie sa valeur et réalise
- *  le traitement de fun sans modification du ballot
- *
- *
- * @param[in] ite Itérateur à utiliser
- * @pre baleIteHasNext(ite) == true
- * @pre ite != NULL
- *
- * @return Valeur courante
- */
-int baleIteNext(BaleIte *ite);
-
-/**
- * @date 5/11/2023
- * @brief Renvoie la valeur courrante
- *
- *
- * @param[in] ite Itérateur à utiliser
- * @pre ite != NULL
- * @pre Appel à next avant
- *
- * @return Valeur de l'élément de courant
- */
-int baleIteGetValue(BaleIte *ite);
-
-/**
- * @date 5/11/2023
- * @brief Supprime l'itérateur et libère la mémoire
- *
- *
- * @param[in] ite pointeur vers l'itérateur
- * @pre ite != NULL
- * @pre *ite != NULL
- * @return adresse du buffer
- */
-void* deleteBaleIte(ptrBaleIte *ite);
-
-/*------------------------------------------------------------------*/
 /*                            UTILS                                 */
 /*------------------------------------------------------------------*/
-
-/**
- * @date 5/11/2023
- * @brief Applique la fonction fun à tous les éléments spécifiés du ballot sans
- * les modifier
- *
- *
- * @param[in] b Ballot à parcourir
- * @param[in] l Ligne à parcourir (-1 pour parcourir toutes les lignes)
- * @param[in] c Colonne à parcourir (-1 pour parcourir toutes les colonnes)
- * @param[in] fun Fonction à appliquer à chaque élément, si NULL aucun traitement
- * n'est effectué
- * @param[in] buff pointeur vers le buffer fourni à fun
- * @pre b != NULL
- * @pre -1 <= l < nb_ligne && -1 <= c < nb_colonnes
- */
-void baleMap(Bale *b, int l, int c, fun_ite_bale fun, void *buff);
-
-/**
- * @date 5/11/2023
- * @brief Renvoie la somme des élément positifs du ballot, d'une ligne ou d'une colonne
- *
- *
- * @param[in] b Pointeur vers le ballot
- * @param[in] l Ligne cible (-1 pour toutes les lignes)
- * @param[in] c Colonne cible (-1 pour toutes les colonnes)
- * @pre b != NULL
- * @pre -1 <= l < nb_ligne && -1 <= c < nb_colonnes
- *
- * @return somme des éléments positifs
- */
-int baleSom(Bale *b, int l, int c);
-
-/**
- * @date 5/11/2023
- * @brief Renvoie la/les plus grande valeur du ballot, d'une ligne ou d'une colonne
- *
- * @param[in] b Pointeur vers le ballot
- * @param[in] l Ligne cible (-1 pour toutes les lignes)
- * @param[in] c Colonne cible (-1 pour toutes les colonnes)
- * @pre -1 <= l < nb_ligne && -1 <= c < nb_colonnes
- * @pre b != NULL
- *
- * @return Une liste générique de tableaux d'entiers de taille 3 contenant [valeur_max, ligne, colonne]
- */
-GenList *baleMax(Bale *b, int l, int c);
 
 /**
  * @date 5/11/2023
@@ -327,22 +169,6 @@ GenList *baleMax(Bale *b, int l, int c);
  */
 GenList *baleMin(Bale *b, int l, int c);
 
-typedef fun_filter_matrix fun_filter_bale;
-
-/**
- * @date 5/11/2023
- * @brief Filtre le ballot et renvoie une copie du ballot avec uniquement
- * les éléments tel que fun(elem) = true
- *
- * @param[in] b Pointeur vers le ballot
- * @param[in] fun Fonction de filtrage de type fun_filter
- * @param[in] buff Buffer pour fun_filter
- * @pre b != NULL
- * @pre fun != NULL
- *
- * @return Pointeur vers la copie filtrée
- */
-Bale *baleFilter(Bale *b, fun_filter_bale fun, void *buff);
 
 /**
  * @date 5/11/2023

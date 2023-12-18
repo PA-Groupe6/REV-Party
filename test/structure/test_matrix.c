@@ -110,10 +110,6 @@ bool testUniqueMatrixWithIte(Matrix* m,int l, int c, unsigned nbl, unsigned nbc)
                 printsb(" <+>--- echec next\n");
                 return false;
             }
-            if(matrixIteGetValue(ite) != (int)(i*line_size+j)) {
-                printsb(" <+>--- echec get value\n");
-                return false;
-            }
         }
     }
 
@@ -223,36 +219,6 @@ bool testMatrixSet() {
     return true;
 }
 
-bool testMatrixErase() {
-    /* Créer matrice */
-    Matrix* m = createMatrix(NB_LINE, NB_COLUMN, DEFAULT_VALUE);
-
-    printsb( "\ntest effacer valeur par défaut...");
-    for(int l = 0; l < NB_LINE; l++) {
-        for(int c = 0; c < NB_COLUMN; c++) {
-            matrixErase(m, l, c);
-            if(matrixGet(m, l, c) != DEFAULT_VALUE) return false;
-        }
-    }
-    if((int)matrixNbLines(m) != NB_LINE) return false;
-    if((int)matrixNbColonnes(m) != NB_COLUMN) return false;
-    printsb( "\n\t- test passé\n");
-
-    printsb( "\ntest effacer valeur autre...");
-    for(int l = 0; l < NB_LINE; l++) {
-        for(int c = 0; c < NB_COLUMN; c++) {
-            matrixSet(m, l, c, l+c);
-            matrixErase(m, l, c);
-            if(matrixGet(m, l, c) != DEFAULT_VALUE) return false;
-        }
-    }
-    if((int)matrixNbLines(m) != NB_LINE) return false;
-    if((int)matrixNbColonnes(m) != NB_COLUMN) return false;
-    printsb( "\n\t- test passé\n");
-
-    deleteMatrix(&m);
-    return true;
-}
 
 
 bool testMatrixInsertRemoveLine() {
@@ -486,7 +452,6 @@ bool testMatrixIte() {
         for(unsigned c = 0; c < NB_COLUMN; c++) {
             if(!matrixIteHasNext(ite)) return false;
             if(matrixIteNext(ite) != (int)(l*NB_COLUMN+c)) return false;
-            if(matrixIteGetValue(ite) != 0) return false;
         }
     }
     if(matrixIteHasNext(ite)) return false;
@@ -518,7 +483,6 @@ int main() {
 
     test_fun(testCreateMatrix, 1, "testCreateMatrix");
     test_fun(testMatrixSet, 2, "testMatrixSet");
-    test_fun(testMatrixErase, 4, "testMatrixErase");
     test_fun(testMatrixInsertRemoveLine, 8, "testMatrixInsertRemoveLine");
     test_fun(testMatrixInsertRemoveColumn, 16, "testMatrixInsertRemoveColumn");
     test_fun(testMatrixIte, 32, "testMatrixIte");

@@ -190,148 +190,10 @@ Arc *graphGetArc(Graph *g, unsigned id_src, unsigned id_dest);
 
 
 
-/*------------------------------------------------------------------*/
-/*                          ITERATEUR                               */
-/*------------------------------------------------------------------*/
-
-/**
- * @date 5/11/2023
- * @brief Définition opaque de la structure GraphIte
- */
-typedef struct s_graphIte GraphIte;
-typedef struct s_graphIte *ptrGraphIte;
-
-/**
- * @date 5/11/2023
- * @brief Définie le type des fonctions prise en paramêtre de l'itérateur
- *
- * @param[in] wieght Poids de l'
- * @param[in] src sommet origine
- * @param[in] dest sommet destination
- * @param[in] buff pointeur vers un buffer pouvant stocker un résultat
- */
-typedef unsigned int (*fun_ite_Graph)(unsigned int weight, unsigned int src, unsigned int dest,
-                                      void *buff);
-
-/**
- * @date 5/11/2023
- * @brief Crée un itérateur sur le graph passé en entrée et le positionne
- * avant le premier élément
- *
- * @param[in] g graph à parcourir
- * @param[in] fun Fonction à appliquer à chaque élément, si NULL aucun traitement
- * n'est appliqué et le graph n'est pas modifiée
- * @param[in] buff pointeur vers le buffer fourni à fun
- * @pre g != NULL
- *
- * @return Pointeur vers l'itérateur
- */
-GraphIte *createGraphIte(Graph *g, fun_ite_Graph fun, void *buff);
-
-/**
- * @date 5/11/2023
- * @brief Renvoie vrai si il reste des éléments à parcourir
- *
- * @param[in] ite Itérateur questionné
- * @pre ite != NULL
- *
- * @return true si il reste des éléments, sinon false
- */
-bool graphIteHasNext(GraphIte *ite);
-
-/**
- * @date 5/11/2023
- * @brief Décale l'itérateur sur le prochain élément, renvoie sa valeur, réalise
- *  le traitement de fun et remplace la valeur courante par le retour de fun
- *
- * @param[in] ite Itérateur à utiliser
- * @pre GraphIteHasNext(ite) == true
- * @pre ite != NULL
- *
- * @return Valeur courante
- */
-unsigned int graphIteNext(GraphIte *ite);
-
-/**
- * @date 5/11/2023
- * @brief Renvoie la valeur courrante
- *
- * @param[in] ite Itérateur à utiliser
- * @pre Appel à next avant
- * @pre ite != NULL
- *
- * @return Valeur de l'élément de courant
- */
-unsigned int graphIteGetValue(GraphIte *ite);
-
-/**
- * @date 5/11/2023
- * @brief Supprime l'itérateur et libère la mémoire
- *
- * @param[in] ite pointeur vers l'itérateur
- * @pre ite != NULL
- * @pre *ite != NULL
- * @return adresse du buffer
- */
-void deleteGraphIte(ptrGraphIte *ite);
 
 /*------------------------------------------------------------------*/
 /*                            UTILS                                 */
 /*------------------------------------------------------------------*/
-
-/**
- * @date 5/11/2023
- * @brief Applique la fonction fun à tous les éléments du graph
- *
- * @param[in] g graph à parcourir
- * @param[in] fun Fonction à appliquer à chaque élément, si NULL aucun traitement
- * n'est effectué
- * @param[in] buff pointeur vers le buffer fourni à fun
- * @pre g != NULL
- */
-void graphMap(Graph *g, fun_ite_Graph fun, void *buff);
-
-/**
- * @date 5/11/2023
- * @brief Renvoie le (ou les) arc(s) de poids maximum
- *
- * @param[in] g Pointeur vers le graph
- * @pre g != NULL
- *
- * @return Liste générique des arcs de poids maximum
- */
-GenList *graphMax(Graph *g);
-
-/**
- * @date 5/11/2023
- * @brief Renvoie le (ou les) arc(s) de poids minimum
- *
- * @param[in] g Pointeur vers le graph
- * @pre g != NULL
- *
- * @return Liste générique des arcs de poids minimum
- */
-GenList *graphMin(Graph *g);
-
-/**
- * @date 5/11/2023
- * @brief Définie le type des fonctions prise en paramêtre du filter
- */
-typedef fun_filter_matrix fun_filter_graph;
-
-/**
- * @date 5/11/2023
- * @brief Filtre le graph et renvoie une copie du graph avec uniquement
- * les arcs tel que fun(arc) = true
- *
- * @param[in] d Pointeur vers le graph
- * @param[in] fun Fonction de filtrage de type fun_filter
- * @param[in] buff Buffer pour fun_filter
- * @pre g != NULL
- *
- * @return Pointeur vers la copie filtrée
- */
-Graph *graphFilter(Graph *g, fun_filter_graph fun, void *buff);
 
 /**
  * @date 5/11/2023
@@ -369,24 +231,6 @@ GenList *graphToList(Graph *g);
  * @return Liste générique des Arcs
  */
 GenList *graphToSortedList(Graph *g, int order);
-
-/**
- * @brief Renvoie la liste des arcs sortants d'un sommet
- *
- * @param g Graph
- * @pre g != NULL
- * @return Liste générique des arcs sortants
- */
-GenList *graphToListArcFromVertex(Graph *g);
-
-/**
- * @brief Renvoie la liste des arcs entrants d'un sommet
- *
- * @param g Graph
- * @pre g != NULL
- * @return Liste générique des arcs entrants
- */
-GenList *graphToListArcToVertex(Graph *g);
 
 /**
  * @brief Test si l'ajoue d'un arc crée un cycle dans le graph

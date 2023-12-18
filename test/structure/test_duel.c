@@ -174,37 +174,6 @@ bool testDuelIndexToLabel() {
 }
 
 
-bool searchLabels(unsigned id_label) {
-    Duel* d;
-    GenList* labels;
-    int index;
-
-    labels = loadLabelsInList(id_label);
-    if(!labels) return echecTest("Erreur chargement labels");
-
-    d = createDuel(NB_CANDIDAT, labels);
-    for(unsigned i = 0; i < NB_CANDIDAT; i++) {
-        index = duelLabelToIndex(d, genListGet(labels, i));
-        if(index == -1) return echecTest("label introuvable");
-        if(index != (int)i) return echecTest("labels différents");
-    }
-    deleteGenList(&labels);
-    deleteDuel(&d);
-    return true;
-}
-
-bool testDuelLabelToIndex () {
-    printsb( "\ntest index de label ...");
-    if(!searchLabels(1)) return echecTest("Echec avec label1");
-    if(!searchLabels(2)) return echecTest("Echec avec label2");
-    if(!searchLabels(3)) return echecTest("Echec avec label3");
-    if(!searchLabels(4)) return echecTest("Echec avec label4");
-    if(!searchLabels(5)) return echecTest("Echec avec label5");
-    printsb( "\n\t- test passé\n");
-
-    return true;
-}
-
 
 bool convertionBaleToDuel(char* path_bale, char* path_duel_ref) {
     Duel* d_ref, *d_frome_b;
@@ -285,7 +254,6 @@ int main() {
 
     test_fun(testCreateDuel, 1, "testCreateDuel");
     test_fun(testDuelSetValue, 2, "testDuelSetValue");
-    test_fun(testDuelLabelToIndex, 4, "testDuelLabelToIndex");
     test_fun(testDuelIndexToLabel, 8, "testDuelIndexToLabel");
     test_fun(testDuelFromBale, 8, "testDuelFromBale");
 

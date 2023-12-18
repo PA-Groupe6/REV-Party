@@ -220,23 +220,6 @@ Arc *graphGetArc(Graph *g, unsigned id_src, unsigned id_dest) {
 /*------------------------------------------------------------------*/
 
 
-
-GenList *graphToList(Graph *g){
-    GenList *l = createGenList(g->nb_arc);
-    int nb_cand = graphNbVertex(g);
-    for(int i ; i<nb_cand;i++){
-        for(int j; j<nb_cand;j++){
-            Arc *cur = graphGetArc(g,i,j);
-                if(cur != NULL){
-                    genListAdd(l,(void*)cur);
-
-                }       
-        }
-    }
-
-    return l;
-}
-
 /**
  * @author Corentin LUDWIG
  * @date  14/12/2023

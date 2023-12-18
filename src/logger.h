@@ -86,16 +86,6 @@ void displayListLog(List *l);
 
 /**
  * @date 26/11/2023
- * @brief Afficher la valeur des pointeurs dans le logger
- *
- * @param[in] l liste à logger
- * @pre l != NULL
- *
- */
-void displayGenListLog(GenList *l);
-
-/**
- * @date 26/11/2023
  * @brief Afficher la matrice dans le logger
  *
  * @param[in] m Matrice à logger

@@ -14,7 +14,6 @@
 
 #include <stdio.h>
 #include <stdbool.h>
-#include <signal.h>
 #include <stdlib.h>
 #include <string.h>
 #include "../../src/logger.h"
@@ -87,47 +86,6 @@ Bale* newUniqueBale(unsigned int nbl, unsigned int nbc, GenList* labels) {
     return b;
 }
 
-bool testUniqueBaleWithIte(Bale* m,int l, int c, unsigned nbl, unsigned nbc) {
-    if(!m) return false;
-    /* Creation de l'iterateur */
-    BaleIte *ite = createBaleIte(m, l, c, NULL, NULL);
-    if(!ite){
-        printsb(" <+>--- echec cration ite\n");
-        return false;
-    }
-    /* initialisation paramêtres */
-    int line_size = nbc;
-    int i,j, imax, jmax;
-    (l==-1 || l+1 > (int)nbl) ? (imax = nbl) : (imax = l+1);
-    (c==-1 || c+1 > (int)nbc) ? (jmax = nbc) : (jmax = c+1);
-
-    /* parcours */
-    (l==-1) ? (i = 0) : (i = l);
-    for(; i < imax; i++) {
-        for(((c == -1)?(j = 0):(j = c)); j < jmax; j++) {
-            if(!baleIteHasNext(ite)){
-                printsb(" <+>--- echec has next\n");
-                return false;
-            }
-            if(baleIteNext(ite) != (int)(i*line_size+j)) {
-                printsb(" <+>--- echec next\n");
-                return false;
-            }
-            if(baleIteGetValue(ite) != (int)(i*line_size+j)) {
-                printsb(" <+>--- echec get value\n");
-                return false;
-            }
-        }
-    }
-
-    /* Fin du parcours */
-    if(baleIteHasNext(ite)) {
-        printsb(" <+>--- echec next fin\n");
-        return false;
-    }
-    deleteBaleIte(&ite);
-    return true;
-}
 
 
 
@@ -260,35 +218,6 @@ bool testBaleColumnToLabel() {
     return true;
 }
 
-bool searchLabels(unsigned id_label) {
-    GenList* labels;
-    Bale* b;
-    int col;
-    labels = loadLabelsInList(id_label);
-    if(!labels) return echecTest("\n X-- Erreur chargement labels");
-    b = createBale(NB_VOTER, NB_CANDIDAT, labels);
-    for(unsigned i = 0; i < NB_CANDIDAT; i++) {
-        col = baleLabelToColumn(b, genListGet(labels, i));
-        if(col == -1) return echecTest("\n X-- label introuvable");
-        if(col != (int)i) return echecTest("\n X-- labels différents");
-    }
-    deleteGenList(&labels);
-    deleteBale(&b);
-    return true;
-}
-
-bool testBaleLabelToColumn () {
-    printsb( "\ntest colonne de label ...");
-    if(!searchLabels(1)) return echecTest("\n X-- Echec avec label1");
-    if(!searchLabels(2)) return echecTest("\n X-- Echec avec label2");
-    if(!searchLabels(3)) return echecTest("\n X-- Echec avec label3");
-    if(!searchLabels(4)) return echecTest("\n X-- Echec avec label4");
-    if(!searchLabels(5)) return echecTest("\n X-- Echec avec label5");
-    printsb( "\n\t- test passé\n");
-
-    return true;
-}
-
 
 void test_fun(bool(*f)(), int fnb, char* fname) {
     beforeEach();
@@ -308,7 +237,6 @@ int main() {
     test_fun(testCreateBale, 1, "testCreateBale");
     test_fun(testBaleSet, 2, "testBaleSet");
     test_fun(testBaleColumnToLabel, 4, "testBaleColumnToLabel");
-    test_fun(testBaleLabelToColumn, 8, "testBaleLabelToColumn");
 
 
     afterAll();

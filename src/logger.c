@@ -195,26 +195,6 @@ void displayListLog(List *l) {
     
 }
 
-/**
- * @date  1/11/2023
- * @author Ugo VALLAT
- */
-void displayGenListLog(GenList *l) {
-    /* vérification paramêtre */
-    testArgNull(l, "logger.c", "displayGenListLog", "l");
-    
-    /* description */
-    unsigned size = genListSize(l);
-    printl("%s ┌──────────────── generic list (%d)...\n │ %s[", c_yellow, size, c_rstc);
-    
-    /* affichage contenu */
-    if(size > 0 ) 
-        printl(" %p", genListGet(l, 0));
-    for (unsigned i = 1; i < size; i++)
-        printl(", %p", genListGet(l, i));
-    printl(" ]\n");
-}
-
 
 /**
  * @date  1/11/2023
