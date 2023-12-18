@@ -58,6 +58,7 @@ void deleteGraph(ptrGraph *g) {
     deleteMatrix(&(*g)->matrix);
     while(!genListEmpty((*g)->labels))
             free(genListPop((*g)->labels));
+    deleteGenList(&(*g)->labels);
     free(*g);
     *g = NULL;
 }
