@@ -52,12 +52,15 @@ List* winnersOffirstRound(unsigned* scores, unsigned nb_candidat, unsigned nb_vo
     }
 
     /* ### 1er parcours pour chercher le ou les meilleurs scores ### */
-
     unsigned max1 = scores[0]; /* score le plus grand */
     /* recherche du premier max */
-    for (unsigned i = 1; i < nb_candidat; i++) 
-        if(scores[i] > max1)
+    for (unsigned i = 1; i < nb_candidat; i++){
+         printf("score = %d\n",scores[i]);
+        if(scores[i] > max1){
             max1 = scores[i];
+           
+        }
+    }
     
     /* ajout des candidats à la liste des gagnts */
     for(unsigned i = 0; i < nb_candidat; i++)

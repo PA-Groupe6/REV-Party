@@ -3,7 +3,6 @@
  * @brief Structure Duel implémentation
  */
 
-#include "bale.h"
 #include "data_struct_utils.h"
 #include "genericlist.h"
 #include <stdlib.h>

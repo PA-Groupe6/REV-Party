@@ -131,7 +131,7 @@ tsha256: $(OBJDIR)/utils/sha256/sha256.o $(OBJDIR)/test_utils.o
 tcsv_reader: $(OBJ_STRUCT) $(OBJ_TEST) $(OBJDIR)/utils/csv_reader.o
 	@$(call run_test,csv_reader,utils/,$^)
 
-tsingle_member:  $(OBJ_STRUCT) $(OBJ_TEST) $(OBJDIR)/module/single_member_two_rounds.o $(OBJDIR)/module/single_member_one_round.o $(OBJDIR)/utils/csv_reader.o
+tsingle_member:  $(OBJ_STRUCT) $(OBJ_TEST) $(OBJDIR)/module/single_member.o $(OBJDIR)/utils/csv_reader.o
 	@$(call run_test,single_member,module/,$^)
 
 tminimax: $(OBJ_STRUCT) $(OBJ_TEST) $(OBJDIR)/module/condorcet_minimax.o $(OBJDIR)/utils/csv_reader.o $(OBJDIR)/module/condorcet_criterion.o
