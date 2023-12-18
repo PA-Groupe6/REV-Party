@@ -39,7 +39,7 @@ GenList* miniMaxCandidat(Duel* duel){
     for (int cand1 = 0; cand1<nbCandidats;cand1++){
         int maxDiffCandidat = 0;
         for (int cand2 = 0; cand2 < nbCandidats; cand2++){
-            int diff = duelGetValue(duel, cand1, cand2); 
+            int diff = duelGetValue(duel, cand2, cand1); 
             if(diff > maxDiffCandidat){
                 maxDiffCandidat = diff;
             }
