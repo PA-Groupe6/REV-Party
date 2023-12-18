@@ -200,7 +200,7 @@ bool genListEmpty(GenList *l) {
 */
 bool genListContains(GenList *l, void* e) {
 #ifdef DEBUG
-    testArgNull(l, "genericlist.c"; "listContains", "l");
+    testArgNull(l, "genericlist.c", "listContains", "l");
 #endif
     for (unsigned int i = 0; i < genListSize(l); i++)
         if (genListGet(l, i) == e)
