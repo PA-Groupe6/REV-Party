@@ -29,30 +29,62 @@ unsigned* voteCountFirstRound(Bale* bale){
     }
     return votesComplete;
 }
+
+
+/**
+ * @name Ugo VALLAT
+ * @date 30/11/2023
+ * @brief Calcul les vainqueurs du premier tour
+ * 
+ * @param scores Tableau des scores des candiats 
+ * @param nb_candidat Nombre de candidats
+ * @param nb_voter Nombre de vontants
+ * @return Liste des identifiants des candidats (numéro de colonne dans ballot)
+ */
+List* winnersOffirstRound(unsigned* scores, unsigned nb_candidat, unsigned nb_voter, int tour_voulu){
+    List* winners = createList(nb_candidat);
+
+    /* cas particuliers */
+    if(nb_candidat == 0) return winners;
+    if(nb_candidat == 1) {
+        listAdd(winners, 0);
+        return winners;
+    }
+
+    /* ### 1er parcours pour chercher le ou les meilleurs scores ### */
+
+    unsigned max1 = scores[0]; /* score le plus grand */
+    /* recherche du premier max */
+    for (unsigned i = 1; i < nb_candidat; i++) 
+        if(scores[i] > max1)
+            max1 = scores[i];
+    
+    /* ajout des candidats à la liste des gagnts */
+    for(unsigned i = 0; i < nb_candidat; i++)
+        if(scores[i] == max1)
+            listAdd(winners, i);
+    
+    /* Si déjà plusieurs gagnants, pas de votes, ou 1 candidat > 50%, on arrête */
+    if(listSize(winners) > 1 || max1 == 0 || max1 > 2*nb_voter || tour_voulu == 1) return winners;
+
+
+    /* ### 2eme parcours pour chercher le ou les seconds ### */
+    unsigned max2 = 0; /* 2eme score le plus grand */
+    /* recherche du second max */
+    for (unsigned i = 0; i < nb_candidat; i++)
+        if(scores[i] > max2 && scores[i] != max1)
+            max2 = scores[i];
+        
+    /* ajout des candidats à la liste des gagnts */
+    for(unsigned i = 0; i < nb_candidat; i++)
+        if(scores[i] == max2)
+            listAdd(winners, i);
+    
+    return winners;
+}
 /***********
 *   UNI1   *
 ***********/
-
-/**
- * @author Alina IVANOVA, Corentin LUDWIG
- * @date 21/11/2023 
- */
-List* maxVotesCandidat(unsigned* votes, int nb_candidat){
-    int max = votes[0];
-    List *winner = createList(1);
-    listAdd(winner, 0);
-    for (int i = 1; i < nb_candidat; i++ ){
-        if (votes[i] > max) {
-            max = votes[i];
-            while(!listEmpty(winner))
-                listPop(winner);
-            listAdd(winner, i);
-        } else if( votes[i] == max){
-            listAdd(winner,i);
-        }
-    }
-    return winner;
-}
 
 /**
  * @author Alina IVANOVA
@@ -70,7 +102,7 @@ GenList* theWinnerOneRound(Bale* bale){
     unsigned* summaryOfVotes = voteCountFirstRound(bale);
 
     /* Récupération du nom du gagnant */
-    List* winningCandidates = maxVotesCandidat(summaryOfVotes, nb_candidat);
+    List* winningCandidates = winnersOffirstRound(summaryOfVotes, nb_candidat, baleNbVoter(bale), 1);
 
     for (unsigned i = 0; i < listSize(winningCandidates); i++)
     {
@@ -96,57 +128,7 @@ GenList* theWinnerOneRound(Bale* bale){
 *   UNI2   *
 ***********/
 
-/**
- * @name Ugo VALLAT
- * @date 30/11/2023
- * @brief Calcul les vainqueurs du premier tour
- * 
- * @param scores Tableau des scores des candiats 
- * @param nb_candidat Nombre de candidats
- * @param nb_voter Nombre de vontants
- * @return Liste des identifiants des candidats (numéro de colonne dans ballot)
- */
-List* winnersOffirstRound(unsigned* scores, unsigned nb_candidat, unsigned nb_voter){
-    List* winners = createList(nb_candidat);
 
-    /* cas particuliers */
-    if(nb_candidat == 0) return winners;
-    if(nb_candidat == 1) {
-        listAdd(winners, 0);
-        return winners;
-    }
-
-    /* ### 1er parcours pour chercher le ou les meilleurs scores ### */
-
-    unsigned max1 = scores[0]; /* score le plus grand */
-    /* recherche du premier max */
-    for (unsigned i = 1; i < nb_candidat; i++) 
-        if(scores[i] > max1)
-            max1 = scores[i];
-    
-    /* ajout des candidats à la liste des gagnts */
-    for(unsigned i = 0; i < nb_candidat; i++)
-        if(scores[i] == max1)
-            listAdd(winners, i);
-    
-    /* Si déjà plusieurs gagnants, pas de votes, ou 1 candidat > 50%, on arrête */
-    if(listSize(winners) > 1 || max1 == 0 || max1 > 2*nb_voter) return winners;
-
-
-    /* ### 2eme parcours pour chercher le ou les seconds ### */
-    unsigned max2 = 0; /* 2eme score le plus grand */
-    /* recherche du second max */
-    for (unsigned i = 0; i < nb_candidat; i++)
-        if(scores[i] > max2 && scores[i] != max1)
-            max2 = scores[i];
-        
-    /* ajout des candidats à la liste des gagnts */
-    for(unsigned i = 0; i < nb_candidat; i++)
-        if(scores[i] == max2)
-            listAdd(winners, i);
-    
-    return winners;
-}
 
 
 /**
@@ -289,7 +271,7 @@ GenList* theWinnerTwoRounds(Bale* bale){
 
     /* ### debut du premier tour ### */
     unsigned* round_1_scores = voteCountFirstRound(bale);
-    List* round_1_winners_id = winnersOffirstRound(round_1_scores, nb_candidat, nb_voters);
+    List* round_1_winners_id = winnersOffirstRound(round_1_scores, nb_candidat, nb_voters,2);
 
 
     unsigned nb_winners_round_1 = listSize(round_1_winners_id);
