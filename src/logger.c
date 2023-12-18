@@ -534,32 +534,38 @@ void displayListWinnerSingleTwo(GenList *l) {
     printf("╝\n");
 }
 
+/* phrase d'annonce */
+#define CONDORCET_BANNER_LENGTH 12
+/* taille de la phrase d'affichage d'un candidat sans compter la taille prise par le nom de celui-ci */
+#define CONDORCET_WINNER_SENTENCE_LENGTH 13
 
-void displayListWinnerCondorcet(GenList *l, char* name_algo) {
+void displayListWinnerCondorcet(GenList *l, char* algo_name) {
     unsigned nb_winners = genListSize(l);
     unsigned max_length_winner = maxLengthLabelCondorcet(l);
-    unsigned max_length_case = max_length_winner + 20;
+    unsigned max_length_case = MAX(CONDORCET_BANNER_LENGTH + strlen(algo_name), max_length_winner + CONDORCET_WINNER_SENTENCE_LENGTH);
 
     /* bordure haute */
     printf("\t╔");
-    printStringN("═", max_length_case);
+    printStringN("═", max_length_case + (2 * SPACE_BETWEEN_BORDER));
     printf("╗\n");
 
     /* titre */
-    printf("\t║  RESULTATS %s :", name_algo);
-    printStringN(" ", max_length_case-19);
+    printf("\t║  RESULTATS %s :", algo_name);
+    printStringN(" ", max_length_case - (CONDORCET_BANNER_LENGTH + strlen(algo_name)) + SPACE_BETWEEN_BORDER);
     printf("║\n");
 
     /* vainqueurs */
     WinnerCondorcet *wtmp;
     for(unsigned i = 0; i < nb_winners; i++) {
         wtmp = genListGet(l, i);
-        printf("\t║  • %-*s        ║\n", max_length_winner, wtmp->name);
+        printf("\t║  • %-*s : %6.2f %%", max_length_winner, wtmp->name, wtmp->score);
+        printStringN(" ", max_length_case - (CONDORCET_WINNER_SENTENCE_LENGTH + max_length_winner) + SPACE_BETWEEN_BORDER);
+        printf("║\n");
     }
 
     /* bordure basse */
     printf("\t╚");
-    printStringN("═", max_length_case);
+    printStringN("═", max_length_case + (2 * SPACE_BETWEEN_BORDER));
     printf("╝\n");
 }
 
