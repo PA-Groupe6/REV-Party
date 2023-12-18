@@ -12,7 +12,7 @@
  * @author LAFORGE Mateo
  * @brief libère la mémoire prise par une liste générique de candidats gagnants (le retour type d'une fonction module)
  * 
- * @param winners la liste à libérer
+ * @param[in] winners la liste à libérer
  */
 void deleteWinners(ptrGenList* winners) {
     while (!genListEmpty(*winners))
@@ -25,12 +25,13 @@ void deleteWinners(ptrGenList* winners) {
  * @author LAFORGE Mateo
  * @brief applique la méthode uni1 sur le fichier source_file et affiche son résultat pour l'utilisateur
  * 
- * @param bale le ballot fournit par l'utilisateur en entrée
+ * @param[in] bale le ballot fournit par l'utilisateur en entrée
  */
 void uni1(Bale* bale) {
     GenList* winners = theWinnerOneRound(bale);
     displayListWinnerSingle(winners);
     deleteWinners(&winners);
+    printf("Nombre Votants: %d   -   Nombre Candidats: %d\n", baleNbVoter(bale), baleNbCandidat(bale));
 }
 
 /**
@@ -38,12 +39,13 @@ void uni1(Bale* bale) {
  * @author LAFORGE Mateo
  * @brief applique la méthode uni2 sur le fichier source_file et affiche son résultat pour l'utilisateur
  * 
- * @param bale le ballot fournit par l'utilisateur en entrée
+ * @param[in] bale le ballot fournit par l'utilisateur en entrée
  */
 void uni2(Bale* bale) {
     GenList* winners = theWinnerTwoRounds(bale);
     displayListWinnerSingleTwo(winners);
     deleteWinners(&winners);
+    printf("Nombre Votants: %d   -   Nombre Candidats: %d\n", baleNbVoter(bale), baleNbCandidat(bale));
 }
 
 /**
@@ -51,12 +53,18 @@ void uni2(Bale* bale) {
  * @author LAFORGE Mateo
  * @brief applique la méthode minimax sur le fichier source_file et affiche son résultat pour l'utilisateur
  * 
- * @param duel la matrice de duels fournie par l'utilisateur en entrée
+ * @param[in] duel la matrice de duels fournie par l'utilisateur en entrée
+ * @param[in] nb_voters nombre de votants (si il a été possible de l'extraire, NULL sinon)
  */
-void minimax(Duel* duel) {
+void minimax(Duel* duel, unsigned* nb_voters) {
     GenList* winners = theWinnerMinimax(duel);
     displayListWinnerCondorcet(winners, "minimax");
     deleteWinners(&winners);
+    if (nb_voters != NULL) {
+        printf("Nombre Votants: %d   -   Nombre Candidats: %d\n", *nb_voters, duelNbCandidat(duel));
+    } else {
+        printf("Nombre Candidats: %d\n", duelNbCandidat(duel));
+    }
 }
 
 /**
@@ -64,12 +72,18 @@ void minimax(Duel* duel) {
  * @author LAFORGE Mateo
  * @brief applique la méthode de rangement des pairs sur le fichier source_file et affiche son résultat pour l'utilisateur
  * 
- * @param duel la matrice de duels fournie par l'utilisateur en entrée
+ * @param[in] duel la matrice de duels fournie par l'utilisateur en entrée
+ * @param[in] nb_voters nombre de votants (si il a été possible de l'extraire, NULL sinon)
  */
-void rankedPairs(Duel* duel) {
+void rankedPairs(Duel* duel, unsigned* nb_voters) {
     GenList* winners = theWinnerRankedPairs(duel);
     displayListWinnerCondorcet(winners, "rangement des pairs");
     deleteWinners(&winners);
+    if (nb_voters != NULL) {
+        printf("Nombre Votants: %d   -   Nombre Candidats: %d\n", *nb_voters, duelNbCandidat(duel));
+    } else {
+        printf("Nombre Candidats: %d\n", duelNbCandidat(duel));
+    }
 }
 
 /**
@@ -77,12 +91,18 @@ void rankedPairs(Duel* duel) {
  * @author LAFORGE Mateo
  * @brief applique la méthode de schulze sur le fichier source_file et affiche son résultat pour l'utilisateur
  * 
- * @param duel la matrice de duels fournie par l'utilisateur en entrée
+ * @param[in] duel la matrice de duels fournie par l'utilisateur en entrée
+ * @param[in] nb_voters nombre de votants (si il a été possible de l'extraire, NULL sinon)
  */
-void schulze(Duel* duel) {
+void schulze(Duel* duel, unsigned* nb_voters) {
     GenList* winners = theWinnerSchulze(duel);
     displayListWinnerCondorcet(winners, "schulze");
     deleteWinners(&winners);
+    if (nb_voters != NULL) {
+        printf("Nombre Votants: %d   -   Nombre Candidats: %d\n", *nb_voters, duelNbCandidat(duel));
+    } else {
+        printf("Nombre Candidats: %d\n", duelNbCandidat(duel));
+    }
 }
 
 /**
@@ -90,12 +110,13 @@ void schulze(Duel* duel) {
  * @author LAFORGE Mateo
  * @brief applique la méthode du jugement majoritaire sur le fichier source_file et affiche son résultat pour l'utilisateur
  * 
- * @param bale le ballot fournit par l'utilisateur en entrée
+ * @param[in] bale le ballot fournit par l'utilisateur en entrée
  */
 void majorityJudgment(Bale* bale) {
     GenList* winners = theWinnerMajorityJudgment(bale);
     displayListWinnerMajorityJudgment(winners);
     deleteWinners(&winners);
+    printf("Nombre Votants: %d   -   Nombre Candidats: %d\n", baleNbVoter(bale), baleNbCandidat(bale));
 }
 
 /**
@@ -103,7 +124,7 @@ void majorityJudgment(Bale* bale) {
  * @author LAFORGE Mateo
  * @brief applique dans l'ordre de définition toutes les méthodes de scrutins une à une en affichant à chaque fois le résultat
  * 
- * @param source_file le fichier d'entrée fournit par l'utilisateur
+ * @param[in] cmd la commande interprétée de l'utilisateur
  */
 void all(Command* cmd) {
     switch (cmd->file_type) {
@@ -112,11 +133,11 @@ void all(Command* cmd) {
             Duel* duel = csvToDuel(cmd->file_name);
 
             printl(" -= Minimax =-\n");
-            minimax(duel);
+            minimax(duel, NULL);
             printl(" -= Rangement Des Pairs =-\n");
-            rankedPairs(duel);
+            rankedPairs(duel, NULL);
             printl(" -= Schulze =-\n");
-            schulze(duel);
+            schulze(duel, NULL);
 
             deleteDuel(&duel);
             break;
@@ -130,13 +151,14 @@ void all(Command* cmd) {
             uni2(bale);
 
             Duel* duel = duelFromBale(bale);
+            unsigned nb_voters = baleNbVoter(bale);
 
             printl(" -= Minimax =-\n");
-            minimax(duel);
+            minimax(duel, &nb_voters);
             printl(" -= Rangement Des Pairs =-\n");
-            rankedPairs(duel);
+            rankedPairs(duel, &nb_voters);
             printl(" -= Schulze =-\n");
-            schulze(duel);
+            schulze(duel, &nb_voters);
 
             printl(" -= Jugment Majoritaire =-\n");
             majorityJudgment(bale);
@@ -155,11 +177,12 @@ void all(Command* cmd) {
  * @author LAFORGE Mateo
  * @brief récupère une structure Duel soit à partir d'une matrice de duel soit à partir d'un ballot
  * 
- * @param cmd commande permettant la récupération des informations pour la construction
+ * @param[in] cmd commande permettant la récupération des informations pour la construction
+ * @param[out] nb_voters nombre de votants modifier si il à été possible de l'extraire (cas où cmd donne un ballot)
  * 
  * @return la matrice de duel construite
  */
-Duel* getDuel(Command* cmd) {
+Duel* getDuel(Command* cmd, unsigned* nb_voters) {
     Duel* duel;
     switch (cmd->file_type) {
         case DUEL:
@@ -168,6 +191,8 @@ Duel* getDuel(Command* cmd) {
         case BALE: {
             Bale* bale = csvToBale(cmd->file_name);
             duel = duelFromBale(bale);
+            // assigne nb_voters si possible
+            if (nb_voters != NULL) *nb_voters = baleNbVoter(bale);
             deleteBale(&bale);
             break;
         }
@@ -202,20 +227,23 @@ int main(int argc, char* argv[]) {
             break;
         }
         case MINIMAX: {
-            Duel* duel = getDuel(cmd);
-            minimax(duel);
+            unsigned nb_voters;
+            Duel* duel = getDuel(cmd, &nb_voters);
+            minimax(duel, &nb_voters);
             deleteDuel(&duel);
             break;
         }
         case RANGEMENT: {
-            Duel* duel = getDuel(cmd);
-            rankedPairs(duel);
+            unsigned nb_voters;
+            Duel* duel = getDuel(cmd, &nb_voters);
+            rankedPairs(duel, &nb_voters);
             deleteDuel(&duel);
             break;
         }
         case SCHULZE: {
-            Duel* duel = getDuel(cmd);
-            schulze(duel);
+            unsigned nb_voters;
+            Duel* duel = getDuel(cmd, &nb_voters);
+            schulze(duel, &nb_voters);
             deleteDuel(&duel);
             break;
         }
