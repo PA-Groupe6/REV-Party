@@ -150,7 +150,7 @@ Graph* findingPaths(Duel* duel){
                         int weight = max(cand_2vs1, min(cand_2vs3, cand_3vs1));
                         current_arc->weight = weight; 
 
-                        // graphSetWeight(graph_for_search, cand_2, cand_1, weight);
+                        graphSetWeight(graph_for_search, cand_2, cand_1, weight);
                     }
                 }
             } 
@@ -257,13 +257,13 @@ GenList* findWinnerGraph(Duel* duel){
 */
 GenList* theWinnerSchulze(Duel* duel){
     GenList* winners;
-
-    if (CondorcetWinnerCriterion(duel)==NULL) {
+    WinnerCondorcet* winner_condorcet = CondorcetWinnerCriterion(duel);
+    if (winner_condorcet==NULL) {
         winners = findWinnerGraph(duel);
     }
     else {
         winners = createGenList(1);
-        genListAdd(winners,CondorcetWinnerCriterion(duel));
+        genListAdd(winners,winner_condorcet);
     }
     return winners;
 }

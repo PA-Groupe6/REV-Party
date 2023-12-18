@@ -78,35 +78,65 @@ bool testSchulzeOnDuel(char* file) {
 
 bool testSchulze() {
 
-    printsb("\ntest sur duel 1...");
-    testSchulzeOnDuel("test/ressource/duel_1.csv");
-    printsb( "\n\t- test passé\n");
+    // printsb("\ntest sur duel 1...");
+    // printl("\n\n<+>--------------------------------- test sur [ duel 1 ] :\n\n");
+    // testSchulzeOnDuel("test/ressource/duel_1.csv");
+    // printsb( "\n\t- test passé\n");
 
-    printsb("\ntest sur duel 2...");
-    testSchulzeOnDuel("test/ressource/duel_2.csv");
-    printsb( "\n\t- test passé\n");
+    // printsb("\ntest sur duel 2...");
+    // printl("\n\n<+>--------------------------------- test sur [ duel 2 ] :\n\n");
+    // testSchulzeOnDuel("test/ressource/duel_2.csv");
+    // printsb( "\n\t- test passé\n");
 
-    printsb("\ntest sur duel 3...");
-    testSchulzeOnDuel("test/ressource/duel_3.csv");
-    printsb( "\n\t- test passé\n");
+    // printsb("\ntest sur duel 3...");
+    // printl("\n\n<+>--------------------------------- test sur [ duel 3 ] :\n\n");
+    // testSchulzeOnDuel("test/ressource/duel_3.csv");
+    // printsb( "\n\t- test passé\n");
 
     printsb("\ntest sur duel 4...");
+    printl("\n\n<+>--------------------------------- test sur [ duel 4 ] :\n\n");
     testSchulzeOnDuel("test/ressource/duel_4.csv");
     printsb( "\n\t- test passé\n");
 
     printsb("\ntest sur duel 5...");
+    printl("\n\n<+>--------------------------------- test sur [ duel 5 ] :\n\n");
     testSchulzeOnDuel("test/ressource/duel_5.csv");
     printsb( "\n\t- test passé\n");
 
     printsb("\ntest sur duel 6...");
+    printl("\n\n<+>--------------------------------- test sur [ duel 6 ] :\n\n");
     testSchulzeOnDuel("test/ressource/duel_6.csv");
     printsb( "\n\t- test passé\n");
 
-
     printsb("\ntest sur duel 7...");
+    printl("\n\n<+>--------------------------------- test sur [ duel 7 ] :\n\n");
     testSchulzeOnDuel("test/ressource/duel_7.csv");
     printsb( "\n\t- test passé\n");
 
+    // printsb("\ntest sur duel 8...");
+    // printl("\n\n<+>--------------------------------- test sur [ duel 8 ] :\n\n");
+    // testSchulzeOnDuel("test/ressource/duel_of_bale_8.csv");
+    // printsb( "\n\t- test passé\n");
+
+    // printsb("\ntest sur duel 9...");
+    // printl("\n\n<+>--------------------------------- test sur [ duel 9 ] :\n\n");
+    // testSchulzeOnDuel("test/ressource/duel_of_bale_9.csv");
+    // printsb( "\n\t- test passé\n");
+
+    printsb("\ntest sur duel 10...");
+    printl("\n\n<+>--------------------------------- test sur [ duel 10 ] :\n\n");
+    testSchulzeOnDuel("test/ressource/duel_10.csv");
+    printsb( "\n\t- test passé\n");
+
+    printsb("\ntest sur duel 11...");
+    printl("\n\n<+>--------------------------------- test sur [ duel 11 ] :\n\n");
+    testSchulzeOnDuel("test/ressource/duel_11.csv");
+    printsb( "\n\t- test passé\n");
+
+    printsb("\ntest sur duel 12...");
+    printl("\n\n<+>--------------------------------- test sur [ duel 12 ] :\n\n");
+    testSchulzeOnDuel("test/ressource/duel_12.csv");
+    printsb( "\n\t- test passé\n");
 
     return true;
 
