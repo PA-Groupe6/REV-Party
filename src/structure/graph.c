@@ -274,6 +274,14 @@ GenList *graphToSortedList(Graph *g, int order){
     return l;
 }
 
+Arc* copyArc(Arc* arc){
+    Arc* cp = malloc(sizeof(Arc));
+    cp->id_dest = arc->id_dest;
+    cp->id_src = arc->id_src;
+    cp->weight = arc->weight;
+    return cp;
+}
+
 
 /**
  * @author Corentin LUDWIG
@@ -310,7 +318,9 @@ bool graphIsMakingCycle(Graph *g, Arc *arc){
 
     bool test = false;
 
-    genListAdd(l_arc,(void*) arc);
+
+
+    genListAdd(l_arc,copyArc(arc));
     while(!genListEmpty(l_arc) && !test){
         Arc *cur = (Arc*) genListPop(l_arc);
         l_to_add = graphToListArcFromArcDest(g,cur);

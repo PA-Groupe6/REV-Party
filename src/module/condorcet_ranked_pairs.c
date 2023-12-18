@@ -107,11 +107,13 @@ Graph* creatingGraph(Duel* duel){
         free(genListPop(labels_graph));
     deleteGenList(&labels_graph);
 
-
     for (int i = 0; i< nb_arcs; i++){
         Arc* arc_current = genListGet(arcs_list, i);
         if(!graphIsMakingCycle(winner_graph, arc_current)){
-            graphAdd(winner_graph,arc_current->id_src ,arc_current->id_dest , arc_current->weight);
+            int src = arc_current->id_src;
+            int dest = arc_current->id_dest;
+            int weiht = arc_current->weight;
+            graphAdd(winner_graph,src ,dest , weiht);
         }
     }
     while(!genListEmpty(arcs_list))
@@ -134,7 +136,7 @@ GenList* findWinnerGraph(Duel* duel){
 
     int nb_cand = duelNbCandidat(duel) ;
     int nb_arcs = graphNbArc(graph);
-    int* wins_arcs = malloc(sizeof(int)*nb_cand);
+    int wins_arcs[nb_cand];
 
     deleteGraph(&graph);
 
@@ -179,7 +181,6 @@ GenList* findWinnerGraph(Duel* duel){
         }
     }
 
-    free(wins_arcs);
 
     return winners;
 
