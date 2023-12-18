@@ -256,14 +256,19 @@ GenList* theWinnerMajorityJudgment(Bale* bale){
     // liste générique retournée
     GenList* winner_s = createGenList(nb_winners);
 
-    if (nb_winners>1) { // si ex-aeqo utilise des techniques plus avancées
-        // peupler la liste winner_s des candidats ex-aeqo
+    if (nb_winners>1) { // si ex-aequo utilise des techniques plus avancées
+        warnl("majority_judgment.c", "theWinnerMajorityJudgment",
+            "Ex-aequo dans le vainqueur par médiane -> tactique du moindre mal\n");
+        // peupler la liste winner_s des candidats ex-aequo
         severalWinners(bale, winner_s, min_median, nb_winners, index_winners);
-        // parmis les ex-aeqo, calcul du vainqueur par moindre mal
+        // parmis les ex-aequo, calcul du vainqueur par moindre mal
         winner_s = leastHarmCand(winner_s);
-        if(genListSize(winner_s) > 1) // si encore ex-aeqo
-            // parmis les ex-aeqo, calcul du vainqueur par meilleur bien
+        if(genListSize(winner_s) > 1) {// si encore ex-aequo
+            warnl("majority_judgment.c", "theWinnerMajorityJudgment",
+                "Ex-aequo dans la tactique de moindre mal -> tactique du \"meileur bien\"\n");
+            // parmis les ex-aequo, calcul du vainqueur par meilleur bien
             winner_s = bestCand(winner_s);
+        }
     } else {
         WinnerMajorityJudgment* winner = malloc(sizeof(WinnerMajorityJudgment));
         char* winner_name =  baleColumnToLabel(bale, index_winners[0]);
