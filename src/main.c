@@ -96,7 +96,7 @@ void schulze(Duel* duel) {
  * @param[in] bale le ballot fournit par l'utilisateur en entrée
  */
 void majorityJudgment(Bale* bale) {
-    GenList* winners = theWinnerMajorityJudgment(bale);
+    GenList* winners = theWinnerMajorityJudgment(bale,false);
     displayListWinnerMajorityJudgment(winners);
     deleteWinners(&winners);
 }
@@ -140,7 +140,7 @@ void all(Command* cmd) {
         case DUEL: {
             warnl("main", "all", "Une Matrice de duel à été passée en paramètre -> exécution des méthodes de Condorcet\n");
             Duel* duel = csvToDuel(cmd->file_name);
-
+            displayDuelLog(duel);
             printl(" -= Minimax =-\n");
             minimax(duel);
             printl(" -= Rangement Des Pairs =-\n");
@@ -154,6 +154,7 @@ void all(Command* cmd) {
         }
         case BALE: {
             Bale* bale = csvToBale(cmd->file_name);
+            displayBaleLog(bale);
 
             printl(" -= Uni1 =-\n");
             uni1(bale);
@@ -161,6 +162,7 @@ void all(Command* cmd) {
             uni2(bale);
 
             Duel* duel = duelFromBale(bale);
+            displayDuelLog(duel);
 
             printl(" -= Minimax =-\n");
             minimax(duel);
