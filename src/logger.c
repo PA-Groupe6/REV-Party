@@ -113,9 +113,9 @@ void printStackTrace() {
  */
 void exitl(const char* file_name, const char* fun_name, int exit_value, char* format, ...) {
 #ifdef DEBUG
+    printStackTrace();
     if (output == NULL) {
         fprintf(stderr, "Warning: logger call to exitl while being not initialized!\n");
-        printStackTrace();
         exit(EXIT_FAILURE);
     }
 #endif
@@ -573,7 +573,7 @@ void displayListWinnerMajorityJudgment(GenList *l) {
     WinnerMajorityJudgment *wtmp;
     for(unsigned i = 0; i < nb_winners; i++) {
         wtmp = genListGet(l, i);
-        printf("\t║  • %-*s : (%6.2f %%,%2d,%6.2f %%)", max_length_winner, wtmp->name, wtmp->percent_sup * 100, wtmp->median , wtmp->percent_inf * 100);
+        printf("\t║  • %-*s : (%6.2f %%,%2d,%6.2f %%)", max_length_winner, wtmp->name, wtmp->percent_inf * 100, wtmp->median , wtmp->percent_sup * 100);
         printStringN(" ", max_length_case - (MJ_WINNER_SENTENCE_LENGTH + max_length_winner) + SPACE_BETWEEN_BORDER);
         printf("║\n");
     }

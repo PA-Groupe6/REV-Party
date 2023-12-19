@@ -52,7 +52,7 @@ typedef struct s_winner_MajorityJudgment {
  *
  * @return Le nom du candidat gagnant
 */
-GenList* theWinnerMajorityJudgment(Bale* bale);
+GenList* theWinnerMajorityJudgment(Bale* bale, bool is_bale_judgment);
 
 
 

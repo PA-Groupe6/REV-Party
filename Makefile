@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=-Wextra -Wall -Werror -pedantic -std=c99 -pthread 
+CFLAGS=-Wextra -Wall -Werror -pedantic -std=c99 -pthread -rdynamic
 
 BINDIR=bin
 OBJDIR=obj
